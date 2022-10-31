@@ -1,0 +1,124 @@
+{% extends 'base.html.twig' %}
+{% set showDivider = true %}
+
+{% block title %}{% endblock %}
+
+{% block breadcrumbs %}
+    <div class="container mx-auto">
+        <div class="text-sm breadcrumbs">
+            <ul>
+                <li><a href="{{ path('app_home') }}"><i class="la la-home"></i></a></li>
+                <li><a href="{{ path('app_category') }}">{{ 'Coral'|trans }}</a></li>
+                <li><a href="{{ path('app_category') }}">{{ 'LPS Corals'|trans }}</a></li>
+                <li>{{ 'Euphyllidae'|trans }}</li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto">
+        <div class="grid grid-cols-8 gap-10">
+            <div class="filters col-span-2">
+                <h1 class="text-4xl">{{ 'Coral'|trans }} <small>(1200)</small></h1>
+                <div class="mt-4 bg-base-200 p-4">
+                    <h2 class="text-xl font-bold">{{ 'Subcategories'|trans }}</h2>
+                    <ul class="mt-2">
+                        <li>
+                            <a href="#">{{ 'LPS Coral'|trans }}</a>
+                        </li>
+                        <li>
+                            <a href="#">{{ 'SPS Coral'|trans }}
+                        </li>
+                        <li>
+                            <a href="#">{{ 'Cerianthus'|trans }}</a>
+                        </li>
+                        <li>
+                            <a href="#">{{ 'Ears'|trans }}</a>
+                        </li>
+                        <li>
+                            <a href="#">{{ 'Lethercoral'|trans }}</a>
+                        </li>
+                        <li>
+                            <a href="#">{{ 'Zoa\'s'|trans }}</a>
+                        </li>
+                        <li>
+                            <a href="#">{{ 'Anenome'|trans }}</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="mt-4 filter__range-slider">
+                    <h3 class="font-bold">{{ 'Price' }}</h3>
+                    <input type="range" min="0" max="100" value="100" class="range range-xs range-accent mt-2"/>
+                    <div class="filter__range-slider-input grid grid-cols-3 mt-1">
+                        <input type="number" value="0" class="input input-bordered input-accent input-sm w-full" />
+                        <div></div>
+                        <input type="number" value="100" class="input input-bordered input-accent input-sm w-full" />
+                    </div>
+                </div>
+                <div class="filters__filter mt-4">
+                    <h3 class="font-bold">{{ 'Size' }}</h3>
+                    <div class="filters__filter-options mt-2">
+                        <div class="filters__filter-option form-control">
+                            <label class="cursor-pointer label flex gap-3">
+                                <span class="label-text text-base">{{ 'T'|trans }}</span>
+                                <input type="checkbox" class="checkbox checkbox-accent"/>
+                            </label>
+                        </div>
+                        <div class="filters__filter-option form-control">
+                            <label class="cursor-pointer label flex gap-3">
+                                <span class="label-text text-base">{{ 'S'|trans }}</span>
+                                <input type="checkbox" class="checkbox checkbox-accent"/>
+                            </label>
+                        </div>
+                        <div class="filters__filter-option form-control">
+                            <label class="cursor-pointer label flex gap-3">
+                                <span class="label-text text-base">{{ 'M'|trans }}</span>
+                                <input type="checkbox" class="checkbox checkbox-accent"/>
+                            </label>
+                        </div>
+                        <div class="filters__filter-option form-control">
+                            <label class="cursor-pointer label flex gap-3">
+                                <span class="label-text text-base">{{ 'L'|trans }}</span>
+                                <input type="checkbox" class="checkbox checkbox-accent"/>
+                            </label>
+                        </div>
+                        <div class="filters__filter-option form-control">
+                            <label class="cursor-pointer label flex gap-3">
+                                <span class="label-text text-base">{{ 'XL'|trans }}</span>
+                                <input type="checkbox" class="checkbox checkbox-accent"/>
+                            </label>
+                        </div>
+                        <div class="filters__filter-option form-control">
+                            <label class="cursor-pointer label flex gap-3">
+                                <span class="label-text text-base">{{ 'XXL'|trans }}</span>
+                                <input type="checkbox" class="checkbox checkbox-accent"/>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="filters__filter mt-4">
+                    <h3 class="font-bold">{{ 'Coral options' }}</h3>
+                    <div class="filters__filter-options mt-2">
+                        <div class="filters__filter-option form-control">
+                            <label class="cursor-pointer label flex gap-3">
+                                <span class="label-text text-base">{{ 'Cultured corals'|trans }}</span>
+                                <input type="checkbox" class="checkbox checkbox-accent"/>
+                            </label>
+                        </div>
+                        <div class="filters__filter-option form-control">
+                            <label class="cursor-pointer label flex gap-3">
+                                <span class="label-text text-base">{{ 'Wild collected corals'|trans }}</span>
+                                <input type="checkbox" class="checkbox checkbox-accent"/>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="product_row grid grid-cols-4 gap-4 mt-8 col-span-6">
+                {% include 'catalog/_partials/product_list.html.twig' with {'count': 32} %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

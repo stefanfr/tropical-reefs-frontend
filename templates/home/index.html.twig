@@ -1,0 +1,123 @@
+{% extends 'base.html.twig' %}
+{% set showDivider = false %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+    <div class="carousel w-full mt-5">
+        <div id="slide1" class="carousel-item relative w-full">
+            <img src="https://via.placeholder.com/1600x400" class="w-full"/>
+        </div>
+        <div id="slide2" class="carousel-item relative w-full">
+            <img src="https://via.placeholder.com/800x200" class="w-full"/>
+        </div>
+        <div id="slide3" class="carousel-item relative w-full">
+            <img src="https://via.placeholder.com/800x200" class="w-full"/>
+        </div>
+        <div id="slide4" class="carousel-item relative w-full">
+            <img src="https://via.placeholder.com/800x200" class="w-full"/>
+        </div>
+    </div>
+    <div class="divider lg:divider-vertical w-full" style="margin-top: 2.5rem">
+        <h2 style="font-size: 1.7rem; font-weight: bold">{{ 'Categories'|trans }}</h2>
+    </div>
+    <div class="container mx-auto  mt-10">
+        <div class="category flex gap-5">
+            <a href="/category" class="category__item">
+                <img src="https://via.placeholder.com/150" class="rounded-full"/>
+                <strong class="text-center block mt-1">{{ 'Coral'|trans }}</strong>
+            </a>
+            <a href="/category" class="category__item">
+                <img src="https://via.placeholder.com/150" class="rounded-full"/>
+                <strong class="text-center block mt-1">{{ 'Fish'|trans }}</strong>
+            </a>
+            <a href="/category" class="category__item">
+                <img src="https://via.placeholder.com/150" class="rounded-full"/>
+                <strong class="text-center block mt-1">{{ 'Food'|trans }}</strong>
+            </a>
+            <a href="/category" class="category__item">
+                <img src="https://via.placeholder.com/150" class="rounded-full"/>
+                <strong class="text-center block mt-1">{{ 'Medicine'|trans }}</strong>
+            </a>
+            <a href="/category" class="category__item">
+                <img src="https://via.placeholder.com/150" class="rounded-full"/>
+                <strong class="text-center block mt-1">{{ 'Lighting'|trans }}</strong>
+            </a>
+            <a href="/category" class="category__item">
+                <img src="https://via.placeholder.com/150" class="rounded-full"/>
+                <strong class="text-center block mt-1">{{ 'Test kits'|trans }}</strong>
+            </a>
+            <a href="/category" class="category__item">
+                <img src="https://via.placeholder.com/150" class="rounded-full"/>
+                <strong class="text-center block mt-1">{{ 'Pumps'|trans }}</strong>
+            </a>
+            <a href="/category" class="category__item">
+                <img src="https://via.placeholder.com/150" class="rounded-full"/>
+                <strong class="text-center block mt-1">{{ 'Sale'|trans }}</strong>
+            </a>
+        </div>
+    </div>
+    <div class="divider lg:divider-vertical w-full" style="margin-top: 2.5rem;">
+        <h2 style="font-size: 1.7rem; font-weight: bold">{{ 'Our brands'|trans }}</h2>
+    </div>
+    <div class="container mx-auto mt-10">
+        <div class="category grid lg:grid-cols-5 gap-5 mt-4 row">
+            <a href="/brand" class="category__item">
+                <img src="https://media2.cdn.bulkreefsupply.com/media/cache/7135e6e10e016ff97261056fa95c44b9/wysiwyg/fma/home/ecotech-434x270.webp"/>
+            </a>
+            <a href="/brand" class="category__item">
+                <img src="https://media2.cdn.bulkreefsupply.com/media/cache/7135e6e10e016ff97261056fa95c44b9/wysiwyg/fma/home/Neptune-434x270.webp"/>
+            </a>
+            <a href="/brand" class="category__item">
+                <img src="https://media2.cdn.bulkreefsupply.com/media/cache/7135e6e10e016ff97261056fa95c44b9/wysiwyg/fma/home/AI-434x270.webp"/>
+            </a>
+            <a href="/brand" class="category__item">
+                <img src="https://media2.cdn.bulkreefsupply.com/media/cache/7135e6e10e016ff97261056fa95c44b9/wysiwyg/fma/home/aquaforest-215x135.webp"/>
+            </a>
+            <a href="/brand" class="category__item">
+                <img src="https://media2.cdn.bulkreefsupply.com/media/cache/7135e6e10e016ff97261056fa95c44b9/wysiwyg/fma/home/Sicce-215x135.webp"/>
+            </a>
+            <a href="/brand" class="category__item">
+                <img src="https://media2.cdn.bulkreefsupply.com/media/cache/7135e6e10e016ff97261056fa95c44b9/wysiwyg/fma/brand-master-tropic-marin.webp"/>
+            </a>
+            <a href="/brand" class="category__item">
+                <img src="https://media2.cdn.bulkreefsupply.com/media/cache/7135e6e10e016ff97261056fa95c44b9/wysiwyg/fma/home/Red-Sea-215x135.webp"/>
+            </a>
+            <a href="/brand" class="category__item">
+                <img src="https://media2.cdn.bulkreefsupply.com/media/cache/7135e6e10e016ff97261056fa95c44b9/wysiwyg/fma/home/kz-215x135.webp"/>
+            </a>
+            <a href="/brand" class="category__item">
+                <img src="https://media2.cdn.bulkreefsupply.com/media/cache/7135e6e10e016ff97261056fa95c44b9/wysiwyg/fma/home/Neptune-434x270.webp"/>
+            </a>
+            <a href="/brand" class="category__item">
+                <img src="https://media2.cdn.bulkreefsupply.com/media/cache/7135e6e10e016ff97261056fa95c44b9/wysiwyg/fma/home/ecotech-434x270.webp"/>
+            </a>
+        </div>
+    </div>
+    <div class="seo_block flex gap-10 pr-20 mt-20 items-center mt-16 bg-base-300">
+        <img class="grow" width="714" src="https://media2.cdn.bulkreefsupply.com/media/cache/7135e6e10e016ff97261056fa95c44b9/wysiwyg/home/cropped_coral_scene-816x464_1_.webp" alt="">
+        <div class="divider lg:divider-horizontal w-full"></div>
+        <div class="grow seo_block__content row">
+            <h2 class="seo_block__title" style="font-size: 2rem; font-weight: bold">Quality Saltwater Aquarium Supplies
+                with Expert Advice</h2>
+            <p class="seo_block__text mt-3">
+                We want to make reefing fun and easy. That's why we provide expert reefing knowledge and quality
+                saltwater aquarium products. From saltwater tanks with clownfish and anemones to full-blown reef tanks,
+                We have your reefing needs covered.
+            </p>
+            <div class="seo_block__usps flex mt-4">
+                <strong class="usp grow">365 Day Returns</strong>
+                <strong class="usp grow">Free Shipping</strong>
+                <strong class="usp grow">Earn 5% Back</strong>
+            </div>
+        </div>
+    </div>
+    <div class="divider lg:divider-vertical w-full" style="margin-top: 2.5rem">
+        <h2 style="font-size: 1.7rem; font-weight: bold">{{ 'Featured products'|trans }}</h2>
+    </div>
+    <div class="container mx-auto">
+        <div class="product_row grid grid-cols-5 gap-4 mt-8 col-span-6">
+            {% include 'catalog/_partials/product_list.html.twig' with {'count': 5} %}
+        </div>
+    </div>
+{% endblock %}

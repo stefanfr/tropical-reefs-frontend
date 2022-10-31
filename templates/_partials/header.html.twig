@@ -1,0 +1,27 @@
+<header>
+    {% include '_partials/_usps.html.twig' %}
+    <div class="container mx-auto mt-10">
+        <div class="flex gap-10">
+            <a href="{{ path('app_home') }}">
+                <img src="https://via.placeholder.com/150x57" alt="logo">
+            </a>
+            <div class="grow items-end flex">
+                <input type="search" placeholder="{{ 'Where are you looking for?'|trans }}" class="input input-bordered input-accent grow" />
+            </div>
+            <div class="flex gap-2 items-end">
+                <a href="{{ path('app_customer') }}">
+                    <i class="la la-user la-2-5x"></i>
+                </a>
+                <a href="#" class="indicator">
+                    <span class="indicator-item badge badge-secondary p-2" style="aspect-ratio: 1; font-size: .7rem; margin-top: 5px; margin-right: 5px;">9+</span>
+                    <i class="la la-heart la-2-5x"></i>
+                </a>
+                <a href="#" class="indicator">
+                    <small class="indicator-item badge badge-secondary p-2" style="aspect-ratio: 1; font-size: .7rem; margin-top: 5px; margin-right: 5px;">9</small>
+                    <i class="la la-shopping-basket la-2-5x"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% include '_partials/_navigation.html.twig' %}
+</header>

@@ -1,0 +1,62 @@
+doctrine:
+    dbal:
+        default_connection: default
+        connections:
+            default:
+                url: '%env(resolve:DATABASE_URL)%'
+                driver: 'pdo_mysql'
+                server_version: '8.0'
+                charset: utf8mb4
+            magento:
+                url: '%env(resolve:DATABASE_MAGENTO_URL)%'
+                driver: 'pdo_mysql'
+                server_version: '8.0'
+                charset: utf8mb4
+    orm:
+        default_entity_manager: default
+        entity_managers:
+            default:
+                connection: default
+                naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+                auto_mapping: true
+                mappings:
+                    Frontend:
+                        is_bundle: false
+                        type: annotation
+                        dir: '%kernel.project_dir%/src/Entity/Frontend'
+                        prefix: 'App\Entity\Frontend'
+                        alias: Main
+            magento:
+                connection: magento
+                naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+                mappings:
+                    Magento:
+                        is_bundle: false
+                        type: annotation
+                        dir: '%kernel.project_dir%/src/Entity/Magento'
+                        prefix: 'App\Entity\Magento'
+                        alias: Magento
+
+when@test:
+    doctrine:
+        dbal:
+            dbname_suffix: '_test%env(default::TEST_TOKEN)%'
+
+when@prod:
+    doctrine:
+        orm:
+            auto_generate_proxy_classes: false
+            query_cache_driver:
+                type: pool
+                pool: doctrine.system_cache_pool
+            result_cache_driver:
+                type: pool
+                pool: doctrine.result_cache_pool
+
+    framework:
+        cache:
+            pools:
+                doctrine.result_cache_pool:
+                    adapter: cache.app
+                doctrine.system_cache_pool:
+                    adapter: cache.system

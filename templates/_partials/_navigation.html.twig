@@ -1,0 +1,22 @@
+<nav class="menu-bar container mx-auto mt-10 flex">
+    <div class="menu-items flex grow">
+        <div class="dropdown">
+            <label tabindex="0" class="title">{{ 'All categories'|trans }}</label>
+            <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+                <li><a>{{ 'Coral'|trans }}</a></li>
+                <li><a>{{ 'Fish'|trans }}</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="menu-items menu-right flex">
+        <div class="top-menu grow">
+            <a href="#"
+               class="link active"
+               data-toggle="tooltip-menu"
+               data-tippy-content="Home"
+            >
+                <span class="title">{{ 'Contact'|trans }}</span>
+            </a>
+        </div>
+    </div>
+</nav>
