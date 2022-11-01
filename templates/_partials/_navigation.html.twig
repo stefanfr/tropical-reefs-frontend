@@ -1,10 +1,15 @@
+{% set categories = categoryTree.collect %}
+
 <nav class="menu-bar container mx-auto mt-10 flex">
     <div class="menu-items flex grow">
         <div class="dropdown">
-            <label tabindex="0" class="title">{{ 'All categories'|trans }}</label>
+            <label tabindex="0" class="title">{{ 'All Categories'|trans }}</label>
             <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
-                <li><a>{{ 'Coral'|trans }}</a></li>
-                <li><a>{{ 'Fish'|trans }}</a></li>
+                {% for childCategory in categories %}
+                    <li>
+                        <a href="{{ path('app_category', {categoryPath: childCategory['url_path']}) }}">{{ childCategory['name'] }}</a>
+                    </li>
+                {% endfor %}
             </ul>
         </div>
     </div>
