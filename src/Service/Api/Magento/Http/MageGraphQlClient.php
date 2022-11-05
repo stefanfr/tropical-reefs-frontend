@@ -4,6 +4,8 @@ namespace App\Service\Api\Magento\Http;
 
 class MageGraphQlClient extends MageHttpClient
 {
+    protected ?string $baseUrl = null;
+
     /**
      * @param string $uri
      * @param null|string $storeCode
@@ -26,6 +28,13 @@ class MageGraphQlClient extends MageHttpClient
      */
     public function getApiBaseUrl(): string
     {
-        return rtrim($this->getBaseUrl(), '/') . '/graphql';
+        return rtrim($this->baseUrl ?? $this->getBaseUrl(), '/') . '/graphql';
+    }
+
+    public function setBaseUrl(?string $baseUrl): static
+    {
+        $this->baseUrl = $baseUrl;
+
+        return $this;
     }
 }

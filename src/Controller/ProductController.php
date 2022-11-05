@@ -2,15 +2,22 @@
 
 namespace App\Controller;
 
+use App\Service\Api\Magento\Catalog\MagentoCatalogProductApiService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 
 class ProductController extends AbstractController
 {
-    #[Route('/product', name: 'app_product')]
-    public function index(): Response
+    public function __construct(
+        protected MagentoCatalogProductApiService $magentoCatalogProductApiService
+    )
     {
-        return $this->render('catalog/product/index.html.twig');
+    }
+
+    public function index(array $magentoMatch): Response
+    {
+        return $this->render('catalog/product/index.html.twig', [
+            'product' => $this->magentoCatalogProductApiService->collectProduct($magentoMatch['entity_uid'], false)
+        ]);
     }
 }

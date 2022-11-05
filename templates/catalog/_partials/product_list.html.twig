@@ -1,15 +1,32 @@
-{% for index in 1..count %}
-    <div class="product_row__item rounded-box border-2 border-base-400 border-solid overflow-hidden">
-        <a href="/product" class="category__item">
-            <img width="230" src="https://shop.dejongmarinelife.nl/media/catalog/product/cache/85b3bc55e4c6a4e2ed552d4efcb3a8a9/a/n/ancora_common_1.jpg" class="w-full"/>
-            <div class="product_row__item-info py-4 px-3">
-                <strong class="text-black product_row__title mt-2">Euphyllia ancora (Common)</strong>
-                <div class="gap-4">
-                    <small class="grow product_row__from_price line-through">&euro;
-                        30,-
-                    </small>
-                    <strong class="grow product_row__final_price">
-                        &euro; 30,-
+{% if limit is defined %}
+    {% set items = items|slice(0, limit) %}
+{% endif %}
+
+{% for item in items %}
+    <div class="product_row__item card shadow-md">
+        <a href="/{{ item['url_key'] }}" class="category__item">
+            <div class="product_row__item-image-holder relative">
+                <picture>
+                    <img class="w-full aspect-square" src="{{ item['small_image']['url'] }}"/>
+                </picture>
+            </div>
+            <div class="product_row__item-label absolute top-3 left-3">
+                {% if item['price_range']['minimum_price']['discount']['amount_off'] > 0 %}
+                    <label class="bg-error text-white py-1 px-2 w-full text-xs">
+                        {{ item['price_range']['minimum_price']['discount']['percent_off'] }}% Sale
+                    </label>
+                {% endif %}
+            </div>
+            <div class="product_row__item-info py-4 px-3 grid grid-cols-4">
+                <strong class="product_row__title mt-2 grow col-span-3">{{ item['name']|replace({'(': "<br />", ')': ''})|raw }}</strong>
+                <div class="mt-2 text-right grid mr-1">
+                    {% if item['price_range']['minimum_price']['discount']['amount_off'] > 0 %}
+                        <small class="grow product_row__from_price line-through text-xs">
+                            &euro;{{ item['price_range']['minimum_price']['regular_price']['value'] }}
+                        </small>
+                    {% endif %}
+                    <strong class="grow product_row__final_price text-lg">
+                        &euro;{{ item['price_range']['minimum_price']['final_price']['value'] }}
                     </strong>
                 </div>
             </div>

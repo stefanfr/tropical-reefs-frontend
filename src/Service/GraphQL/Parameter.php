@@ -13,6 +13,6 @@ class Parameter
 
     public function __toString(): string
     {
-        return $this->field . ':' . $this->value;
+        return $this->field . ': "' . $this->value . '"';
     }
 }

@@ -2,15 +2,24 @@
 
 namespace App\Controller;
 
+use App\Service\Api\Magento\Catalog\MagentoCatalogCategoryApiService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class CategoryController extends AbstractController
 {
-    #[Route('/category/{categoryPath}', name: 'app_category')]
-    public function index(string $categoryPath): Response
+    public function __construct(
+        protected MagentoCatalogCategoryApiService $magentoCatalogCategoryApiService
+    )
     {
-        return $this->render('catalog/category/index.html.twig');
+    }
+
+    public function index(array $magentoMatch): Response
+    {
+        return $this->render('catalog/category/index.html.twig', [
+            'catalog' => $this->magentoCatalogCategoryApiService->collectCategory($magentoMatch['entity_uid']),
+            'subCategories' => $this->magentoCatalogCategoryApiService->collectCategoryTree($magentoMatch['entity_uid'])
+        ]);
     }
 }

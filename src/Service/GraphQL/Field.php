@@ -11,7 +11,7 @@ class Field
     {
     }
 
-    public function addChildField(Field $field): static
+    public function addChildField(Fragment|Field $field): static
     {
         $this->childFields[] = $field;
 

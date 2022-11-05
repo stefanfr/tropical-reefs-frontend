@@ -5,15 +5,22 @@ parameters:
       base_url: '%env(resolve:MAGE_API_BASE_URL)%'
       default_headers:
         verify: true
+  imaginary_client:
+    enabled: false
+    base_url: '%env(resolve:IMAGINARY_BASE_URL)%'
+    app_url: '%env(resolve:IMAGINARY_APP_URL)%'
 
   when@prod:
     api:
       default_headers: [ ]
+    imaginary_client:
+      enabled: true
 
 services:
   _defaults:
     autowire: true      # Automatically injects dependencies in your services.
     autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
   App\:
     resource: '../src/'
     exclude:
@@ -21,9 +28,24 @@ services:
       - '../src/Entity/'
       - '../src/Kernel.php'
 
+  Symfony\Component\HttpKernel\EventListener\RouterListener:
+    arguments:
+      - '@App\Routing\MagentoRouteMatcher'
+
+  App\Routing\MagentoRouteMatcher:
+    arguments:
+      - '@router.default'
+
   App\Cache\Adapter\RedisAdapter:
-    arguments: [ '@service_container' ]
+    arguments:
+      - '@service_container'
 
   App\Service\Api\Magento\Http\:
     resource: '../src/Service/Api/Magento/Http'
-    arguments: [ '@service_container' ]
+    arguments:
+      - '@service_container'
+      -
+  App\Service\Imaginary\Http\:
+    resource: '../src/Service/Imaginary/Http'
+    arguments:
+      - '@service_container'

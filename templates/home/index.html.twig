@@ -6,55 +6,20 @@
 {% block body %}
     <div class="carousel w-full mt-5">
         <div id="slide1" class="carousel-item relative w-full">
-            <img src="https://via.placeholder.com/1600x400" class="w-full"/>
-        </div>
-        <div id="slide2" class="carousel-item relative w-full">
-            <img src="https://via.placeholder.com/800x200" class="w-full"/>
-        </div>
-        <div id="slide3" class="carousel-item relative w-full">
-            <img src="https://via.placeholder.com/800x200" class="w-full"/>
-        </div>
-        <div id="slide4" class="carousel-item relative w-full">
-            <img src="https://via.placeholder.com/800x200" class="w-full"/>
+            <img src="{{ asset('build/assets/images/water-1283152_1280.jpg')|cdn('crop', 1600, 500) }}" class="w-full"/>
         </div>
     </div>
     <div class="divider lg:divider-vertical w-full" style="margin-top: 2.5rem">
         <h2 style="font-size: 1.7rem; font-weight: bold">{{ 'Categories'|trans }}</h2>
     </div>
     <div class="container mx-auto  mt-10">
-        <div class="category flex gap-5">
-            <a href="/category" class="category__item">
-                <img src="https://via.placeholder.com/150" class="rounded-full"/>
-                <strong class="text-center block mt-1">{{ 'Coral'|trans }}</strong>
-            </a>
-            <a href="/category" class="category__item">
-                <img src="https://via.placeholder.com/150" class="rounded-full"/>
-                <strong class="text-center block mt-1">{{ 'Fish'|trans }}</strong>
-            </a>
-            <a href="/category" class="category__item">
-                <img src="https://via.placeholder.com/150" class="rounded-full"/>
-                <strong class="text-center block mt-1">{{ 'Food'|trans }}</strong>
-            </a>
-            <a href="/category" class="category__item">
-                <img src="https://via.placeholder.com/150" class="rounded-full"/>
-                <strong class="text-center block mt-1">{{ 'Medicine'|trans }}</strong>
-            </a>
-            <a href="/category" class="category__item">
-                <img src="https://via.placeholder.com/150" class="rounded-full"/>
-                <strong class="text-center block mt-1">{{ 'Lighting'|trans }}</strong>
-            </a>
-            <a href="/category" class="category__item">
-                <img src="https://via.placeholder.com/150" class="rounded-full"/>
-                <strong class="text-center block mt-1">{{ 'Test kits'|trans }}</strong>
-            </a>
-            <a href="/category" class="category__item">
-                <img src="https://via.placeholder.com/150" class="rounded-full"/>
-                <strong class="text-center block mt-1">{{ 'Pumps'|trans }}</strong>
-            </a>
-            <a href="/category" class="category__item">
-                <img src="https://via.placeholder.com/150" class="rounded-full"/>
-                <strong class="text-center block mt-1">{{ 'Sale'|trans }}</strong>
-            </a>
+        <div class="category flex gap-10">
+            {% for category in categories %}
+                <a href="/{{ category['url_path'] }}" class="category__item">
+                    <img src="{{ (category['image'] ?? 'https://via.placeholder.com/150')|cdn('crop', 'square', '150') }}" width="180" class="rounded-full aspect-square"/>
+                    <strong class="text-center block mt-1">{{ category['name']|trans }}</strong>
+                </a>
+            {% endfor %}
         </div>
     </div>
     <div class="divider lg:divider-vertical w-full" style="margin-top: 2.5rem;">
@@ -62,36 +27,11 @@
     </div>
     <div class="container mx-auto mt-10">
         <div class="category grid lg:grid-cols-5 gap-5 mt-4 row">
-            <a href="/brand" class="category__item">
-                <img src="https://media2.cdn.bulkreefsupply.com/media/cache/7135e6e10e016ff97261056fa95c44b9/wysiwyg/fma/home/ecotech-434x270.webp"/>
-            </a>
-            <a href="/brand" class="category__item">
-                <img src="https://media2.cdn.bulkreefsupply.com/media/cache/7135e6e10e016ff97261056fa95c44b9/wysiwyg/fma/home/Neptune-434x270.webp"/>
-            </a>
-            <a href="/brand" class="category__item">
-                <img src="https://media2.cdn.bulkreefsupply.com/media/cache/7135e6e10e016ff97261056fa95c44b9/wysiwyg/fma/home/AI-434x270.webp"/>
-            </a>
-            <a href="/brand" class="category__item">
-                <img src="https://media2.cdn.bulkreefsupply.com/media/cache/7135e6e10e016ff97261056fa95c44b9/wysiwyg/fma/home/aquaforest-215x135.webp"/>
-            </a>
-            <a href="/brand" class="category__item">
-                <img src="https://media2.cdn.bulkreefsupply.com/media/cache/7135e6e10e016ff97261056fa95c44b9/wysiwyg/fma/home/Sicce-215x135.webp"/>
-            </a>
-            <a href="/brand" class="category__item">
-                <img src="https://media2.cdn.bulkreefsupply.com/media/cache/7135e6e10e016ff97261056fa95c44b9/wysiwyg/fma/brand-master-tropic-marin.webp"/>
-            </a>
-            <a href="/brand" class="category__item">
-                <img src="https://media2.cdn.bulkreefsupply.com/media/cache/7135e6e10e016ff97261056fa95c44b9/wysiwyg/fma/home/Red-Sea-215x135.webp"/>
-            </a>
-            <a href="/brand" class="category__item">
-                <img src="https://media2.cdn.bulkreefsupply.com/media/cache/7135e6e10e016ff97261056fa95c44b9/wysiwyg/fma/home/kz-215x135.webp"/>
-            </a>
-            <a href="/brand" class="category__item">
-                <img src="https://media2.cdn.bulkreefsupply.com/media/cache/7135e6e10e016ff97261056fa95c44b9/wysiwyg/fma/home/Neptune-434x270.webp"/>
-            </a>
-            <a href="/brand" class="category__item">
-                <img src="https://media2.cdn.bulkreefsupply.com/media/cache/7135e6e10e016ff97261056fa95c44b9/wysiwyg/fma/home/ecotech-434x270.webp"/>
-            </a>
+            {% for brand in brands %}
+                <a href="/{{ brand['url_path'] }}" class="category__item">
+                    <img width="434" height="270" src="{{ brand['image']|cdn('resize', 434, 270) }}"/>
+                </a>
+            {% endfor %}
         </div>
     </div>
     <div class="seo_block flex gap-10 pr-20 mt-20 items-center mt-16 bg-base-300">
@@ -117,7 +57,7 @@
     </div>
     <div class="container mx-auto">
         <div class="product_row grid grid-cols-5 gap-4 mt-8 col-span-6">
-            {% include 'catalog/_partials/product_list.html.twig' with {'count': 5} %}
+            {% include 'catalog/_partials/product_list.html.twig' with {'items': featuredProducts, 'count': 5} %}
         </div>
     </div>
 {% endblock %}

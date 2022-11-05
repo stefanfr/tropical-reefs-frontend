@@ -1,0 +1,18 @@
+{% for index in 1..count %}
+    <div class="product_row__item rounded-box border-2 border-base-400 border-solid overflow-hidden">
+        <a href="/product" class="category__item">
+            <img width="230" src="https://shop.dejongmarinelife.nl/media/catalog/product/cache/85b3bc55e4c6a4e2ed552d4efcb3a8a9/a/n/ancora_common_1.jpg" class="w-full"/>
+            <div class="product_row__item-info py-4 px-3">
+                <strong class="text-black product_row__title mt-2">Euphyllia ancora (Common)</strong>
+                <div class="gap-4">
+                    <small class="grow product_row__from_price line-through">&euro;
+                        30,-
+                    </small>
+                    <strong class="grow product_row__final_price">
+                        &euro; 30,-
+                    </strong>
+                </div>
+            </div>
+        </a>
+    </div>
+{% endfor %}

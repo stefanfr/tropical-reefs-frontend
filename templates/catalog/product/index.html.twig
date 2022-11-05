@@ -21,47 +21,27 @@
     <div class="container mx-auto mt-4">
         <div class="grid lg:grid-cols-5 gap-10 sm:grid-cols-1">
             <div class="product__images-container col-span-3">
-                <div class="flex gap-4">
-                    <div class="image__thumbnail flex-col">
-                        <a href="#image_1">
-                            <img style="aspect-ratio: 1" width="95" class="cursor-pointer thumbnail active rounded-box" src="https://shop.dejongmarinelife.nl/media/catalog/product/cache/58af15fc54ae9324a4e860e0fbe6423f/a/n/ancora_pinkish.jpg" alt="">
-                        </a>
-                        <a href="#image_2">
-                            <img style="aspect-ratio: 1" width="95" class="cursor-pointer thumbnail active mt-4 rounded-box" src="https://shop.dejongmarinelife.nl/media/catalog/product/cache/58af15fc54ae9324a4e860e0fbe6423f/9/1/91_2.jpg" alt="">
-                        </a>
-                        <a href="#image_3">
-                            <img style="aspect-ratio: 1" width="95" class="cursor-pointer thumbnail active mt-4 rounded-box" src="https://shop.dejongmarinelife.nl/media/catalog/product/cache/58af15fc54ae9324a4e860e0fbe6423f/1/0/103_2.jpg" alt="">
-                        </a>
-                        <a href="#image_4">
-                            <img style="aspect-ratio: 1" width="95" class="cursor-pointer thumbnail active mt-4 rounded-box" src="https://shop.dejongmarinelife.nl/media/catalog/product/cache/58af15fc54ae9324a4e860e0fbe6423f/9/9/99_2.jpg" alt="">
-                        </a>
-                        <a href="#image_5">
-                            <img style="aspect-ratio: 1" width="95" class="cursor-pointer thumbnail active mt-4 rounded-box" src="https://shop.dejongmarinelife.nl/media/catalog/product/cache/58af15fc54ae9324a4e860e0fbe6423f/l/p/lps-eap-050992_1.jpg" alt="">
-                        </a>
+                <div class="flex gap-2">
+                    <div class="carousel carousel-vertical gap-2 h-full" style="max-height: 640px">
+                        {% for image in product['media_gallery'] %}
+                            <a href="#image_{{ loop.index }}" class="carousel-item">
+                                <img style="aspect-ratio: 1" width="95" class="cursor-pointer thumbnail rounded-box" src="{{ image['url'] }}" alt="">
+                            </a>
+                        {% endfor %}
                     </div>
                     <div class="carousel rounded-box w-65" style="max-width: 640px;">
-                        <div id="image_1" class="carousel-item w-full">
-                            <img style="aspect-ratio: 1" width="640" src="https://shop.dejongmarinelife.nl/media/catalog/product/a/n/ancora_pinkish.jpg" alt="">
-                        </div>
-                        <div id="image_2" class="carousel-item w-full">
-                            <img style="aspect-ratio: 1" width="640" src="https://shop.dejongmarinelife.nl/media/catalog/product/9/1/91_2.jpg" alt="">
-                        </div>
-                        <div id="image_3" class="carousel-item w-full">
-                            <img style="aspect-ratio: 1" width="640" src="https://shop.dejongmarinelife.nl/media/catalog/product/1/0/103_2.jpg" alt="">
-                        </div>
-                        <div id="image_4" class="carousel-item w-full">
-                            <img style="aspect-ratio: 1" width="640" src="https://shop.dejongmarinelife.nl/media/catalog/product/9/9/99_2.jpg" alt="">
-                        </div>
-                        <div id="image_5" class="carousel-item w-full">
-                            <img style="aspect-ratio: 1" width="640" src="https://shop.dejongmarinelife.nl/media/catalog/product/l/p/lps-eap-050992_1.jpg" alt="">
-                        </div>
+                        {% for image in product['media_gallery'] %}
+                            <div id="#image_{{ loop.index }}" class="carousel-item w-full">
+                                <img style="aspect-ratio: 1" width="640" src="{{ image['url'] }}" alt="">
+                            </div>
+                        {% endfor %}
                     </div>
                 </div>
 
             </div>
             <div class="product__details-container col-span-2">
                 <div class="product__details-title grid">
-                    <h1 class="text-4xl font-bold">{{ 'Euphyllia ancora (Pinkish)'|trans }}</h1>
+                    <h1 class="text-4xl font-bold">{{ product['name']|replace({'(': "<br />", ')': ''})|raw }}</h1>
                     <div class="grid grid-cols-2">
                         <div class="grid">
                             <div class="product__details-review mt-1">
@@ -76,9 +56,15 @@
                                 {{ 'Shipped in 5 - 10 working days' }}
                             </div>
                         </div>
-                        <div class="product__details-price mt-5 flex gap-1">
-                            <small class="product_details-from-price line-through">&euro; 59.99</small>
-                            <strong class="product_details-from-price text-4xl">&euro; 39.99</strong>
+                        <div class="mt-2 text-right grid mr-1">
+                            {% if product['price_range']['minimum_price']['discount']['amount_off'] > 0 %}
+                                <small class="grow product_row__from_price line-through text-md">
+                                    &euro;{{ product['price_range']['minimum_price']['regular_price']['value'] }}
+                                </small>
+                            {% endif %}
+                            <strong class="grow product_row__final_price text-4xl">
+                                &euro;{{ product['price_range']['minimum_price']['final_price']['value'] }}
+                            </strong>
                         </div>
                     </div>
                     <div class="product__details-configuration mt-5">
@@ -104,12 +90,7 @@
                         </div>
                     </div>
                     <div class="product__details-short-description mt-5 sm:hidden lg:block">
-                        These corals are a wonderful asset to the aquarium, and available in all shapes, sizes and
-                        colors. In principle, a hammer made of bladder coral is fairly easy to keep, even for beginners.
-                        <br/>
-                        <br/>
-                        It grows best when the water values are good, that is a little bit of phosphate and nitrate must
-                        be there, and certainly the rest of the water value must also be in order.
+                        {{ product['short_description']['html']|raw }}
                         <a class="mt-3 text-accent" href="#product-description">{{ 'Read more'|trans }}</a>
                     </div>
                 </div>
@@ -122,46 +103,19 @@
     <div class="container mx-auto mt-10">
         <div class="product__description grid grid-cols-3 gap-20">
             <div class="product__description-text col-span-2">
-                <h3 class="text-xl font-bold">About Euphyllia ancora (Pinkish).</h3>
-                <p class="mt-3">
-                    These corals are a wonderful asset to the aquarium, and available in all shapes, sizes and colors.
-                    In
-                    principle, a hammer made of bladder coral is fairly easy to keep, even for beginners.<br/>
-                    <br/>
-                    It grows best when the water values are good, that is a little bit of phosphate and nitrate must be
-                    there, and certainly the rest of the water value must also be in order.<br/>
-                    <br/>
-                    These corals feed on light (preferably T5), but can also be fed with different types of food, and of
-                    course also with brine shrimp and mysis.<br/>
-                    <br/>
-                    The corals in the photos shown are an impression. We always have the most beautiful and best quality
-                    coral in house. Rest assured that we will insure and ship the most beautiful and best corals to you.
-                    These corals are not WYSIWYG corals, they are identified by a WYSIWYG tag.
-                </p>
+                {{ product['description']['html']|raw }}
             </div>
             <div class="product__description-text">
                 <h3 class="text-xl font-bold">Characteristics</h3>
                 <table class="table table-compact w-full mt-3">
-                    <tr>
-                        <td class="font-bold">Origin</td>
-                        <td>Australia</td>
-                    </tr>
-                    <tr>
-                        <td class="font-bold">Illuminance</td>
-                        <td>Average</td>
-                    </tr>
-                    <tr>
-                        <td class="font-bold">Animal species</td>
-                        <td>Hammers and vesicle coral</td>
-                    </tr>
-                    <tr>
-                        <td class="font-bold">Current</td>
-                        <td>Average</td>
-                    </tr>
-                    <tr>
-                        <td class="font-bold">Placement</td>
-                        <td>Everywhere</td>
-                    </tr>
+                    {% for attribute in product['custom_attributes'] %}
+                        {% if null != attribute['value'] %}
+                            <tr>
+                                <td class="font-bold">{{ attribute['label'] }}</td>
+                                <td>{{ attribute['value'] }}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
                 </table>
             </div>
         </div>
@@ -170,8 +124,8 @@
         <h3 class="text-3xl font-bold">{{ 'Related products'|trans }}</h3>
     </div>
     <div class="container mx-auto">
-        <div class="product_row grid grid-cols-5 gap-4 mt-8 col-span-6">
-            {% include 'catalog/_partials/product_list.html.twig' with {'count': 5} %}
+        <div class="product_row grid grid-cols-5 gap-4 mt-10 col-span-6">
+            {% include 'catalog/_partials/product_list.html.twig' with {'limit': 5, 'items': product['related_products']} %}
         </div>
     </div>
     <div id="reviews" class="divider lg:divider-vertical" style="margin-top: 4rem">

@@ -19,12 +19,12 @@ class MageHttpClient
 
     public function __construct(
         protected ContainerInterface $container,
-        array                        $options = []
+        ?array                        $options = []
     )
     {
         $this->config = $container->getParameter('mage_client');
         $this->client = new Client(
-            array_replace($this->getDefaultClientOptions(), $options)
+            array_replace($this->getDefaultClientOptions(), $options ?? [])
         );
     }
 

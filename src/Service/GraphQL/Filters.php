@@ -5,7 +5,8 @@ namespace App\Service\GraphQL;
 class Filters
 {
     public function __construct(
-        protected array $filters = []
+        protected string $key = 'filters',
+        protected array  $filters = []
     )
     {
     }
@@ -19,7 +20,7 @@ class Filters
 
     public function __toString(): string
     {
-        $filters = 'filters: {';
+        $filters = $this->key . ': {';
         foreach ($this->filters as $filter) {
             $filters .= $filter->__toString();
         }
