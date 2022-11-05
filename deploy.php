@@ -5,10 +5,10 @@ require 'recipe/symfony4.php';
 
 // Project name
 set('http_user', 'root');
-set('application', 'aquamanager');
+set('application', 'tropical-reefs-frontend');
 
 // Project repository
-set('repository', 'git@gitlab.hostplus.nl:dreamreef/aquariummanager.git');
+set('repository', 'git@gitlab.hostplus.nl:root/aquastore-frontend.git');
 
 // [Optional] Allocate tty for git clone. Default value is false.
 set('pty', true);
@@ -27,14 +27,8 @@ add('writable_dirs', ['var/cache', 'var/log', 'var/sessions', 'public/media']);
 
 // Hosts
 // Dev
-host('192.168.40.102')
+host('192.168.40.111')
     ->stage('staging')
-    ->user('root')
-    ->set('branch', 'master')
-    ->set('deploy_path', '/var/www/vhosts/{{application}}');
-
-host('164.92.156.175')
-    ->stage('production')
     ->user('root')
     ->set('branch', 'master')
     ->set('deploy_path', '/var/www/vhosts/{{application}}');
