@@ -9,6 +9,6 @@ class CmsPageController extends AbstractController
 {
     public function index(array $magentoMatch): Response
     {
-
+        return new Response('');
     }
 }
