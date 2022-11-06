@@ -94,7 +94,7 @@ task('deploy', [
     'deploy:database:update',
     'deploy:symlink',
     'deploy:permissions',
-    'deploy:supervisor',
+//    'deploy:supervisor',
     'deploy:unlock',
     'cleanup',
 ])->desc('Deploy your project');
