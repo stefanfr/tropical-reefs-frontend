@@ -78,4 +78,15 @@ class ImaginaryHttpClient
     {
         return $this->config['enabled'];
     }
+
+    public function getCdnUrl(string $uri, string $method, int|string $width, int $height): string
+    {
+        return implode('/', [
+            $this->getBaseUrl(),
+            $method,
+            $width,
+            $height,
+            $uri,
+        ]);
+    }
 }

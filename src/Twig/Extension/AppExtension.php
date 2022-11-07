@@ -26,50 +26,7 @@ class AppExtension extends AbstractExtension
         if ( ! $this->imaginaryHttpClient->isEnabled()) {
             return $uri;
         }
-        $query = [
-            'url' => $uri,
-            'width' => $width,
-            'height' => $height,
-        ];
 
-        if ( ! preg_match('|^http(s)?://[a-z\d-]+(.[a-z\d-]+)*(:\d+)?(/.*)?$|i', $query['url'])) {
-            $query['url'] = $this->imaginaryHttpClient->getAppUrl() . $uri;
-        }
-
-        if ($height === -1) {
-            unset($query['height']);
-        }
-
-        if (is_string($width)) {
-            if ($width !== 'square') {
-                return $uri;
-            }
-
-            $query['width'] = $height;
-        }
-
-        $response = $this->imaginaryHttpClient->send(
-            $this->imaginaryHttpClient->get(
-                $method
-            ),
-            [
-                'query' => array_merge(
-                    [
-                        'quality' => 90,
-                        'extend' => 'white',
-                        'stripmeta' => true,
-                        'colorspace' => 'srgb',
-                        'noprofile' => true,
-                    ],
-                    $query
-                ),
-            ]
-        );
-
-        if (null === $response) {
-            return $uri;
-        }
-
-        return 'data:image/png;base64,' . base64_encode($response->getBody()->getContents());
+        return $this->imaginaryHttpClient->getCdnUrl($uri, $method, $width, $height);
     }
 }
