@@ -85,8 +85,7 @@ class ImaginaryHttpClient
             $this->getBaseUrl(),
             $method,
             $width,
-            $height,
-            $uri,
-        ]);
+            $height
+        ]) . $uri;
     }
 }
