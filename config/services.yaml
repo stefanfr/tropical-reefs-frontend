@@ -57,8 +57,9 @@ services:
     resource: '../src/Service/Api/Magento/Http'
     arguments:
       - '@service_container'
-      -
+
   App\Service\Imaginary\Http\:
     resource: '../src/Service/Imaginary/Http'
     arguments:
+      - '@logger'
       - '@service_container'
