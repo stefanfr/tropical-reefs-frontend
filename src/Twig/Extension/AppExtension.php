@@ -66,6 +66,10 @@ class AppExtension extends AbstractExtension
             ]
         );
 
+        if (null === $response) {
+            return $uri;
+        }
+
         return 'data:image/png;base64,' . base64_encode($response->getBody()->getContents());
     }
 }

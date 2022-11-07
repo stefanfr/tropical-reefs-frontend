@@ -8,6 +8,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ImaginaryHttpClient
@@ -16,6 +17,7 @@ class ImaginaryHttpClient
     protected array $config;
 
     public function __construct(
+        protected LoggerInterface    $logger,
         protected ContainerInterface $container,
         ?array                       $options = []
     )
@@ -29,13 +31,15 @@ class ImaginaryHttpClient
     /**
      * @param MessageInterface $request
      * @param array $options
-     * @return ResponseInterface
+     * @return ?ResponseInterface
      */
-    public function send(MessageInterface $request, array $options = []): ResponseInterface
+    public function send(MessageInterface $request, array $options = []): ?ResponseInterface
     {
         try {
             return $this->client->send($request, $options);
         } catch (GuzzleException $e) {
+            $this->logger->error($e->getMessage());
+            return null;
         }
     }
 

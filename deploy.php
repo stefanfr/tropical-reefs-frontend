@@ -4,7 +4,7 @@ namespace Deployer;
 require 'recipe/symfony4.php';
 
 // Project name
-set('http_user', 'root');
+set('http_user', 'nginx');
 set('application', 'tropical-reefs-frontend');
 
 // Project repository
