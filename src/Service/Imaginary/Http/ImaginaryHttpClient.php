@@ -82,10 +82,10 @@ class ImaginaryHttpClient
     public function getCdnUrl(string $uri, string $method, int|string $width, int $height): string
     {
         return implode('/', [
-            $this->getBaseUrl(),
-            $method,
-            $width,
-            $height
-        ]) . $uri;
+                $this->getBaseUrl(),
+                $method,
+                $width,
+                $height,
+            ]) . preg_replace('/cache\/.*\//U', '', $uri);
     }
 }
