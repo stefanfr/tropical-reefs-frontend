@@ -27,6 +27,11 @@ class AppExtension extends AbstractExtension
             return $uri;
         }
 
+        if (preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i', $uri)) {
+            $uri = parse_url($uri)['path'];
+        }
+
+
         return $this->imaginaryHttpClient->getCdnUrl($uri, $method, $width, $height);
     }
 }
