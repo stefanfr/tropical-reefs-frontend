@@ -6,7 +6,7 @@ parameters:
       default_headers:
         verify: true
   imaginary_client:
-    enabled: false
+    enabled: '%env(resolve:IMAGINARY_ENABLED)%'
     base_url: '%env(resolve:IMAGINARY_BASE_URL)%'
     app_url: '%env(resolve:IMAGINARY_APP_URL)%'
 
