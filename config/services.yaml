@@ -21,6 +21,19 @@ services:
     autowire: true      # Automatically injects dependencies in your services.
     autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
+  Redis:
+    class: Redis
+    calls:
+      - connect:
+          - '%env(REDIS_SESSION_HOST)%'
+          - '%env(int:REDIS_SESSION_PORT)%'
+          - '%env(int:REDIS_SESSION_DB)%'
+
+  Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler:
+    arguments:
+      - '@Redis'
+      - { 'ttl': 14400 }
+
   App\:
     resource: '../src/'
     exclude:

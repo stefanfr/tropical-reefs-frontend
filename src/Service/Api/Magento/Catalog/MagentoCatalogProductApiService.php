@@ -4,7 +4,6 @@ namespace App\Service\Api\Magento\Catalog;
 
 use App\Cache\Adapter\RedisAdapter;
 use App\Service\Api\Magento\Http\MageGraphQlClient;
-use App\Service\Api\Magento\Http\MageRestClient;
 use App\Service\GraphQL\Field;
 use App\Service\GraphQL\Filter;
 use App\Service\GraphQL\Filters;
@@ -17,7 +16,6 @@ use Symfony\Contracts\Cache\ItemInterface;
 class MagentoCatalogProductApiService
 {
     public function __construct(
-        protected MageRestClient    $mageRestClient,
         protected MageGraphQlClient $mageGraphQlClient,
         protected RedisAdapter      $redisAdapter,
     )
@@ -127,6 +125,7 @@ class MagentoCatalogProductApiService
                                             new Field('review_count'),
                                             new Field('rating_summary'),
                                             new Field('sku'),
+                                            new Field('size'),
                                             (new Field('price_range')
                                             )->addChildField(
                                                 (new Field('minimum_price')
@@ -172,8 +171,8 @@ class MagentoCatalogProductApiService
                                                             (new Field('product')
                                                             )->addChildFields(
                                                                 [
-                                                                    (new Field('sku')),
-                                                                    (new Field('size')),
+                                                                    new Field('sku'),
+                                                                    new Field('size'),
                                                                 ]
                                                             ),
                                                         ]
@@ -191,7 +190,9 @@ class MagentoCatalogProductApiService
                                                     (new Field('product')
                                                     )->addChildFields(
                                                         [
-                                                            (new Field('sku')),
+                                                            new Field('sku'),
+                                                            new Field('size'),
+                                                            (new Field('stock_status')),
                                                             (new Field('custom_attributes')
                                                             )->addChildFields(
                                                                 [
@@ -207,8 +208,27 @@ class MagentoCatalogProductApiService
                                             (new Field('configurable_options')
                                             )->addChildFields(
                                                 [
-                                                    (new Field('attribute_code')),
-                                                    (new Field('attribute_uid')),
+                                                    new Field('attribute_code'),
+                                                    new Field('attribute_uid'),
+                                                    new Field('label'),
+                                                    (new Field('values')
+                                                    )->addChildFields(
+                                                        [
+                                                            new Field('uid'),
+                                                            new Field('store_label'),
+                                                            new Field('use_default_value'),
+                                                            (new Field('swatch_data')
+                                                            )->addChildFields(
+                                                                [
+                                                                    new Field('value'),
+                                                                    (new Fragment('ImageSwatchData')
+                                                                    )->addField(
+                                                                        new Field('thumbnail'),
+                                                                    ),
+                                                                ]
+                                                            ),
+                                                        ]
+                                                    ),
                                                 ]
                                             ),
                                         ]

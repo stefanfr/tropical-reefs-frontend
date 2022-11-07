@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Service\Api\Magento\Catalog\MagentoCatalogCategoryApiService;
 use App\Service\Api\Magento\Catalog\MagentoCatalogProductApiService;
+use App\Service\Api\Magento\Checkout\MagentoCheckoutCartApiService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -11,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class HomeController extends AbstractController
 {
     public function __construct(
-        protected MagentoCatalogProductApiService $magentoCatalogProductApiService,
+        protected MagentoCatalogProductApiService  $magentoCatalogProductApiService,
         protected MagentoCatalogCategoryApiService $magentoCatalogCategoryApiService,
     )
     {

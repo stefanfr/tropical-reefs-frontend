@@ -18,7 +18,12 @@ class CategoryTree
     public function collect(): array
     {
         try {
-            return $this->catalogCategoryApiService->collectCategoryTree();
+            return array_filter(
+                $this->catalogCategoryApiService->collectCategoryTree(),
+                static function ($category) {
+                    return $category['include_in_menu'];
+                }
+            );
         } catch (InvalidArgumentException $e) {
             return [];
         }

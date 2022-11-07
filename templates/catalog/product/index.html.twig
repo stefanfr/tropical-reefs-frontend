@@ -25,14 +25,14 @@
                     <div class="carousel carousel-vertical gap-2 h-full" style="max-height: 640px">
                         {% for image in product['media_gallery'] %}
                             <a href="#image_{{ loop.index }}" class="carousel-item">
-                                <img style="aspect-ratio: 1" width="95" class="cursor-pointer thumbnail rounded-box" src="{{ image['url'] }}" alt="">
+                                <img style="aspect-ratio: 1" width="95" class="cursor-pointer thumbnail rounded-box" src="{{ image['url']|cdn('resize', 'square', 95) }}" alt="">
                             </a>
                         {% endfor %}
                     </div>
                     <div class="carousel rounded-box w-65" style="max-width: 640px;">
                         {% for image in product['media_gallery'] %}
                             <div id="#image_{{ loop.index }}" class="carousel-item w-full">
-                                <img style="aspect-ratio: 1" width="640" src="{{ image['url'] }}" alt="">
+                                <img style="aspect-ratio: 1" width="640" src="{{ image['url']|cdn('resize', 'square', 640) }}" alt="">
                             </div>
                         {% endfor %}
                     </div>
@@ -62,33 +62,14 @@
                                     &euro;{{ product['price_range']['minimum_price']['regular_price']['value'] }}
                                 </small>
                             {% endif %}
-                            <strong class="grow product_row__final_price text-4xl">
+                            <strong class="grow product_row__final_price text-5xl">
                                 &euro;{{ product['price_range']['minimum_price']['final_price']['value'] }}
                             </strong>
                         </div>
                     </div>
-                    <div class="product__details-configuration mt-5">
-                        <div class="grid grid-cols-8 gap-4 sm:grid-cols-3">
-                            <select name="qty" id="qty" class="select select-accent col-span-2 sm:col-span-1">
-                                {% for index in 0..10 %}
-                                    <option value="{{ index }}" {% if index == 1 %}selected {% endif %}>{{ index }}</option>
-                                {% endfor %}
-                            </select>
-                            <div class="col-span-5 grid grid-cols-2 gap-3 sm:col-span-2">
-                                <button class="col-span-2 btn btn-outline btn-accent flex">
-                                    <span class="grow">{{ 'Add to cart'|trans }}</span>
-                                    <i class="la la-cart-plus la-2x" style="margin-right: 5px"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline btn-error">
-                                    <span class="grow">{{ 'Add to wishlist'|trans }}</span>
-                                </button>
-                                <button class="btn btn-sm btn-outline btn-info">
-                                    <span class="grow">{{ 'Share'|trans }}</span>
-                                    <i class="la la-share" style="margin-right: 5px"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                    {{ component('catalog_product_configuration', {
+                        product: product,
+                    }) }}
                     <div class="product__details-short-description mt-5 sm:hidden lg:block">
                         {{ product['short_description']['html']|raw }}
                         <a class="mt-3 text-accent" href="#product-description">{{ 'Read more'|trans }}</a>

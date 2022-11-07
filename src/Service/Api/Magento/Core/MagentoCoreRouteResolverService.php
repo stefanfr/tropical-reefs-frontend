@@ -14,7 +14,6 @@ use Symfony\Contracts\Cache\ItemInterface;
 class MagentoCoreRouteResolverService
 {
     public function __construct(
-        protected MageRestClient    $mageRestClient,
         protected MageGraphQlClient $mageGraphQlClient,
         protected RedisAdapter      $redisAdapter,
     )

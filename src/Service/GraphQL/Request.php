@@ -8,7 +8,7 @@ use JsonException;
 class Request
 {
     public function __construct(
-        protected Query             $query,
+        protected Query|Mutation    $query,
         protected MageGraphQlClient $mageGraphQlClient
     )
     {

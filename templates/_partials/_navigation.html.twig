@@ -1,27 +1,47 @@
 {% set categories = categoryTree.collect %}
-
-<nav class="menu-bar container mx-auto mt-5 flex">
-    <div class="menu-items flex grow">
-        <div class="dropdown">
-            <label tabindex="0" class="title">{{ 'All Categories'|trans }}</label>
-            <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
-                {% for childCategory in categories %}
-                    <li>
-                        <a href="/{{ childCategory['url_path'] }}">{{ childCategory['name'] }}</a>
-                    </li>
+<div class="bg-base-200 w-full top-0 border-solid border-gray-300" id="sticky-nav" style="z-index: 10000">
+    <nav class="menu-bar container mx-auto flex py-5">
+        <div class="menu-items flex grow">
+            <div class="flex gap-10">
+                {% for category in categories %}
+                    <div class="dropdown cursor-pointer h-full leading-5">
+                        <label tabindex="0" class="title cursor-pointer">{{ category['name']|trans }}</label>
+                        <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+                            {% for childCategory in category['children'] %}
+                                <li>
+                                    <a href="/{{ childCategory['url_path'] }}">{{ childCategory['name'] }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 {% endfor %}
-            </ul>
+            </div>
         </div>
-    </div>
-    <div class="menu-items menu-right flex">
-        <div class="top-menu grow">
-            <a href="#"
-               class="link active"
-               data-toggle="tooltip-menu"
-               data-tippy-content="Home"
-            >
-                <span class="title">{{ 'Contact'|trans }}</span>
-            </a>
+        <div class="menu-items menu-right flex">
+            <div class="top-menu grow">
+                <a href="#"
+                   class="link active"
+                   data-toggle="tooltip-menu"
+                   data-tippy-content="Home"
+                >
+                    <span class="title">{{ 'Contact'|trans }}</span>
+                </a>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
+</div>
+
+<script>
+    const stickNav = document.getElementById('sticky-nav');
+    const sticky = stickNav.offsetTop;
+
+    window.onscroll = function() {
+        if (window.scrollY > sticky) {
+            stickNav.classList.add("fixed");
+            stickNav.classList.add("border-b");
+        } else {
+            stickNav.classList.remove("fixed");
+            stickNav.classList.remove("border-b");
+        }
+    };
+</script>

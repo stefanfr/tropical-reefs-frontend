@@ -4,7 +4,6 @@ namespace App\Service\Api\Magento\Catalog;
 
 use App\Cache\Adapter\RedisAdapter;
 use App\Service\Api\Magento\Http\MageGraphQlClient;
-use App\Service\Api\Magento\Http\MageRestClient;
 use App\Service\GraphQL\Field;
 use App\Service\GraphQL\Filter;
 use App\Service\GraphQL\Filters;
@@ -19,7 +18,6 @@ use Symfony\Contracts\Cache\ItemInterface;
 class MagentoCatalogCategoryApiService
 {
     public function __construct(
-        protected MageRestClient    $mageRestClient,
         protected MageGraphQlClient $mageGraphQlClient,
         protected RedisAdapter      $redisAdapter,
     )
@@ -65,6 +63,7 @@ class MagentoCatalogCategoryApiService
                             new Field('name'),
                             new Field('path'),
                             new Field('url_path'),
+                            new Field('include_in_menu'),
                             (new Field('children')
                             )->addChildFields(
                                 [

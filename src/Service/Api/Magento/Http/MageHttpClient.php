@@ -38,6 +38,7 @@ class MageHttpClient
         try {
             return $this->client->send($request, $options);
         } catch (GuzzleException $e) {
+            dd($e->getMessage());
         }
     }
 

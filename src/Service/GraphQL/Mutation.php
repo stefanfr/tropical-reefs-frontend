@@ -2,7 +2,7 @@
 
 namespace App\Service\GraphQL;
 
-class Query
+class Mutation
 {
     public function __construct(
         protected string $query,
@@ -35,32 +35,31 @@ class Query
         return $this;
     }
 
-
     public function __toString(): string
     {
-        $query = 'query {';
-        $query .= $this->query;
+        $mutation = 'mutation {';
+        $mutation .= $this->query;
         if ($this->params) {
-            $query .= '(';
+            $mutation .= '(';
 
             foreach ($this->params as $param) {
-                $query .= $param->__toString();
+                $mutation .= $param->__toString();
             }
-            $query .= ')';
+            $mutation .= ')';
         }
 
         if ($this->fields) {
-            $query .= ' {';
+            $mutation .= ' {';
 
             foreach ($this->fields as $field) {
-                $query .= $field->__toString() . ' ';
+                $mutation .= $field->__toString() . ' ';
             }
 
-            $query .= '}';
+            $mutation .= '}';
         }
 
-        $query .= '}';
+        $mutation .= '}';
 
-        return $query;
+        return $mutation;
     }
 }

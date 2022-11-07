@@ -15,6 +15,22 @@ h1, h2, h3 {
   font-family: Orbitron, Roboto, sans-serif;
 }
 
+@media (min-width: 1536px) {
+  .container {
+    max-width: 1280px;
+  }
+}
+
+.fixed {
+  .logo_small {
+    display: block;
+  }
+
+  .logo_full, .hidden-fixed {
+    display: none;
+  }
+}
+
 .la-2-5x {
   font-size: 2.5em;
 }
@@ -29,5 +45,24 @@ h1, h2, h3 {
   position: relative;
 
   .product_row__item-info {
+  }
+}
+
+.product__details-configuration-items {
+  .product__details-configuration-item {
+    border: 1px solid hsl(var(--b3));
+    border-bottom-width: 2px;
+
+    span {
+
+    }
+
+    &:focus, &:hover, &.__active {
+      border-color: hsl(var(--a));
+    }
+
+    &.__active {
+      background-color: hsl(var(--b2));
+    }
   }
 }

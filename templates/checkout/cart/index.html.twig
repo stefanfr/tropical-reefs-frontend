@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+{% set showDivider = true %}
+
+{% block title %}Hello CartController!{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto mt-4">
+        <table class="w-full table table-normal">
+            <thead>
+            <tr>
+                <td><strong>{{ 'Description'|trans }}</strong></td>
+                <td><strong>{{ 'Quantity'|trans }}</strong></td>
+                <td><strong>{{ 'Price'|trans }}</strong></td>
+                <td><strong>{{ 'Row total'|trans }}</strong></td>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for item in cart['items'] %}
+                <tr>
+                    <td class="flex gap-3">
+                        <img class="block float-left" width="100" src="{{ item['product']['small_image']['url'] }}" alt="{{ item['product']['name'] }}"/>
+                        <div class="grow">
+                            <a href="/{{ item['product']['url_key'] }}"><strong class="block text-lg">{{ item['product']['name'] }}</strong></a>
+                            <span class="block">SKU: {{ item['product']['sku'] }}</span>
+                            {% for option in item['configurable_options'] %}
+                                <span class="block">{{ option['option_label'] }}: {{ option['value_label'] }}</span>
+                            {% endfor %}
+                        </div>
+                    </td>
+                    <td>
+                        <select required name="qty" id="qty" class="select select-accent col-span-2 sm:col-span-1" data-model="selectedQty">
+                            {% for index in 1..10 %}
+                                <option value="{{ index }}" {% if index == item['quantity'] %}selected {% endif %}>{{ index }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        &euro;{{ item['prices']['price']['value'] }}
+                    </td>
+                    <td>
+                        <strong>&euro;{{ item['prices']['row_total_including_tax']['value'] }}</strong>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+            {% for total in cart['prices'] %}
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        {% if loop.index == 1 %}
+                            {{ 'Sub total'|trans }}
+                        {% elseif loop.index ==2 %}
+                            {{ 'Discount amount'|trans }}
+                        {% elseif loop.index ==3 %}
+                            {{ 'Tax amount'|trans }}
+                        {% elseif loop.index ==4 %}
+                            {{ 'Grand total'|trans }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        &euro; {{ total['value'] ?? 0 }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tfoot>
+        </table>
+    </div>
+{% endblock %}
