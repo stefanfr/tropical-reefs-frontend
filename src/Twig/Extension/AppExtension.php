@@ -32,6 +32,6 @@ class AppExtension extends AbstractExtension
         }
 
 
-        return $this->imaginaryHttpClient->getCdnUrl($uri, $method, $width, $height);
+        return $this->imaginaryHttpClient->getCdnUrl(preg_replace('/cache\/.*\//U', '', $uri), $method, $width, $height);
     }
 }

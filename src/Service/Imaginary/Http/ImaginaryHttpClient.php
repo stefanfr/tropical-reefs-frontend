@@ -86,7 +86,7 @@ class ImaginaryHttpClient
                 $method,
                 $width,
                 $height,
-                preg_replace('/cache\/.*\//U', '', $uri)
+                $uri
             ]);
     }
 }
