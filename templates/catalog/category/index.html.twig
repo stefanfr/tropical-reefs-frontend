@@ -1,16 +1,23 @@
 {% extends 'base.html.twig' %}
 {% set showDivider = true %}
 
-{% block title %}{% endblock %}
+{% block title %}{{ category['name'] }}{% endblock %}
 
 {% block breadcrumbs %}
     <div class="container mx-auto">
         <div class="text-sm breadcrumbs">
             <ul>
-                <li><a href="{{ path('app_home') }}"><i class="la la-home"></i></a></li>
-                {#                <li><a href="{{ path('app_category') }}">{{ 'Coral'|trans }}</a></li> #}
-                {#                <li><a href="{{ path('app_category') }}">{{ 'LPS Corals'|trans }}</a></li> #}
-                <li>{{ 'Euphyllidae'|trans }}</li>
+                <li>
+                    <a href="{{ path('app_home') }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/>
+                        </svg>
+                    </a>
+                </li>
+                {% for breadcrumb in category['breadcrumbs'] ?? [] %}
+                    <li><a href="/{{ breadcrumb['category_url_path'] }}">{{ breadcrumb['category_name']|trans }}</a></li>
+                {% endfor %}
+                <li>{{ category['name']|trans }}</li>
             </ul>
         </div>
     </div>
@@ -18,14 +25,14 @@
 
 {% block body %}
     <div class="container mx-auto">
-        <h1 class="text-4xl">{{ 'Coral'|trans }} <small>({{ catalog['total_count'] }})</small></h1>
+        <h1 class="text-4xl">{{ 'Coral'|trans }} <small>({{ category['products']['total_count'] }})</small></h1>
         <div class="mt-8 grid grid-cols-8 gap-10">
             <div class="filters col-span-2">
-                {% if subCategories|length > 0 %}
+                {% if category['children']|length > 0 %}
                     <div class="bg-base-200 p-4">
                         <h2 class="text-xl font-bold">{{ 'Subcategories'|trans }}</h2>
                         <ul class="mt-2">
-                            {% for subCategory in subCategories %}
+                            {% for subCategory in category['children'] %}
                                 <li>
                                     <a href="/{{ subCategory['url_path'] }}">{{ subCategory['name']|trans }}</a>
                                 </li>
@@ -102,7 +109,7 @@
                 </div>
             </div>
             <div class="product_row grid grid-cols-4 gap-4 col-span-6 auto-rows-min">
-                {% include 'catalog/_partials/product_list.html.twig' with {'items': catalog['items']} %}
+                {% include 'catalog/_partials/product_list.html.twig' with {'items': category['products']['items']} %}
             </div>
         </div>
     </div>

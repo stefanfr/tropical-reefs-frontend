@@ -8,6 +8,7 @@ use App\Service\GraphQL\Field;
 use App\Service\GraphQL\Filter;
 use App\Service\GraphQL\Filters;
 use App\Service\GraphQL\Fragment;
+use App\Service\GraphQL\Parameter;
 use App\Service\GraphQL\Query;
 use App\Service\GraphQL\Request;
 use Exception;
@@ -124,108 +125,100 @@ class MagentoCatalogCategoryApiService
                 $item->expiresAfter(1 * 60 * 60);
 
                 $response = (new Request(
-                    (new Query('products')
+                    (new Query('category')
                     )->addParameter(
-                        (new Filters('filter')
-                        )->addFilter(
-                            (new Filter('category_uid')
-                            )->addOperator(
-                                'eq',
-                                $uid
-                            )
-                        )
+                        new Parameter('id', base64_decode($uid)),
                     )->addFields(
                         [
-                            new Field('total_count'),
-                            (new Field('page_info')
+                            new Field('name'),
+                            new Field('description'),
+                            (new Field('breadcrumbs')
                             )->addChildFields(
                                 [
-                                    new Field('current_page'),
-                                    new Field('page_size'),
-                                    new Field('total_pages'),
+                                    new Field('category_level'),
+                                    new Field('category_name'),
+                                    new Field('category_uid'),
+                                    new Field('category_url_key'),
+                                    new Field('category_url_path'),
                                 ]
                             ),
-                            (new Field('sort_fields')
-                            )->addChildFields(
-                                [
-                                    new Field('default'),
-                                    (new Field('options')
-                                    )->addChildFields(
-                                        [
-                                            new Field('label'),
-                                            new Field('value'),
-                                        ]
-                                    ),
-                                ]
-                            ),
-                            (new Field('items')
+                            (new Field('children')
                             )->addChildFields(
                                 [
                                     new Field('uid'),
-                                    new Field('type_id'),
-                                    new Field('url_key'),
                                     new Field('name'),
-                                    new Field('sku'),
-                                    (new Field('custom_attributes')
+                                    new Field('path'),
+                                    new Field('url_path'),
+                                ]
+                            ),
+                            (new Field('products')
+                            )->addChildFields(
+                                [
+                                    (new Field('page_info')
                                     )->addChildFields(
                                         [
-                                            new Field('code'),
-                                            new Field('value'),
+                                            new Field('current_page'),
+                                            new Field('page_size'),
+                                            new Field('total_pages'),
                                         ]
                                     ),
-                                    (new Field('price_range')
-                                    )->addChildField(
-                                        (new Field('minimum_price')
-                                        )->addChildFields(
-                                            [
-                                                (new Field('final_price'))
-                                                    ->addChildFields(
-                                                        [
-                                                            new Field('value'),
-                                                            new Field('currency'),
-                                                        ]
-                                                    ),
-                                                (new Field('regular_price'))
-                                                    ->addChildFields(
-                                                        [
-                                                            new Field('value'),
-                                                            new Field('currency'),
-                                                        ]
-                                                    ),
-                                                (new Field('discount'))
-                                                    ->addChildFields(
-                                                        [
-                                                            new Field('amount_off'),
-                                                            new Field('percent_off'),
-                                                        ]
-                                                    ),
-                                            ]
-                                        )
-                                    ),
-                                    (new Field('small_image')
+                                    new Field('total_count'),
+                                    (new Field('items')
                                     )->addChildFields(
                                         [
-                                            new Field('url'),
-                                            new Field('label'),
-                                        ]
-                                    ),
-                                    (new Fragment('ConfigurableProduct')
-                                    )->addFields(
-                                        [
-                                            (new Field('variants')
+                                            new Field('uid'),
+                                            new Field('type_id'),
+                                            new Field('url_key'),
+                                            new Field('name'),
+                                            new Field('sku'),
+                                            (new Field('price_range')
+                                            )->addChildField(
+                                                (new Field('minimum_price')
+                                                )->addChildFields(
+                                                    [
+                                                        (new Field('final_price'))
+                                                            ->addChildFields(
+                                                                [
+                                                                    new Field('value'),
+                                                                    new Field('currency'),
+                                                                ]
+                                                            ),
+                                                        (new Field('regular_price'))
+                                                            ->addChildFields(
+                                                                [
+                                                                    new Field('value'),
+                                                                    new Field('currency'),
+                                                                ]
+                                                            ),
+                                                        (new Field('discount'))
+                                                            ->addChildFields(
+                                                                [
+                                                                    new Field('amount_off'),
+                                                                    new Field('percent_off'),
+                                                                ]
+                                                            ),
+                                                    ]
+                                                )
+                                            ),
+                                            (new Field('small_image')
                                             )->addChildFields(
                                                 [
-                                                    (new Field('product')
+                                                    new Field('url'),
+                                                    new Field('label'),
+                                                ]
+                                            ),
+                                            (new Fragment('ConfigurableProduct')
+                                            )->addFields(
+                                                [
+                                                    (new Field('variants')
                                                     )->addChildFields(
                                                         [
-                                                            (new Field('name')),
-                                                            (new Field('sku')),
-                                                            (new Field('size')),
-                                                            (new Field('custom_attributes')
+                                                            (new Field('product')
                                                             )->addChildFields(
                                                                 [
-                                                                    new Field('code'),
-                                                                    new Field('value'),
+                                                                    (new Field('name')),
+                                                                    (new Field('sku')),
+                                                                    (new Field('size')),
                                                                 ]
                                                             ),
                                                         ]
@@ -244,10 +237,10 @@ class MagentoCatalogCategoryApiService
                 )->send();
 
                 if ($debug) {
-                    die(json_encode($response['data']['products'] ?? $response, JSON_THROW_ON_ERROR));
+                    die(json_encode($response['data']['category'] ?? $response, JSON_THROW_ON_ERROR));
                 }
 
-                return $response['data']['products'] ?? throw new NotFoundHttpException('Category not found');
+                return $response['data']['category'] ?? throw new NotFoundHttpException('Category not found');
             }
         );
     }
@@ -325,6 +318,7 @@ class MagentoCatalogCategoryApiService
                                 ),
                         )->addFields(
                             [
+                                new Field('name'),
                                 new Field('image'),
                                 new Field('url_path'),
                                 new Field('homepage_position'),

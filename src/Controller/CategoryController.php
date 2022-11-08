@@ -18,8 +18,7 @@ class CategoryController extends AbstractController
     public function index(array $magentoMatch): Response
     {
         return $this->render('catalog/category/index.html.twig', [
-            'catalog' => $this->magentoCatalogCategoryApiService->collectCategory($magentoMatch['entity_uid']),
-            'subCategories' => $this->magentoCatalogCategoryApiService->collectCategoryTree($magentoMatch['entity_uid'])
+            'category' => $this->magentoCatalogCategoryApiService->collectCategory($magentoMatch['entity_uid']),
         ]);
     }
 }

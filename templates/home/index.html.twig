@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 {% set showDivider = false %}
 
-{% block title %}{% endblock %}
+{% block title %}Homepage{% endblock %}
 
 {% block body %}
     <div class="carousel w-full">
         <div id="slide1" class="carousel-item relative w-full">
-            <img src="https://via.placeholder.com/1600x500" class="w-full"/>
+            <img alt="header_image" src="https://via.placeholder.com/1600x500" class="w-full"/>
         </div>
     </div>
     <div class="divider lg:divider-vertical w-full" style="margin-top: 2.5rem">
@@ -17,9 +17,9 @@
             {% for category in categories %}
                 <a href="/{{ category['url_path'] }}" class="category__item relative rounded-full">
                     {% if null == category['image'] %}
-                        <img src="https://via.placeholder.com/180" width="180" class="rounded-full aspect-square"/>
+                        <img alt="{{ category['name'] }}" src="https://via.placeholder.com/180" width="180" class="rounded-full aspect-square"/>
                     {% else %}
-                        <img src="{{ category['image']|cdn('auto', 'square', '150') }}" width="180" class="rounded-full aspect-square"/>
+                        <img alt="{{ category['name'] }}" src="{{ category['image']|cdn('auto', 'square', '150') }}" width="180" class="rounded-full aspect-square"/>
                     {% endif %}
                     <span class="w-full h-full absolute top-0 flex justify-center items-center">
                         <strong class="text-white w-full bg-neutral/40 text-center block text-lg py-2 rounded-full">{{ category['name']|trans }}</strong>
@@ -35,7 +35,7 @@
         <div class="category grid lg:grid-cols-5 gap-5 mt-4 row">
             {% for brand in brands %}
                 <a href="/{{ brand['url_path'] }}" class="category__item">
-                    <img width="434" height="270" src="{{ brand['image']|cdn('auto', 434, 270) }}"/>
+                    <img alt="{{ brand['name'] }}" width="434" height="270" src="{{ brand['image']|cdn('auto', 434, 270) }}"/>
                 </a>
             {% endfor %}
         </div>

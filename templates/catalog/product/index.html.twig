@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% set showDivider = true %}
 
-{% block title %}{% endblock %}
+{% block title %}{{ product['name'] }}{% endblock %}
 
 {% block breadcrumbs %}
     <div class="container mx-auto">
@@ -47,7 +47,7 @@
                             <div class="product__details-review mt-1">
                                 <div class="rating rating-sm block mx-1 float-left">
                                     {% for index in 0..4 %}
-                                        <input disabled type="radio" name="rating-{{ index }}" class="mt-1 mask mask-star-2 bg-accent" {% if index == 3 %} checked {% endif %} />
+                                        <input aria-label="rating-{{ index+1 }}" disabled type="radio" name="rating-{{ index }}" class="mt-1 mask mask-star-2 bg-accent" {% if index == 3 %} checked {% endif %} />
                                     {% endfor %}
                                 </div>
                                 <a class="text-sm block mt-1 float-left ml-2" href="#reviews">120 reviews</a>
