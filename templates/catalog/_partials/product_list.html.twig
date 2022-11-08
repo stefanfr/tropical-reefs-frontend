@@ -12,7 +12,7 @@
             </div>
             <div class="product_row__item-label absolute top-3 left-3">
                 {% if item['price_range']['minimum_price']['discount']['amount_off'] > 0 %}
-                    <label class="bg-error text-white py-1 px-2 w-full text-xs">
+                    <label class="bg-error text-error-content py-1 px-2 w-full text-xs">
                         {{ item['price_range']['minimum_price']['discount']['percent_off'] }}% Sale
                     </label>
                 {% endif %}
