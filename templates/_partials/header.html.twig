@@ -3,7 +3,10 @@
     <div class="container mx-auto mt-10 pb-5">
         <div class="flex gap-10">
             <a href="{{ path('app_home') }}">
-                <img class="logo_full" width="200" height="72" src="{{ asset('build/assets/images/logo.png'|cdn('auto', 200, 0)) }}" alt="logo">
+                <picture class="logo_full">
+                    <source srcset="{{ asset('build/assets/images/logo.png'|cdn('auto', 400, 144)) }}" />
+                    <img width="200" height="72" src="{{ asset('build/assets/images/logo.png'|cdn('auto', 200, 72)) }}" alt="logo" />
+                </picture>
             </a>
             <div class="grow items-end flex">
                 <input type="search" placeholder="{{ 'Where are you looking for?'|trans }}" class="input input-bordered input-accent grow"/>
