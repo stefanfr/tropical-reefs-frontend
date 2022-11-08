@@ -7,7 +7,7 @@
         <a href="/{{ item['url_key'] }}" class="category__item">
             <div class="product_row__item-image-holder relative">
                 <picture>
-                    <img class="w-full aspect-square" src="{{ item['small_image']['url'] }}"/>
+                    <img class="w-full aspect-square" src="{{ item['small_image']['url']|cdn('resize', 'square', 450) }}"/>
                 </picture>
             </div>
             <div class="product_row__item-label absolute top-3 left-3">
