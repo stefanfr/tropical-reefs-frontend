@@ -38,7 +38,7 @@ class AppExtension extends AbstractExtension
             default => sprintf('%s:%s', $width, $height),
         };
 
-        $filters .= '/gravity:sm';
+        $filters .= '/gravity:ce';
 
         return $this->imgProxyService->getUrl(
             $uri,
