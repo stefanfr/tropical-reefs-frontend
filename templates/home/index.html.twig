@@ -34,7 +34,7 @@
     <div class="container mx-auto mt-10">
         <div class="category grid lg:grid-cols-5 gap-5 mt-4 row">
             {% for brand in brands %}
-                <a href="/{{ brand['url_path'] }}" class="category__item">
+                <a href="/{{ brand['url_path'] }}" class="category__item" aria-label="{{ brand['name'] }}">
                     <img alt="{{ brand['name'] }}" width="434" height="270" src="{{ brand['image']|cdn('auto', 434, 270) }}"/>
                 </a>
             {% endfor %}
