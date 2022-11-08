@@ -30,10 +30,11 @@ class AppExtension extends AbstractExtension
         $filters = 'pr:sharp/';
 
         $filters .= match ($method) {
-            'resize' => 'rs:fill:',
             'crop' => 'crop:',
-            'auto' => 'auto:',
-            'fill' => 'fill:',
+            'fit' => 'rs:fit:',
+            'fill' => 'rs:fill:',
+            'force' => 'rs:force:',
+            'auto' => 'rs:auto:',
             default => 'plain',
         };
 
