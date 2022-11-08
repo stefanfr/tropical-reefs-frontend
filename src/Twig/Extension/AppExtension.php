@@ -23,6 +23,10 @@ class AppExtension extends AbstractExtension
 
     public function cdn(string $uri, string $method, int|string $width, int $height): string
     {
+        if ( ! preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i', $uri)) {
+            $uri = 'https://dev.tropicalreefs.nl/' . $uri;
+        }
+
         $filters = 'pr:sharp/';
 
         $filters .= match ($method) {
@@ -41,7 +45,7 @@ class AppExtension extends AbstractExtension
         $filters .= '/gravity:ce';
 
         return $this->imgProxyService->getUrl(
-            $uri,
+            preg_replace('/cache\/.*\//U', '', $uri),
             $filters
         );
     }
