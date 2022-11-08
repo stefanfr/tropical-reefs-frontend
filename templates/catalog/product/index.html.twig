@@ -25,7 +25,7 @@
                     <div class="carousel carousel-vertical gap-2 h-full" style="max-height: 640px">
                         {% for image in product['media_gallery'] %}
                             <a href="#image_{{ loop.index }}" class="carousel-item">
-                                <img style="aspect-ratio: 1" width="95" class="cursor-pointer thumbnail rounded-box" src="{{ image['url']|cdn('auto', 'square', 95) }}" alt="">
+                                <img style="aspect-ratio: 1" width="95" class="cursor-pointer thumbnail rounded-box" src="{{ image['url']|cdn('fill-down', 'square', 95) }}" alt="">
                             </a>
                         {% endfor %}
                     </div>
