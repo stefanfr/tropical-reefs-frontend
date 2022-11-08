@@ -2,10 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Line Awesome */
-@import url("https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css");
-@import url(https://fonts.googleapis.com/css?family=Roboto:400,700);
-@import url(https://fonts.googleapis.com/css?family=Orbitron:200,300,400,500,600,700);
+@import "Roboto";
+@import "Orbitron";
 
 * {
   font-family: Roboto, sans-serif
