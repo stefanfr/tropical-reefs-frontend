@@ -23,9 +23,13 @@ class AppExtension extends AbstractExtension
 
     public function cdn(string $uri, string $method, int|string $width, int $height): string
     {
-        $filters = match ($method) {
-            'resize' => 'resize:fill:',
+        $filters = 'pr:sharp/';
+
+        $filters .= match ($method) {
+            'resize' => 'rs:fill:',
             'crop' => 'crop:',
+            'auto' => 'auto:',
+            'fill' => 'fill:',
             default => 'plain',
         };
 

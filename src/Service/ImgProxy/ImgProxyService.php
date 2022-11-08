@@ -32,7 +32,7 @@ class ImgProxyService
         return $this->config['salt'];
     }
 
-    public function getUrl(string $url, string $filter, string $extends = '.png')
+    public function getUrl(string $url, string $filter, string $extends = '.webp')
     {
         $keyBin = pack('H*', $this->getKey());
         if (empty($keyBin)) {
@@ -45,7 +45,7 @@ class ImgProxyService
 
         $encodedUrl = rtrim(strtr(base64_encode($url), '+/', '-_'), '=');
 
-        $path = "/{$filter}/{$encodedUrl}.{$extends}";
+        $path = "/{$filter}/{$encodedUrl}{$extends}";
 
         $signature = rtrim(strtr(base64_encode(hash_hmac('sha256', $saltBin . $path, $keyBin, true)), '+/', '-_'), '=');
 
