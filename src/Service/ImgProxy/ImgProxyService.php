@@ -47,8 +47,8 @@ class ImgProxyService
 
         $path = "/{$filter}/{$encodedUrl}{$extends}";
 
-        $signature = rtrim(strtr(base64_encode(hash_hmac('sha256', $saltBin . $path, $keyBin, true)), '+/', '-_'), '=');
+//        $signature = rtrim(strtr(base64_encode(hash_hmac('sha256', $saltBin . $path, $keyBin, true)), '+/', '-_'), '=');
 
-        return $this->getBaseUrl() . sprintf('/%s%s', $signature, $path);
+        return $this->getBaseUrl() . sprintf('/%s', $path);
     }
 }
