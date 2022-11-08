@@ -34,6 +34,7 @@ class AppExtension extends AbstractExtension
             'crop' => 'crop:',
             'fit' => 'rs:fit:',
             'fill' => 'rs:fill:',
+            'fill-down' => 'rs:fill-down:',
             'force' => 'rs:force:',
             'auto' => 'rs:auto:',
             default => 'plain',

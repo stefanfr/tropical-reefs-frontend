@@ -32,7 +32,7 @@
                     <div class="carousel rounded-box w-65" style="max-width: 640px;">
                         {% for image in product['media_gallery'] %}
                             <div id="#image_{{ loop.index }}" class="carousel-item w-full">
-                                <img style="aspect-ratio: 1" width="640" src="{{ image['url']|cdn('fill', 'square', 640) }}" alt="">
+                                <img style="aspect-ratio: 1" width="640" src="{{ image['url']|cdn('fill-down', 'square', 640) }}" alt="">
                             </div>
                         {% endfor %}
                     </div>
