@@ -22,7 +22,7 @@ Encore
     .copyFiles({
         from: './assets/images',
         to: 'assets/images/[path][name].[ext]',
-        pattern: /\.(png|jpg|jpeg|svg|webmanifest)$/
+        pattern: /\.(png|jpg|jpeg|svg|webmanifest|webp)$/
     })
     .enableSingleRuntimeChunk()
     .cleanupOutputBeforeBuild()
