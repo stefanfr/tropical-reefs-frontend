@@ -9,6 +9,10 @@ parameters:
     enabled: '%env(resolve:IMAGINARY_ENABLED)%'
     base_url: '%env(resolve:IMAGINARY_BASE_URL)%'
     app_url: '%env(resolve:IMAGINARY_APP_URL)%'
+  imgproxy:
+    key: '%env(resolve:IMGPROXY_KEY)%'
+    salt: '%env(resolve:IMGPROXY_SALT)%'
+    base_url: '%env(resolve:IMGPROXY_BASE_URL)%'
 
   when@prod:
     api:
@@ -60,6 +64,12 @@ services:
 
   App\Service\Imaginary\Http\:
     resource: '../src/Service/Imaginary/Http'
+    arguments:
+      - '@logger'
+      - '@service_container'
+
+  App\Service\ImgProxy\:
+    resource: '../src/Service/ImgProxy'
     arguments:
       - '@logger'
       - '@service_container'
