@@ -22,11 +22,8 @@
 </head>
 <body>
 {% include '_partials/header.html.twig' %}
-{% if showDivider %}
-    <div class="divider lg:divider-vertical w-full"></div>
-{% endif %}
-{% block breadcrumbs %}{% endblock %}
-<main>
+<main class="mt-4">
+    {% block breadcrumbs %}{% endblock %}
     {% block body %}{% endblock %}
 </main>
 {% include '_partials/footer.html.twig' %}

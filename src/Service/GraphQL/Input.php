@@ -2,16 +2,16 @@
 
 namespace App\Service\GraphQL;
 
-class Fragment
+class Input
 {
     public function __construct(
-        protected string $fragmentName,
+        protected string $name,
         protected array  $fields = []
     )
     {
     }
 
-    public function addField(Field|Selection $field): static
+    public function addField(InputField $field): static
     {
         $this->fields[] = $field;
 
@@ -29,16 +29,16 @@ class Fragment
 
     public function __toString(): string
     {
-        $fragment = '... on ';
-        $fragment .= $this->fragmentName;
-        $fragment .= '{';
+        $input = $this->name;
+        $input .= ': {';
 
-        foreach ($this->fields as $field) {
-            $fragment .= $field->__toString() . ' ';
+        foreach ($this->fields as $key => $field) {
+            if ($key) {
+                $input .= ',';
+            }
+            $input .= $field;
         }
-
-        $fragment .= '}';
-
-        return $fragment;
+        $input .= '}';
+        return $input;
     }
 }

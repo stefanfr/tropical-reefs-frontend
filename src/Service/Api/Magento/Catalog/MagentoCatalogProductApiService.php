@@ -8,8 +8,10 @@ use App\Service\GraphQL\Field;
 use App\Service\GraphQL\Filter;
 use App\Service\GraphQL\Filters;
 use App\Service\GraphQL\Fragment;
+use App\Service\GraphQL\Parameter;
 use App\Service\GraphQL\Query;
 use App\Service\GraphQL\Request;
+use App\Service\GraphQL\Selection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Contracts\Cache\ItemInterface;
 
@@ -22,10 +24,16 @@ class MagentoCatalogProductApiService
     {
     }
 
-    public function collectProduct(string $uid, bool $debug = false): array
+    public function collectProduct(string $uid, $selectedOptions = [], bool $debug = false): array
     {
-        return $this->redisAdapter->get('catalog_product_' . $uid,
-            function (ItemInterface $item) use ($uid, $debug) {
+        $cacheKey = 'catalog_product_' . $uid;
+
+        if ( ! empty($selectedOptions)) {
+            $cacheKey .= '_' . implode('_', $selectedOptions);
+        }
+
+        return $this->redisAdapter->get($cacheKey,
+            function (ItemInterface $item) use ($uid, $debug, $selectedOptions) {
                 $item->expiresAfter(24 * 60 * 60);
 
                 $response = (new Request(
@@ -184,23 +192,51 @@ class MagentoCatalogProductApiService
                                     (new Fragment('ConfigurableProduct')
                                     )->addFields(
                                         [
-                                            (new Field('variants')
+                                            (new Selection('configurable_product_options_selection')
+                                            )->addParameter(
+                                                new Parameter('configurableOptionValueUids', $selectedOptions)
                                             )->addChildFields(
                                                 [
-                                                    (new Field('product')
+                                                    (new Field('variant')
                                                     )->addChildFields(
                                                         [
                                                             new Field('sku'),
-                                                            new Field('size'),
-                                                            (new Field('stock_status')),
-                                                            (new Field('custom_attributes')
-                                                            )->addChildFields(
-                                                                [
-                                                                    new Field('code'),
-                                                                    new Field('label'),
-                                                                    new Field('value'),
-                                                                ]
+                                                            (new Field('price_range')
+                                                            )->addChildField(
+                                                                (new Field('minimum_price')
+                                                                )->addChildFields(
+                                                                    [
+                                                                        (new Field('final_price'))
+                                                                            ->addChildFields(
+                                                                                [
+                                                                                    new Field('value'),
+                                                                                    new Field('currency'),
+                                                                                ]
+                                                                            ),
+                                                                        (new Field('regular_price'))
+                                                                            ->addChildFields(
+                                                                                [
+                                                                                    new Field('value'),
+                                                                                    new Field('currency'),
+                                                                                ]
+                                                                            ),
+                                                                        (new Field('discount'))
+                                                                            ->addChildFields(
+                                                                                [
+                                                                                    new Field('amount_off'),
+                                                                                    new Field('percent_off'),
+                                                                                ]
+                                                                            ),
+                                                                    ]
+                                                                )
                                                             ),
+                                                        ]
+                                                    ),
+                                                    (new Field('options_available_for_selection')
+                                                    )->addChildFields(
+                                                        [
+                                                            new Field('attribute_code'),
+                                                            new Field('option_value_uids'),
                                                         ]
                                                     ),
                                                 ]
@@ -243,7 +279,7 @@ class MagentoCatalogProductApiService
                 )->send();
 
                 if ($debug) {
-                    echo json_encode($response['data']['product']['product']['related_products'] ?? $response, JSON_THROW_ON_ERROR);
+                    echo json_encode($response['data']['product']['product'] ?? $response, JSON_THROW_ON_ERROR);
                     die;
                 }
 

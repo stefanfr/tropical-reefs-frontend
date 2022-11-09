@@ -18,6 +18,15 @@ class Filters
         return $this;
     }
 
+    public function addFilters(array $filters): string
+    {
+        foreach ($filters as $filter) {
+            $this->addFilter($filter);
+        }
+
+        return $this;
+    }
+
     public function __toString(): string
     {
         $filters = $this->key . ': {';

@@ -12,7 +12,7 @@ class Mutation
     {
     }
 
-    public function addParameter(Parameter|Filters $parameter): static
+    public function addParameter(Parameter|Filters|Input $parameter): static
     {
         $this->params[] = $parameter;
 

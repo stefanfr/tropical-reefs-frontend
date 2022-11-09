@@ -2,19 +2,21 @@
 
 namespace App\Twig\Components\Catalog\Product;
 
+use App\Service\Api\Magento\Catalog\MagentoCatalogProductApiService;
 use App\Service\Api\Magento\Checkout\MagentoCheckoutCartApiService;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsLiveComponent('catalog_product_configuration', 'components/catalog/product/configuration.html.twig')]
+#[AsLiveComponent(name: 'catalog_product_configuration', template: 'components/catalog/product/configuration.html.twig')]
 final class ConfigurationComponent
 {
     use DefaultActionTrait;
 
     public function __construct(
-        protected MagentoCheckoutCartApiService $magentoCheckoutCartApiService,
+        protected MagentoCheckoutCartApiService   $magentoCheckoutCartApiService,
+        protected MagentoCatalogProductApiService $magentoCatalogProductApiService,
     )
     {
     }
@@ -33,7 +35,13 @@ final class ConfigurationComponent
     public array $addToCartResponse = [];
 
     #[LiveAction]
-    public function addProductToCart()
+    public function updateProduct()
+    {
+        $this->product = $this->magentoCatalogProductApiService->collectProduct($this->product['uid'], [$this->selectedSize]);
+    }
+
+    #[LiveAction]
+    public function addProductToCart(): void
     {
         $addToCartOptions = [
             'sku' => $this->product['sku'],
@@ -45,5 +53,23 @@ final class ConfigurationComponent
         }
 
         $this->addToCartResponse = $this->magentoCheckoutCartApiService->addProductToCart($addToCartOptions);
+    }
+
+    public function getDiscountAmount(): float
+    {
+        return $this->product['configurable_product_options_selection']['variant']['price_range']['minimum_price']['discount']['amount_off'] ??
+            $this->product['price_range']['minimum_price']['discount']['amount_off'];
+    }
+
+    public function getProductRegularPrice(): float
+    {
+        return $this->product['configurable_product_options_selection']['variant']['price_range']['minimum_price']['regular_price']['value'] ??
+            $this->product['price_range']['minimum_price']['regular_price']['value'];
+    }
+
+    public function getProductFinalPrice(): float
+    {
+        return $this->product['configurable_product_options_selection']['variant']['price_range']['minimum_price']['final_price']['value'] ??
+            $this->product['price_range']['minimum_price']['final_price']['value'];
     }
 }

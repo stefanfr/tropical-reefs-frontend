@@ -15,33 +15,8 @@
             </tr>
             </thead>
             <tbody>
-
             {% for item in cart['items'] %}
-                <tr>
-                    <td class="flex gap-3">
-                        <img class="block float-left" width="100" src="{{ item['product']['small_image']['url'] }}" alt="{{ item['product']['name'] }}"/>
-                        <div class="grow">
-                            <a href="/{{ item['product']['url_key'] }}"><strong class="block text-lg">{{ item['product']['name'] }}</strong></a>
-                            <span class="block">SKU: {{ item['product']['sku'] }}</span>
-                            {% for option in item['configurable_options'] %}
-                                <span class="block">{{ option['option_label'] }}: {{ option['value_label'] }}</span>
-                            {% endfor %}
-                        </div>
-                    </td>
-                    <td>
-                        <select required name="qty" id="qty" class="select select-accent col-span-2 sm:col-span-1" data-model="selectedQty">
-                            {% for index in 1..10 %}
-                                <option value="{{ index }}" {% if index == item['quantity'] %}selected {% endif %}>{{ index }}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                    <td>
-                        &euro;{{ item['prices']['price']['value'] }}
-                    </td>
-                    <td>
-                        <strong>&euro;{{ item['prices']['row_total_including_tax']['value'] }}</strong>
-                    </td>
-                </tr>
+                {% include 'checkout/cart/_partials/item.html.twig' with {'item': item} %}
             {% endfor %}
             </tbody>
             <tfoot>

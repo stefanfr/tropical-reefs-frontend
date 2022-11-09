@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Checkout;
+namespace App\Controller\Checkout\Cart;
 
 use App\Service\Api\Magento\Checkout\MagentoCheckoutCartApiService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

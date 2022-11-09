@@ -2,16 +2,33 @@
 
 namespace App\Service\GraphQL;
 
-class Field
+class Selection
 {
     public function __construct(
         protected string $fieldName,
+        protected array  $params = [],
         protected array  $childFields = []
     )
     {
     }
 
-    public function addChildField(Fragment|Field|Parameter $field): static
+    public function addParameter(Parameter $parameters): static
+    {
+        $this->params[] = $parameters;
+
+        return $this;
+    }
+
+    public function addParameters(array $parameters): static
+    {
+        foreach ($parameters as $parameter) {
+            $this->addParameter($parameter);
+        }
+
+        return $this;
+    }
+
+    public function addChildField(Fragment|Field $field): static
     {
         $this->childFields[] = $field;
 
@@ -30,8 +47,13 @@ class Field
     public function __toString(): string
     {
         $field = $this->fieldName;
-        if (empty($this->childFields)) {
-            return $field;
+
+        if ( ! empty($this->params)) {
+            $field .= '(';
+            foreach ($this->params as $param) {
+                $field .= $param->__toString();
+            }
+            $field .= ')';
         }
 
         $field .= '{';

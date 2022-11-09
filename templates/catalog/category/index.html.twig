@@ -1,5 +1,4 @@
 {% extends 'base.html.twig' %}
-{% set showDivider = true %}
 
 {% block title %}{{ category['name'] }}{% endblock %}
 
@@ -25,7 +24,7 @@
 
 {% block body %}
     <div class="container mx-auto">
-        <h1 class="text-4xl">{{ 'Coral'|trans }} <small>({{ category['products']['total_count'] }})</small></h1>
+        <h1 class="text-4xl">{{ category['name']|trans }} <small>({{ category['products']['total_count'] }})</small></h1>
         <div class="mt-8 grid grid-cols-8 gap-10">
             <div class="filters col-span-2">
                 {% if category['children']|length > 0 %}

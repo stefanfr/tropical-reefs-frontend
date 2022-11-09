@@ -6,6 +6,8 @@ use App\Cache\Adapter\RedisAdapter;
 use App\Service\Api\Magento\Http\MageGraphQlClient;
 use App\Service\GraphQL\Field;
 use App\Service\GraphQL\Fragment;
+use App\Service\GraphQL\Input;
+use App\Service\GraphQL\InputField;
 use App\Service\GraphQL\Mutation;
 use App\Service\GraphQL\Parameter;
 use App\Service\GraphQL\Query;
@@ -48,6 +50,7 @@ class MagentoCheckoutCartApiService
                             (new Field('items')
                             )->addChildFields(
                                 [
+                                    new Field('uid'),
                                     new Field('quantity'),
                                     (new Field('product')
                                     )->addChildFields(
@@ -123,7 +126,7 @@ class MagentoCheckoutCartApiService
                     (new Field('items')
                     )->addChildFields(
                         [
-                            new Field('id'),
+                            new Field('uid'),
                             new Field('quantity'),
                             (new Fragment('ConfigurableCartItem')
                             )->addFields(
@@ -187,6 +190,13 @@ class MagentoCheckoutCartApiService
                     (new Field('prices')
                     )->addChildFields(
                         [
+                            (new Field('subtotal_excluding_tax')
+                            )->addChildFields(
+                                [
+                                    new Field('value'),
+                                    new Field('currency'),
+                                ]
+                            ),
                             (new Field('subtotal_including_tax')
                             )->addChildFields(
                                 [
@@ -236,5 +246,63 @@ class MagentoCheckoutCartApiService
         )->send();
 
         return $response['data']['cart'] ?? dd($response['errors']);// throw new BadRequestException('Failed to load cart');
+    }
+
+    public function updateItemQty(string $uid, int $selectedQty): array
+    {
+        $response = (new Request(
+            (new Mutation('updateCartItems')
+            )->addParameter(
+                (new Input('input')
+                )->addFields(
+                    [
+                        new InputField('cart_id', $this->magentoCheckoutApiService->getQuoteMaskId()),
+                        (new InputField('cart_items')
+                        )->addChildInputFields(
+                            [
+                                new InputField('cart_item_uid', $uid),
+                                new InputField('quantity', $selectedQty),
+                            ]
+                        ),
+                    ]
+                )
+            )->addFields(
+                [
+                    (new Field('cart')
+                    )->addChildField(
+                        new Field('id')
+                    ),
+                ]
+            ),
+            $this->mageGraphQlClient
+        ))->send();
+
+        return $response['data'] ?? dd($response['errors']);// throw new BadRequestException('Failed to load cart');
+    }
+
+    public function deleteItem(string $uid): array
+    {
+        $response = (new Request(
+            (new Mutation('removeItemFromCart')
+            )->addParameter(
+                (new Parameter('input', null)
+                )->addFields(
+                    [
+                        new Parameter('cart_id', $this->magentoCheckoutApiService->getQuoteMaskId()),
+                        new Parameter('cart_item_uid', $uid),
+                    ]
+                )
+            )->addFields(
+                [
+                    (new Field('cart')
+                    )->addChildField(
+                        new Field('id')
+                    ),
+                ]
+            ),
+            $this->mageGraphQlClient
+        ))->send();
+
+        return $response['data'] ?? dd($response['errors']);// throw new BadRequestException('Failed to load cart');
     }
 }

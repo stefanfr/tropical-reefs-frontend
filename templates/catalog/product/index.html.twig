@@ -7,7 +7,13 @@
     <div class="container mx-auto">
         <div class="text-sm breadcrumbs">
             <ul>
-                <li><a href="{{ path('app_home') }}"><i class="la la-home"></i></a></li>
+                <li>
+                    <a href="{{ path('app_home') }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/>
+                        </svg>
+                    </a>
+                </li>
                 {#                <li><a href="{{ path('app_category') }}">{{ 'Coral'|trans }}</a></li> #}
                 {#                <li><a href="{{ path('app_category') }}">{{ 'LPS Corals'|trans }}</a></li> #}
                 {#                <li><a href="{{ path('app_category') }}">{{ 'Euphyllidae'|trans }}</a></li> #}
@@ -42,31 +48,6 @@
             <div class="product__details-container col-span-2">
                 <div class="product__details-title grid">
                     <h1 class="text-4xl font-bold">{{ product['name']|replace({'(': "<br />", ')': ''})|raw }}</h1>
-                    <div class="grid grid-cols-2">
-                        <div class="grid">
-                            <div class="product__details-review mt-1">
-                                <div class="rating rating-sm block mx-1 float-left">
-                                    {% for index in 0..4 %}
-                                        <input aria-label="rating-{{ index+1 }}" disabled type="radio" name="rating-{{ index }}" class="mt-1 mask mask-star-2 bg-accent" {% if index == 3 %} checked {% endif %} />
-                                    {% endfor %}
-                                </div>
-                                <a class="text-sm block mt-1 float-left ml-2" href="#reviews">120 reviews</a>
-                            </div>
-                            <div class="product__details-delivery block mt-3">
-                                {{ 'Shipped in 5 - 10 working days' }}
-                            </div>
-                        </div>
-                        <div class="mt-2 text-right grid mr-1">
-                            {% if product['price_range']['minimum_price']['discount']['amount_off'] > 0 %}
-                                <small class="grow product_row__from_price line-through text-md">
-                                    &euro;{{ product['price_range']['minimum_price']['regular_price']['value'] }}
-                                </small>
-                            {% endif %}
-                            <strong class="grow product_row__final_price text-5xl">
-                                &euro;{{ product['price_range']['minimum_price']['final_price']['value'] }}
-                            </strong>
-                        </div>
-                    </div>
                     {{ component('catalog_product_configuration', {
                         product: product,
                     }) }}

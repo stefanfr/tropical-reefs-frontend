@@ -1,79 +1,107 @@
-<div class="product__details-configuration mt-5" {{ attributes }}>
-    {% if this.addToCartResponse is not empty %}
-        <div class="product__details-configuration_messages">
-            {% if this.addToCartResponse['user_errors'] is empty %}
-                <div class="toast z-50 toast-top">
-                    <div class="alert alert-success">
-                        <div>
-                            <span>{{ 'Succesfully added product to cart'|trans }}</span>
-                        </div>
-                    </div>
+<div {{ attributes }}>
+    <div class="grid grid-cols-2">
+        <div class="grid">
+            <div class="product__details-review mt-1">
+                <div class="rating rating-sm block mx-1 float-left">
+                    {% for index in 0..4 %}
+                        <input aria-label="rating-{{ index+1 }}" disabled type="radio" name="rating-{{ index }}" class="mt-1 mask mask-star-2 bg-accent" {% if index == 3 %} checked {% endif %} />
+                    {% endfor %}
                 </div>
-            {% else %}
-                {% for error in this.addToCartResponse['user_errors'] %}
+                <a class="text-sm block mt-1 float-left ml-2" href="#reviews">120 reviews</a>
+            </div>
+            <div class="product__details-delivery block mt-3">
+                {{ 'Shipped in 5 - 10 working days' }}
+            </div>
+        </div>
+        <div class="mt-2 text-right grid mr-1">
+            {% if this.getDiscountAmount > 0 %}
+                <small class="grow product_row__from_price line-through text-md">
+                    &euro;{{ this.getProductRegularPrice }}
+                </small>
+            {% endif %}
+            <strong class="grow product_row__final_price text-5xl">
+                &euro;{{ this.getProductFinalPrice }}
+            </strong>
+        </div>
+    </div>
+    <div class="product__details-configuration mt-5">
+        {% if this.addToCartResponse is not empty %}
+            <div class="product__details-configuration_messages">
+                {% if this.addToCartResponse['user_errors'] is empty %}
                     <div class="toast z-50 toast-top">
-                        <div class="alert alert-error">
+                        <div class="alert alert-success">
                             <div>
-                                <span>{{ error['message']|trans }}</span>
+                                <span>{{ 'Succesfully added product to cart'|trans }}</span>
                             </div>
                         </div>
+                    </div>
+                {% else %}
+                    {% for error in this.addToCartResponse['user_errors'] %}
+                        <div class="toast z-50 toast-top">
+                            <div class="alert alert-error">
+                                <div>
+                                    <span>{{ error['message']|trans }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        {% endif %}
+        <div class="grid gap-4">
+            {% if product['type_id'] == 'configurable' %}
+                {% for attribute in product['configurable_options'] %}
+                    <strong class="block">{{ 'Select a ' }}{{ attribute['label']|lower }}:</strong>
+                    <div class="product__details-configuration-items grid grid-cols-7 gap-2">
+                        {% for value in attribute['values'] %}
+                            <label
+                                    for="{{ value['uid'] }}"
+                                    class="cursor-pointer product__details-configuration-item {% if selectedSize ==  value['uid'] %} __active  {% endif %}"
+                            >
+                                <input
+                                        class="hidden"
+                                        type="radio"
+                                        id="{{ value['uid'] }}"
+                                        name="{{ attribute['attribute_uid'] }}"
+                                        value="{{ value['uid'] }}"
+                                        data-model="selectedSize"
+                                        data-action="click->live#action"
+                                        data-action-name="updateProduct"
+                                >
+                                <span class="block py-2 text-center">
+                                {{ value['store_label'] }}
+                            </span>
+                            </label>
+                        {% endfor %}
                     </div>
                 {% endfor %}
             {% endif %}
         </div>
-    {% endif %}
-    <div class="grid gap-4">
-        {% if product['type_id'] == 'configurable' %}
-            {% for attribute in product['configurable_options'] %}
-                <strong class="block">{{ 'Select a ' }}{{ attribute['label']|lower }}:</strong>
-                <div class="product__details-configuration-items grid grid-cols-7 gap-2">
-                    {% for value in attribute['values'] %}
-                        <label
-                                for="{{ value['uid'] }}"
-                                class="cursor-pointer product__details-configuration-item {% if selectedSize ==  value['uid'] %} __active  {% endif %}"
-                        >
-                            <input
-                                    class="hidden"
-                                    type="radio"
-                                    id="{{ value['uid'] }}"
-                                    name="{{ attribute['attribute_uid'] }}"
-                                    value="{{ value['uid'] }}"
-                                    data-model="selectedSize"
-                            >
-                            <span class="block py-2 text-center">
-                                {{ value['store_label'] }}
-                            </span>
-                        </label>
+        <div class="grid grid-cols-8 gap-4 mt-4 sm:grid-cols-3">
+            <div class="grid lg:grid-cols-1 gap-4">
+                <select required name="qty" id="qty" class="select select-accent col-span-2 sm:col-span-1" data-model="selectedQty">
+                    {% for index in 1..qtySelectorLimit %}
+                        <option value="{{ index }}" {% if index == selectedQty %}selected {% endif %}>{{ index }}</option>
                     {% endfor %}
-                </div>
-            {% endfor %}
-        {% endif %}
-    </div>
-    <div class="grid grid-cols-8 gap-4 mt-4 sm:grid-cols-3">
-        <div class="grid lg:grid-cols-1 gap-4">
-            <select required name="qty" id="qty" class="select select-accent col-span-2 sm:col-span-1" data-model="selectedQty">
-                {% for index in 1..qtySelectorLimit %}
-                    <option value="{{ index }}" {% if index == selectedQty %}selected {% endif %}>{{ index }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="col-span-5 grid grid-cols-2 gap-3 sm:col-span-2">
-            <button
-                    class="col-span-2 btn btn-outline btn-accent flex"
-                    data-action="click->live#action"
-                    data-action-name="addProductToCart"
-            >
-                <span class="grow">{{ 'Add to cart'|trans }}</span>
-                <i class="la la-cart-plus la-2x" style="margin-right: 5px"></i>
-            </button>
-            <button class="btn btn-sm btn-outline btn-error">
-                <span class="grow">{{ 'Add to wishlist'|trans }}</span>
-            </button>
-            <button class="btn btn-sm btn-outline btn-info">
-                <span class="grow">{{ 'Share'|trans }}</span>
-                <i class="la la-share" style="margin-right: 5px"></i>
-            </button>
+                </select>
+            </div>
+            <div class="col-span-5 grid grid-cols-2 gap-3 sm:col-span-2">
+                <button
+                        class="col-span-2 btn btn-outline btn-accent flex"
+                        data-action="click->live#action"
+                        data-action-name="addProductToCart"
+                >
+                    <span class="grow">{{ 'Add to cart'|trans }}</span>
+                    <i class="la la-cart-plus la-2x" style="margin-right: 5px"></i>
+                </button>
+                <button class="btn btn-sm btn-outline btn-error">
+                    <span class="grow">{{ 'Add to wishlist'|trans }}</span>
+                </button>
+                <button class="btn btn-sm btn-outline btn-info">
+                    <span class="grow">{{ 'Share'|trans }}</span>
+                    <i class="la la-share" style="margin-right: 5px"></i>
+                </button>
+            </div>
         </div>
     </div>
 </div>
-
