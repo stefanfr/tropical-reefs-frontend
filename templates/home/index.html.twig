@@ -5,14 +5,20 @@
 {% block body %}
     <div class="carousel w-full -mt-4">
         <div id="slide1" class="carousel-item relative w-full">
-            <img width="1600" height="500" alt="header_image" src="https://via.placeholder.com/1600x500" class="w-full"/>
+            <picture>
+                <source media="(max-width: 640px)" srcset="https://via.placeholder.com/640x192">
+                <source media="(max-width: 678px)" srcset="https://via.placeholder.com/678x203">
+                <source media="(max-width: 1024px)" srcset="https://via.placeholder.com/1024x307">
+                <source media="(max-width: 1280px)" srcset="https://via.placeholder.com/1280x384">
+                <img width="1600" height="500" alt="header_image" src="https://via.placeholder.com/1600x480" class="w-full"/>
+            </picture>
         </div>
     </div>
     <div class="divider lg:divider-vertical w-full" style="margin-top: 2.5rem">
         <h2 style="font-size: 1.7rem; font-weight: bold">{{ 'Categories'|trans }}</h2>
     </div>
     <div class="container mx-auto  mt-10">
-        <div class="category flex gap-10">
+        <div class="category grid grid-cols-2 md:grid-cols-6 gap-10">
             {% for category in categories %}
                 <a href="/{{ category['url_path'] }}" class="category__item relative rounded-full">
                     {% if null == category['image'] %}
@@ -39,9 +45,8 @@
             {% endfor %}
         </div>
     </div>
-    <div class="seo_block flex gap-10 pr-20 mt-20 items-center mt-16 bg-base-300">
+    <div class="grid md:grid-cols-2 seo_block flex gap-10 pr-20 mt-20 items-center mt-16 bg-base-300">
         <img class="grow" width="714" height="406" src="{{ asset('build/assets/images/cropped_coral_scene-816x464_1_.webp')|cdn('auto', 714, 406) }}" alt="">
-        <div class="divider lg:divider-horizontal w-full"></div>
         <div class="grow seo_block__content row">
             <h2 class="seo_block__title" style="font-size: 2rem; font-weight: bold">Quality Saltwater Aquarium Supplies
                 with Expert Advice</h2>
@@ -61,7 +66,7 @@
         <h2 style="font-size: 1.7rem; font-weight: bold">{{ 'Featured products'|trans }}</h2>
     </div>
     <div class="container mx-auto">
-        <div class="product_row grid grid-cols-5 gap-4 mt-8 col-span-6">
+        <div class="product_row grid md:grid-cols-5 gap-4 mt-8 col-span-6">
             {% include 'catalog/_partials/product_list.html.twig' with {'items': featuredProducts, 'count': 5} %}
         </div>
     </div>

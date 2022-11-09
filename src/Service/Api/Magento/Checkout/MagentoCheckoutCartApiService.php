@@ -112,6 +112,11 @@ class MagentoCheckoutCartApiService
         )
         )->send();
 
+        if (isset($response['data']['addProductsToCart']['cart']['total_quantity'])) {
+            $session = $this->requestStack->getSession();
+            $session->set('checkout_cart_item_count', $response['data']['addProductsToCart']['cart']['total_quantity']);
+        }
+
         return $response['data']['addProductsToCart'] ?? throw new BadRequestException('Something went wrong');
     }
 
@@ -123,6 +128,7 @@ class MagentoCheckoutCartApiService
                 new Parameter('cart_id', $this->magentoCheckoutApiService->getQuoteMaskId()),
             )->addFields(
                 [
+                    new Field('total_quantity'),
                     (new Field('items')
                     )->addChildFields(
                         [
@@ -190,13 +196,6 @@ class MagentoCheckoutCartApiService
                     (new Field('prices')
                     )->addChildFields(
                         [
-                            (new Field('subtotal_excluding_tax')
-                            )->addChildFields(
-                                [
-                                    new Field('value'),
-                                    new Field('currency'),
-                                ]
-                            ),
                             (new Field('subtotal_including_tax')
                             )->addChildFields(
                                 [
@@ -244,6 +243,11 @@ class MagentoCheckoutCartApiService
             $this->mageGraphQlClient
         )
         )->send();
+
+        if (isset($response['data']['cart']['total_quantity'])) {
+            $session = $this->requestStack->getSession();
+            $session->set('checkout_cart_item_count', $response['data']['cart']['total_quantity']);
+        }
 
         return $response['data']['cart'] ?? dd($response['errors']);// throw new BadRequestException('Failed to load cart');
     }

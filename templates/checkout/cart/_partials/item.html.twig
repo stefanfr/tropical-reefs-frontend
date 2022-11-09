@@ -1,6 +1,6 @@
 <tr>
     <td class="flex gap-3">
-        <img class="block float-left" width="100" src="{{ item['product']['small_image']['url'] }}" alt="{{ item['product']['name'] }}"/>
+        <img class="block float-left" width="100" src="{{ item['product']['small_image']['url']|cdn('auto', 'square', 100) }}" alt="{{ item['product']['name'] }}"/>
         <div class="grow">
             <a href="/{{ item['product']['url_key'] }}"><strong class="block text-lg">{{ item['product']['name'] }}</strong></a>
             <span class="block">SKU: {{ item['product']['sku'] }}</span>

@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Empty Cart{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto mt-8">
+        <div class="flex gap-2">
+            <div class="grow text-center">
+                <h1 class="text-4xl">{{ 'Cart is empty'|trans }}</h1>
+                <p class="mt-2">
+                    {{ 'There are no items in your cart yet. Below are some suggested categories and products other people liked:'|trans }}
+                </p>
+            </div>
+            <div class="divider lg:divider-horizontal h-full"></div>
+            <div class="grid">
+                <h2 class="text-xl">Quick Links</h2>
+                <a class="link link-hover mt-2">About us</a>
+                <a class="link link-hover">Contact</a>
+                <a class="link link-hover">Jobs</a>
+                <a class="link link-hover">Press kit</a>
+            </div>
+        </div>
+    </div>
+    <div class="divider lg:divider-vertical w-full" style="margin-top: 2.5rem">
+        <h2 style="font-size: 1.7rem; font-weight: bold">{{ 'Categories'|trans }}</h2>
+    </div>
+    <div class="container mx-auto  mt-10">
+        <div class="category flex gap-10">
+            {% for category in categories %}
+                <a href="/{{ category['url_path'] }}" class="category__item relative rounded-full">
+                    {% if null == category['image'] %}
+                        <img alt="{{ category['name'] }}" src="https://via.placeholder.com/180" width="180" class="rounded-full aspect-square"/>
+                    {% else %}
+                        <img alt="{{ category['name'] }}" src="{{ category['image']|cdn('auto', 'square', '150') }}" width="180" class="rounded-full aspect-square"/>
+                    {% endif %}
+                    <span class="w-full h-full absolute top-0 flex justify-center items-center">
+                        <strong class="text-white w-full bg-neutral/50 text-center block text-lg py-2 rounded-full">{{ category['name']|trans }}</strong>
+                    </span>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="divider lg:divider-vertical w-full" style="margin-top: 2.5rem">
+        <h2 style="font-size: 1.7rem; font-weight: bold">{{ 'Featured products'|trans }}</h2>
+    </div>
+    <div class="container mx-auto">
+        <div class="product_row grid grid-cols-5 gap-4 mt-8 col-span-6">
+            {% include 'catalog/_partials/product_list.html.twig' with {'items': featuredProducts, 'count': 5} %}
+        </div>
+    </div>
+{% endblock %}
+
