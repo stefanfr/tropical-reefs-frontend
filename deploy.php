@@ -75,6 +75,10 @@ task('deploy:supervisor', function () {
     run('supervisorctl restart all');
 });
 
+task('deploy:restart:fpm', function () {
+    run('systemctl restart php-fpm');
+});
+
 /**
  * Main task
  */
@@ -96,6 +100,7 @@ task('deploy', [
     'deploy:permissions',
 //    'deploy:supervisor',
     'deploy:unlock',
+    'deploy:restart:fpm',
     'cleanup',
 ])->desc('Deploy your project');
 
