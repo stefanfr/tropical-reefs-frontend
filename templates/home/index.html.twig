@@ -22,9 +22,15 @@
             {% for category in categories %}
                 <a href="/{{ category['url_path'] }}" class="category__item relative rounded-full">
                     {% if null == category['image'] %}
-                        <img alt="{{ category['name'] }}" src="https://via.placeholder.com/180" width="180" class="rounded-full aspect-square"/>
+                        <picture>
+                            <source media="(max-width: 678px)" srcset="https://via.placeholder.com/360">
+                            <img alt="{{ category['name'] }}" src="https://via.placeholder.com/180" class="rounded-full aspect-square"/>
+                        </picture>
                     {% else %}
-                        <img alt="{{ category['name'] }}" src="{{ category['image']|cdn('auto', 'square', '150') }}" width="180" class="rounded-full aspect-square"/>
+                        <picture>
+                            <source media="(max-width: 678px)" srcset="{{ category['image']|cdn('auto', 'square', '360') }}">
+                            <img alt="{{ category['name'] }}" src="{{ category['image']|cdn('auto', 'square', '180') }}" class="rounded-full aspect-square"/>
+                        </picture>
                     {% endif %}
                     <span class="w-full h-full absolute top-0 flex justify-center items-center">
                         <strong class="text-white w-full bg-neutral/50 text-center block text-lg py-2 rounded-full">{{ category['name']|trans }}</strong>
