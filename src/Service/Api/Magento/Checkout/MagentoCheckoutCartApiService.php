@@ -309,4 +309,33 @@ class MagentoCheckoutCartApiService
 
         return $response['data'] ?? dd($response['errors']);// throw new BadRequestException('Failed to load cart');
     }
+
+    public function formatTotals(array $prices): array
+    {
+        $cartTotals = [];
+
+        $prices = array_filter($prices, static function ($price) {
+            return null !== $price;
+        });
+
+        foreach ($prices as $key => $price) {
+            if (array_key_exists('value', $price)) {
+                $cartTotals[] = [
+                    'label' => ucfirst(str_replace('_', ' ', $key)),
+                    'value' => $price['value'],
+                ];
+
+                continue;
+            }
+
+            foreach ($price ?? [] as $taxRow) {
+                $cartTotals[] = [
+                    'label' => $taxRow['label'],
+                    'value' => $taxRow['amount']['value'],
+                ];
+            }
+        }
+
+        return $cartTotals;
+    }
 }

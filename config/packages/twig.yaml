@@ -1,7 +1,7 @@
 twig:
     default_path: '%kernel.project_dir%/templates'
     globals:
-        showDivider: false
+        isCheckout: false
         categoryTree: '@App\Twig\Global\Catalog\CategoryTree'
 
 when@test:

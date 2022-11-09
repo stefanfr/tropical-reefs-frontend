@@ -1,0 +1,18 @@
+<header>
+    {% include '_partials/_usps.html.twig' %}
+    <div class="container mx-auto grid grid-cols-3 items-center gap-20 mt-4">
+        <a href="{{ path('app_home') }}">
+            <picture class="logo_full">
+                <source srcset="{{ asset('build/assets/images/logo.png'|cdn('auto', 400, 144)) }}"/>
+                <img width="200" height="72" src="{{ asset('build/assets/images/logo.png'|cdn('auto', 200, 72)) }}" alt="logo"/>
+            </picture>
+        </a>
+        <h1 class="text-4xl text-center">{{ title }}</h1>
+        <div class="payment_icons flex gap-4">
+            <img width="50" src="{{ asset('build/assets/images/ideal.png')|cdn('auto', 'square', 50) }}" alt="Ideal">
+            <img width="50" src="{{ asset('build/assets/images/visa.png')|cdn('auto', 'square', 50) }}" alt="Visa">
+            <img width="50" src="{{ asset('build/assets/images/mastercard.png')|cdn('auto', 'square', 50) }}" alt="Mastercard">
+            <img width="50" src="{{ asset('build/assets/images/paypal.png')|cdn('auto', 'square', 50) }}" alt="PayPal">
+        </div>
+    </div>
+</header>

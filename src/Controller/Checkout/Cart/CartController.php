@@ -33,6 +33,7 @@ class CartController extends AbstractController
 
         return $this->render('checkout/cart/index.html.twig', [
             'cart' => $cart,
+            'totals' => $this->magentoCheckoutCartApiService->formatTotals($cart['prices']),
         ]);
     }
 

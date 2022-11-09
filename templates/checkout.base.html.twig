@@ -21,42 +21,10 @@
     {% endblock %}
 </head>
 <body>
-{% include '_partials/header.html.twig' %}
+{% include '_partials/checkout/header.html.twig' %}
 <main class="mt-4">
-    {% block breadcrumbs %}{% endblock %}
     {% block body %}{% endblock %}
 </main>
-{% include '_partials/footer.html.twig' %}
+{% include '_partials/checkout/footer.html.twig' %}
 </body>
 </html>
-
-<script>
-    const stickNav = document.getElementById('sticky-nav');
-    const sticky = stickNav.offsetTop;
-
-    const stickyTotals = document.getElementById('sticky-totals');
-    const stickTotals = null !== stickyTotals ? stickyTotals.offsetTop : 0;
-
-    addEventListener('scroll', () => {
-        handleStickyHeader();
-        if (null !== stickyTotals) {
-            handleStickyTotals();
-        }
-    });
-
-    function handleStickyHeader() {
-        if (window.scrollY > sticky) {
-            stickNav.classList.add("fixed");
-        } else {
-            stickNav.classList.remove("fixed");
-        }
-    }
-
-    function handleStickyTotals() {
-        if (window.scrollY > stickTotals) {
-            stickyTotals.classList.add("sticky");
-        } else {
-            stickyTotals.classList.remove("sticky");
-        }
-    }
-</script>
