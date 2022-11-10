@@ -26,12 +26,12 @@
                     {% if null == category['image'] %}
                         <picture>
                             <source media="(max-width: 678px)" srcset="https://via.placeholder.com/360">
-                            <img alt="{{ category['name'] }}" src="https://via.placeholder.com/180" class="rounded-full aspect-square"/>
+                            <img width="180" height="180" alt="{{ category['name'] }}" src="https://via.placeholder.com/180" class="rounded-full aspect-square"/>
                         </picture>
                     {% else %}
                         <picture>
                             <source media="(max-width: 678px)" srcset="{{ category['image']|cdn('auto', 'square', '360') }}">
-                            <img alt="{{ category['name'] }}" src="{{ category['image']|cdn('auto', 'square', '180') }}" class="rounded-full aspect-square"/>
+                            <img width="180" height="180" alt="{{ category['name'] }}" src="{{ category['image']|cdn('auto', 'square', '180') }}" class="rounded-full aspect-square"/>
                         </picture>
                     {% endif %}
                     <span class="w-full h-full absolute top-0 flex justify-center items-center">
