@@ -1,5 +1,4 @@
 {% extends 'base.html.twig' %}
-{% set showDivider = true %}
 
 {% block title %}{{ product['name'] }}{% endblock %}
 
@@ -51,10 +50,6 @@
                     {{ component('catalog_product_configuration', {
                         product: product,
                     }) }}
-                    <div class="product__details-short-description mt-5 sm:hidden lg:block">
-                        {{ product['short_description']['html']|raw }}
-                        <a class="mt-3 text-accent" href="#product-description">{{ 'Read more'|trans }}</a>
-                    </div>
                 </div>
             </div>
         </div>

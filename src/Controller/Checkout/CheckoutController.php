@@ -18,15 +18,15 @@ class CheckoutController extends AbstractController
     #[Route('/checkout/checkout', name: 'app_checkout_checkout')]
     public function index(): Response
     {
-        $cart = $this->magentoCheckoutCartApiService->collectCart();
-
-        if ( ! $cart['total_quantity']) {
-            return $this->redirectToRoute('app_checkout_cart');
-        }
+//        $cart = $this->magentoCheckoutCartApiService->collectCart();
+//
+//        if ( ! $cart['total_quantity']) {
+//            return $this->redirectToRoute('app_checkout_cart');
+//        }
 
         return $this->render('checkout/checkout/index.html.twig', [
-            'cart' => $cart,
-            'totals' => $this->magentoCheckoutCartApiService->formatTotals($cart['prices']),
+//            'cart' => $cart,
+//            'totals' => $this->magentoCheckoutCartApiService->formatTotals($cart['prices']),
         ]);
     }
 }

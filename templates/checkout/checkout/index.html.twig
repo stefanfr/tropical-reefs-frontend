@@ -5,6 +5,41 @@
 {% set title = 'Checkout'|trans %}
 
 {% block body %}
-    <div class="container mx-auto mt-8">
+    <div class="container mx-auto mt-2 grid grid-cols-8 items-center">
+        <ul class="col-start-3 col-span-4 steps steps-vertical lg:steps-horizontal">
+            <li class="step step-accent">{{ 'Address'|trans }}</li>
+            <li class="step">{{ 'Shipping'|trans }}</li>
+            <li class="step">{{ 'Payment'|trans }}</li>
+            <li class="step">{{ 'Complete'|trans }}</li>
+        </ul>
+        <div class="mt-4 py-8 col-start-3 col-span-4 container border border-base-300 rounded-box shadow-md border-solid grid justify-center">
+            <h2 class="text-2xl">{{ '1. Shipping Address'|trans }}</h2>
+            <div class="checkout__address-container mt-4 grid gap-4 mb-4">
+                <input type="text" placeholder="{{ 'Email'|trans }}" class="input input-bordered w-full max-w-md"/>
+                <input type="text" placeholder="{{ 'Company'|trans }}" class="input input-bordered w-full max-w-md"/>
+                <input type="text" placeholder="{{ 'Phone'|trans }}" class="input input-bordered w-full max-w-md"/>
+
+                <div class="checkout__address-name flex gap-4 max-w-md">
+                    <input type="text" placeholder="{{ 'Firstname'|trans }}" class="input input-bordered w-full"/>
+                    <input type="text" placeholder="{{ 'Lastname'|trans }}" class="input input-bordered w-full"/>
+                </div>
+
+                <select name="country_id" id="country_id" class="select select-bordered w-full max-w-md">
+                    <option selected disabled>{{ 'Select a country'|trans }}</option>
+                    <option value="NL">{{ 'Netherlands'|trans }}</option>
+                </select>
+
+                <div class="checkout__address-postcode flex gap-4 max-w-md">
+                    <input type="text" placeholder="{{ 'Postcode'|trans }}" class="input input-bordered w-full"/>
+                    <input type="text" placeholder="{{ 'House nr.'|trans }}" class="input input-bordered w-full"/>
+                    <input type="text" placeholder="{{ 'Add.'|trans }}" class="input input-bordered w-full"/>
+                </div>
+            </div>
+            <div id="reviews" class="divider lg:divider-vertical"></div>
+            <div class="checkout__address-actions mt-4 grid gap-4 grid-cols-2 items-center content-center">
+                <a class="link" href="{{ path('app_checkout_cart') }}">&lt;&lt; {{ 'Back to cart'|trans }}</a>
+                <button class="btn text-accent-content btn-accent btn-sm text-right">{{ 'Next step'|trans }} &gt;&gt;</button>
+            </div>
+        </div>
     </div>
 {% endblock %}
