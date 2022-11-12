@@ -114,7 +114,6 @@ class MagentoCheckoutAddressApiService
                                         new InputField('country_code', $addressDetails->getCountryCode() ?? 'NL'),
                                     ]
                                 ),
-                                (new InputField('same_as_shipping', $sameAsShipping)),
                                 (new InputField('use_for_shipping', $sameAsShipping)),
                             ]
                         ),
