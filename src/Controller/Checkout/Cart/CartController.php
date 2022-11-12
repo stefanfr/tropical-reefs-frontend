@@ -24,8 +24,6 @@ class CartController extends AbstractController
     {
         $cart = $this->magentoCheckoutCartApiService->collectFullCart();
 
-        dd($cart);
-
         if ( ! $cart['total_quantity']) {
             return $this->render('checkout/cart/empty.html.twig', [
                 'categories' => $this->getHomeCategories(),
