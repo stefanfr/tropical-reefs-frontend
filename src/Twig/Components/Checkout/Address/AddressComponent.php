@@ -82,7 +82,7 @@ final class AddressComponent extends AbstractController
 
     protected function instantiateForm(): FormInterface
     {
-        $this->address = new Address();
+//        $this->address = new Address();
         $form = $this->createForm(AddressType::class, $this->address);
 
         if ($this->address->getPostcode() && $this->address->getHouseNr()) {
