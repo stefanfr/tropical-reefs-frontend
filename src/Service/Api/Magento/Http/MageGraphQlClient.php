@@ -7,16 +7,13 @@ class MageGraphQlClient extends MageHttpClient
     protected ?string $baseUrl = null;
 
     /**
-     * @param string $uri
      * @param null|string $storeCode
      * @return string
      */
-    public function getApiUrl(string $uri, ?string $storeCode = 'default'): string
+    public function getApiUrl(?string $storeCode = 'default'): string
     {
         $url = $this->getApiBaseUrl();
         $url .= null !== $storeCode ? "/{$storeCode}" : '';
-        $url .= "/V1";
-        $url .= "/{$uri}";
 
         return $url;
     }

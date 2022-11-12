@@ -1,5 +1,9 @@
 parameters:
   redis_server_url: '%env(resolve:REDIS_SERVER_URL)%'
+  postcode_api:
+    api:
+      api_key: '%env(resolve:POSTCODE_API_API_KEY)%'
+      base_url: '%env(resolve:POSTCODE_API_BASE_URL)%'
   mage_client:
     api:
       base_url: '%env(resolve:MAGE_API_BASE_URL)%'
@@ -36,7 +40,7 @@ services:
   Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler:
     arguments:
       - '@Redis'
-      - { 'ttl': 14400 }
+      - { 'ttl': 86400 }
 
   App\:
     resource: '../src/'
@@ -59,6 +63,11 @@ services:
 
   App\Service\Api\Magento\Http\:
     resource: '../src/Service/Api/Magento/Http'
+    arguments:
+      - '@service_container'
+
+  App\Service\Api\Postcode\:
+    resource: '../src/Service/Api/Postcode'
     arguments:
       - '@service_container'
 

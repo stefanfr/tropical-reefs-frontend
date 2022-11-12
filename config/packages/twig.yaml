@@ -1,4 +1,5 @@
 twig:
+    form_themes: ['form/tailwind_2_layout.html.twig']
     default_path: '%kernel.project_dir%/templates'
     globals:
         isCheckout: false

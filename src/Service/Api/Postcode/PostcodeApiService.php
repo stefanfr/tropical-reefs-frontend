@@ -1,29 +1,23 @@
 <?php
 
-namespace App\Service\Api\Magento\Http;
+namespace App\Service\Api\Postcode;
 
 use App\Service\Api\Http\HttpClient;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Utils;
-use Psr\Http\Message\MessageInterface;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class MageHttpClient extends HttpClient
+class PostcodeApiService extends HttpClient
 {
     protected ClientInterface|Client $client;
     protected array $config;
 
     public function __construct(
         protected ContainerInterface $container,
-        ?array                        $options = []
+        ?array                       $options = []
     )
     {
-        $this->config = $container->getParameter('mage_client');
+        $this->config = $container->getParameter('postcode_api');
         $this->client = new Client(
             array_replace($this->getDefaultClientOptions(), $options ?? [])
         );
@@ -43,7 +37,6 @@ class MageHttpClient extends HttpClient
             [
                 'base_uri' => $this->getBaseUrl(),
             ],
-            $this->config['api']['default_headers'] ?? [],
         );
     }
 }

@@ -12,7 +12,7 @@ class InputField
     {
     }
 
-    public function addChildInputField(InputField $inputField): static
+    public function addChildInputField(InputField|InputObject $inputField): static
     {
         $this->childInputFields[] = $inputField;
 
@@ -34,16 +34,36 @@ class InputField
         $inputField .= ': ';
 
         if (null !== $this->value) {
-            $inputField .= '"' . $this->value . '"';
-        } else {
-            $inputField .= ' [ {';
+            if (is_array($this->value)) {
+                $inputField .= ' [';
 
-            foreach ($this->childInputFields as $childInputField) {
-                $inputField .= $childInputField->__toString() . ' ';
+                foreach ($this->value as $key => $childInputField) {
+                    if ($key) {
+                        $inputField .= ", ";
+                    }
+                    $inputField .= '"' . $childInputField . '"';
+                }
+
+                $inputField .= ' ]';
+                return $inputField;
             }
 
-            $inputField .= ' } ]';
+            if (is_bool($this->value)) {
+                $inputField .= $this->value ? 'true' : 'false';
+            } else {
+                $inputField .= '"' . $this->value . '"';
+            }
+
+            return $inputField;
         }
+
+        $inputField .= ' [ {';
+
+        foreach ($this->childInputFields as $childInputField) {
+            $inputField .= $childInputField->__toString() . ' ';
+        }
+
+        $inputField .= ' } ]';
 
         return $inputField;
     }

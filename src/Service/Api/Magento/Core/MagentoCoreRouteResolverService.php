@@ -4,7 +4,6 @@ namespace App\Service\Api\Magento\Core;
 
 use App\Cache\Adapter\RedisAdapter;
 use App\Service\Api\Magento\Http\MageGraphQlClient;
-use App\Service\Api\Magento\Http\MageRestClient;
 use App\Service\GraphQL\Field;
 use App\Service\GraphQL\Parameter;
 use App\Service\GraphQL\Query;
@@ -22,6 +21,10 @@ class MagentoCoreRouteResolverService
 
     public function resolverRoute(string $pathInfo): false|array
     {
+        if (str_contains($pathInfo, '_components')) {
+            return false;
+        }
+
         return $this->redisAdapter->get(
             'magento_route_resolver_' . preg_replace('/[{}()\/\@:]/m', '-', $pathInfo),
             function (ItemInterface $item) use ($pathInfo) {

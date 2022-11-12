@@ -1,0 +1,20 @@
+{% extends 'checkout.base.html.twig' %}
+
+{% block title %}Checkout{% endblock %}
+{% set isCheckout = true %}
+{% set title = 'Checkout'|trans %}
+
+{% block body %}
+    <div class="container mx-auto mt-2 grid grid-cols-8 items-center">
+        <ul class="col-start-3 col-span-4 steps steps-vertical lg:steps-horizontal">
+            <li class="step step-accent"><a href="{{ path('app_checkout_address') }}">{{ 'Address'|trans }}</a></li>
+            <li class="step step-accent">{{ 'Shipping'|trans }}</li>
+            <li class="step">{{ 'Payment'|trans }}</li>
+            <li class="step">{{ 'Complete'|trans }}</li>
+        </ul>
+        {{ component('checkout_shipping', {
+            shippingMethods: shippingMethods,
+            selectedShippingMethod: selectedShippingMethod
+        }) }}
+    </div>
+{% endblock %}

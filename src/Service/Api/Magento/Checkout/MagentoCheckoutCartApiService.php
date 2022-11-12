@@ -249,7 +249,7 @@ class MagentoCheckoutCartApiService
             $session->set('checkout_cart_item_count', $response['data']['cart']['total_quantity']);
         }
 
-        return $response['data']['cart'] ?? dd($response['errors']);// throw new BadRequestException('Failed to load cart');
+        return $response['data']['cart'] ?? throw new BadRequestException('Failed to load cart');
     }
 
     public function updateItemQty(string $uid, int $selectedQty): array
@@ -307,7 +307,7 @@ class MagentoCheckoutCartApiService
             $this->mageGraphQlClient
         ))->send();
 
-        return $response['data'] ?? dd($response['errors']);// throw new BadRequestException('Failed to load cart');
+        return $response['data'] ?? throw new BadRequestException('Failed to load cart');
     }
 
     public function formatTotals(array $prices): array
@@ -337,5 +337,220 @@ class MagentoCheckoutCartApiService
         }
 
         return $cartTotals;
+    }
+
+    public function collectFullCart()
+    {
+        $response = (new Request(
+            (new Query('cart')
+            )->addParameter(
+                new Parameter('cart_id', $this->magentoCheckoutApiService->getQuoteMaskId()),
+            )->addFields(
+                [
+                    new Field('email'),
+                    new Field('total_quantity'),
+                    (new Field('items')
+                    )->addChildFields(
+                        [
+                            new Field('uid'),
+                            new Field('quantity'),
+                            (new Fragment('ConfigurableCartItem')
+                            )->addFields(
+                                [
+                                    (new Field('configurable_options')
+                                    )->addChildFields(
+                                        [
+                                            new Field('option_label'),
+                                            new Field('value_label'),
+                                        ]
+                                    ),
+                                ]
+                            ),
+                            (new Field('product')
+                            )->addChildFields(
+                                [
+                                    new Field('name'),
+                                    new Field('sku'),
+                                    new Field('url_key'),
+                                    (new Field('small_image')
+                                    )->addChildField(
+                                        new Field('url')
+                                    ),
+                                ]
+                            ),
+                            (new Field('errors')
+                            )->addChildFields(
+                                [
+                                    new Field('code'),
+                                    new Field('message'),
+                                ]
+                            ),
+                            (new Field('prices')
+                            )->addChildFields(
+                                [
+                                    (new Field('price')
+                                    )->addChildFields(
+                                        [
+                                            new Field('value'),
+                                            new Field('currency'),
+                                        ]
+                                    ),
+                                    (new Field('row_total_including_tax')
+                                    )->addChildFields(
+                                        [
+                                            new Field('value'),
+                                            new Field('currency'),
+                                        ]
+                                    ),
+                                    (new Field('total_item_discount')
+                                    )->addChildFields(
+                                        [
+                                            new Field('value'),
+                                            new Field('currency'),
+                                        ]
+                                    ),
+                                ]
+                            ),
+                        ]
+                    ),
+                    (new Field('prices')
+                    )->addChildFields(
+                        [
+                            (new Field('subtotal_including_tax')
+                            )->addChildFields(
+                                [
+                                    new Field('value'),
+                                    new Field('currency'),
+                                ]
+                            ),
+                            (new Field('discounts')
+                            )->addChildFields(
+                                [
+                                    new Field('label'),
+                                    (new Field('amount')
+                                    )->addChildFields(
+                                        [
+                                            new Field('value'),
+                                            new Field('currency'),
+                                        ]
+                                    ),
+                                ]
+                            ),
+                            (new Field('applied_taxes')
+                            )->addChildFields(
+                                [
+                                    new Field('label'),
+                                    (new Field('amount')
+                                    )->addChildFields(
+                                        [
+                                            new Field('value'),
+                                            new Field('currency'),
+                                        ]
+                                    ),
+                                ]
+                            ),
+                            (new Field('grand_total')
+                            )->addChildFields(
+                                [
+                                    new Field('value'),
+                                    new Field('currency'),
+                                ]
+                            ),
+                        ]
+                    ),
+                    (new Field('billing_address')
+                    )->addChildFields(
+                        [
+                            new Field('firstname'),
+                            new Field('lastname'),
+                            new Field('street'),
+                            new Field('postcode'),
+                            new Field('city'),
+                            new Field('telephone'),
+                            (new Field('country')
+                            )->addChildField(
+                                new Field('code')
+                            ),
+                        ]
+                    ),
+                    (new Field('shipping_addresses')
+                    )->addChildFields(
+                        [
+                            new Field('firstname'),
+                            new Field('lastname'),
+                            new Field('street'),
+                            new Field('postcode'),
+                            new Field('city'),
+                            new Field('telephone'),
+                            (new Field('country')
+                            )->addChildField(
+                                new Field('code')
+                            ),
+                            (new Field('available_shipping_methods')
+                            )->addChildFields(
+                                [
+                                    (new Field('amount')
+                                    )->addChildField(
+                                        new Field('value')
+                                    ),
+                                    (new Field('price_excl_tax')
+                                    )->addChildField(
+                                        new Field('value')
+                                    ),
+                                    (new Field('price_incl_tax')
+                                    )->addChildField(
+                                        new Field('value')
+                                    ),
+                                    new Field('available'),
+                                    new Field('carrier_code'),
+                                    new Field('carrier_title'),
+                                    new Field('error_message'),
+                                    new Field('method_code'),
+                                    new Field('method_title'),
+                                ]
+                            ),
+                            (new Field('selected_shipping_method')
+                            )->addChildFields(
+                                [
+                                    new Field('carrier_code'),
+                                    new Field('carrier_title'),
+                                    new Field('method_code'),
+                                    new Field('method_title'),
+                                ]
+                            ),
+                        ]
+                    ),
+                    (new Field('available_payment_methods')
+                    )->addChildFields(
+                        [
+                            new Field('code'),
+                            new Field('title'),
+                        ]
+                    ),
+                    (new Field('selected_payment_method')
+                    )->addChildFields(
+                        [
+                            new Field('code'),
+                            new Field('title'),
+                        ]
+                    ),
+                    (new Field('applied_coupons')
+                    )->addChildFields(
+                        [
+                            new Field('code'),
+                        ]
+                    ),
+                ]
+            ),
+            $this->mageGraphQlClient
+        )
+        )->send();
+
+        if (isset($response['data']['cart']['total_quantity'])) {
+            $session = $this->requestStack->getSession();
+            $session->set('checkout_cart_item_count', $response['data']['cart']['total_quantity']);
+        }
+
+        return $response['data']['cart'] ?? throw new BadRequestException('Failed to load cart');
     }
 }

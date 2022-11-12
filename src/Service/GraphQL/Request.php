@@ -22,7 +22,7 @@ class Request
         return json_decode(
             $this->mageGraphQlClient->send(
                 $this->mageGraphQlClient->post(
-                    $this->mageGraphQlClient->getApiUrl('categories'),
+                    $this->mageGraphQlClient->getApiUrl(),
                     json_encode(['query' => (string)$this->query], JSON_THROW_ON_ERROR)
                 ),
                 [

@@ -22,7 +22,9 @@ class CartController extends AbstractController
     #[Route('/checkout/cart', name: 'app_checkout_cart')]
     public function index(): Response
     {
-        $cart = $this->magentoCheckoutCartApiService->collectCart();
+        $cart = $this->magentoCheckoutCartApiService->collectFullCart();
+
+        dd($cart);
 
         if ( ! $cart['total_quantity']) {
             return $this->render('checkout/cart/empty.html.twig', [

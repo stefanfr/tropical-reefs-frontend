@@ -7,12 +7,11 @@ use App\Service\Api\Magento\Http\MageGraphQlClient;
 use App\Service\GraphQL\Field;
 use App\Service\GraphQL\Input;
 use App\Service\GraphQL\InputField;
-use App\Service\GraphQL\InputObject;
 use App\Service\GraphQL\Mutation;
 use App\Service\GraphQL\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class MagentoCheckoutPaymentApiService
+class MagentoCheckoutShipmentService
 {
     public function __construct(
         protected RedisAdapter              $redisAdapter,
@@ -23,19 +22,20 @@ class MagentoCheckoutPaymentApiService
     {
     }
 
-    public function savePaymentMethod(string $methodCode): false|array
+    public function saveShippingMethod(?array $selectedShippingMethod): false|array
     {
         $response = (new Request(
-            (new Mutation('setPaymentMethodOnCart')
+            (new Mutation('setShippingMethodsOnCart')
             )->addParameter(
                 (new Input('input')
                 )->addFields(
                     [
                         new InputField('cart_id', $this->magentoCheckoutApiService->getQuoteMaskId()),
-                        (new InputObject('payment_method')
-                        )->addInputFields(
+                        (new InputField('shipping_methods')
+                        )->addChildInputFields(
                             [
-                                new InputField('code', $methodCode),
+                                new InputField('carrier_code', $selectedShippingMethod['carrier_code']),
+                                new InputField('method_code', $selectedShippingMethod['method_code']),
                             ]
                         ),
                     ]
