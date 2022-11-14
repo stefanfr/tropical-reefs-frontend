@@ -20,9 +20,27 @@
 </head>
 <body class="maintenance">
 <main class="w-full h-full">
-    <video class="video-container" autoplay muted loop>
+    <video class="video-container fixed" autoplay muted loop>
         <source src="{{ asset('build/assets/videos/anemone2k.mp4') }}" type="video/mp4">
     </video>
+
+    <div class="content absolute w-full h-full">
+        <div class="flex justify-center items-center h-full">
+            <div class="bg-base-200 rounded-box py-10 px-10 max-w-lg ">
+                <h1 class="text-4xl">Tropical Reefs</h1>
+                <p class="mt-6">{{ 'Welcome to Tropical Reefs, our website is currently under construction. We are preparing something amazing and exiting for you!'|trans }}</p>
+                <p class="mt-8">{{ 'Do you want to get an update when the website is ready and keep up to date with the latest new?'|trans }}</p>
+                <p class="mt-2">{{ 'Then fill in your email below and we will see you back shortly'|trans }}</p>
+
+                <div class="register mt-4 grid gap-4">
+                    <div class="input-group">
+                        <input aria-label="Notify me" type="text" class="input input-md w-full input-bordered" placeholder="{{ 'Your email-address'|trans }}">
+                        <button class="btn btn-md btn-accent">{{ 'Notify me'|trans }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
 </body>
 </html>
