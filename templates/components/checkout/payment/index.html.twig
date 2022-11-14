@@ -1,41 +1,146 @@
-<div class="mt-4 py-8 col-start-3 col-span-4 container border border-base-300 rounded-box shadow-md border-solid grid justify-center" {{ attributes }}>
-    <div class="checkout-step-container grid">
-        <h2 class="text-2xl mt-4">{{ '3. Payment method'|trans }}</h2>
-        {% if errors %}
-            {{ errors|json_encode }}
-        {% endif %}
-        <div class="checkout__payment-container mt-6 grid gap-4 mb-4">
-            <div class="checkout__payment-payment-methods w-full grid gap-3">
-                {% for paymentMethod in paymentMethods %}
-                    <div
-                            class="checkout__payment-payment-method {% if paymentMethod['code'] == selectedPaymentMethod %} shadow-red border-accent {% else %} border-base-200 {% endif %} cursor-pointer flex gap-8 items-center border border-solid py-6 px-8 w-full rounded-box shadow-md"
-                            data-action="click->live#action"
-                            data-action-name="setSelectedPaymentMethod(methodCode={{ paymentMethod['code'] }})"
-                    >
-                        <img width="50" height="50" src="{{ asset('build/assets/images/ideal.png')|cdn('auto', 'square', 50) }}" alt="{{ paymentMethod['title'] }}">
-                        <div class="checkout__payment-payment-method-details grow">
-                            <strong>{{ paymentMethod['title'] }}</strong>
+<div class="container mx-auto mt-2 grid grid-cols-12 gap-4" {{ attributes }}>
+    <ul class="col-start-4 col-span-6 steps steps-vertical lg:steps-horizontal">
+        <li class="step step-accent"><a href="{{ path('app_checkout_address') }}">{{ 'Address'|trans }}</a></li>
+        <li class="step step-accent"><a href="{{ path('app_checkout_shipment') }}">{{ 'Shipping'|trans }}</a></li>
+        <li class="step step-accent">{{ 'Payment'|trans }}</li>
+        <li class="step">{{ 'Complete'|trans }}</li>
+    </ul>
+    <div class="py-8 col-start-4 col-span-5 container border border-base-300 rounded-box shadow-md border-solid grid justify-center">
+        <div class="checkout-step-container grid auto-rows-max">
+            <h2 class="text-2xl mt-4">{{ '3. Payment method'|trans }}</h2>
+            {% if errors %}
+                {{ errors|json_encode }}
+            {% endif %}
+            <div class="checkout__payment-container mt-6 grid gap-4 mb-4">
+                <div class="checkout__payment-payment-methods w-full grid gap-3">
+                    {% for paymentMethod in paymentMethods %}
+                        <div
+                                class="checkout__payment-payment-method {% if paymentMethod['code'] == selectedPaymentMethod %} shadow-red border-accent {% else %} border-base-200 {% endif %} cursor-pointer flex gap-8 items-center border border-solid py-6 px-8 w-full rounded-box shadow-md"
+                                data-action="click->live#action"
+                                data-action-name="setSelectedPaymentMethod(methodCode={{ paymentMethod['code'] }})"
+                        >
+                            <img width="50" height="50" src="{{ asset('build/assets/images/ideal.png')|cdn('auto', 'square', 50) }}" alt="{{ paymentMethod['title'] }}">
+                            <div class="checkout__payment-payment-method-details grow">
+                                <strong>{{ paymentMethod['title'] }}</strong>
+                            </div>
                         </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="divider lg:divider-vertical"></div>
+            <small>{{ couponErrorMessage }}</small>
+            <div class="flex gap-4 items-center">
+                <label class="cursor-pointer label gap-4">
+                    <strong class="label-text">{{ 'I wan\'t to use a coupon'|trans }}</strong>
+                    <input
+                            type="checkbox"
+                            class="checkbox checkbox-md checkbox-accent grow"
+                            {% if useCoupon %}checked{% endif %}
+                            data-model="useCoupon"
+                            data-action="change->live#action"
+                            data-action-name="changeUseCoupon"
+                    />
+                </label>
+                {% if useCoupon %}
+                    <div class="input-group" style="width: auto;">
+                        <input
+                                aria-label="apply coupon"
+                                type="text"
+                                placeholder="{{ 'Coupon code'|trans }}"
+                                class="input input-bordered {% if couponIsValid %} border-accent {% elseif couponErrorMessage %} border-error {% endif %} input-sm"
+                                data-model="norender|couponCode"
+                                value="{{ couponCode }}"
+                        />
+                        {% if couponIsValid %}
+                            <button
+                                    class="btn btn-square btn-accent btn-sm"
+                                    data-action="click->live#action"
+                                    data-action-name="removeCoupon"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+                                </svg>
+                            </button>
+                        {% elseif couponErrorMessage %}
+                            <button
+                                    class="btn btn-square btn-error btn-sm"
+                                    data-action="click->live#action"
+                                    data-action-name="applyCoupon"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"/>
+                                </svg>
+                            </button>
+                        {% else %}
+                            <button
+                                    class="btn btn-square btn-sm"
+                                    data-action="click->live#action"
+                                    data-action-name="applyCoupon"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"/>
+                                </svg>
+                            </button>
+                        {% endif %}
                     </div>
+                {% endif %}
+            </div>
+            <div class="divider lg:divider-vertical"></div>
+            <div class="checkout__address-actions mt-4 grid gap-4 grid-cols-2 items-center content-center">
+                <a class="link" href="{{ path('app_checkout_address') }}">&lt;&lt; {{ 'Back to address'|trans }}</a>
+                <button
+                        class="btn text-accent-content btn-accent btn-sm text-right"
+                        data-action="click->live#action"
+                        data-action-name="prevent|savePaymentMethod"
+                >
+                    <svg data-loading class="animate-spin -ml-1 mr-3 h-5 w-5 text-accent-content" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span data-loading="hide">
+                    {{ 'Place order'|trans }}
+                </span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-span-4 grid gap-4 auto-rows-max">
+        <div class="container py-4 px-8 border border-base-300 rounded-box shadow-md border-solid grid">
+            <h2 class="text-2xl mt-2">{{ 'Totals'|trans }}</h2>
+            <div class="cart__totals-totals grid grid-cols-3 gap-1 mt-2">
+                {% for total in this.totals %}
+                    <span class="col-span-2">{{ total['label'] }}</span>
+                    <strong data-loading="hide">&euro; {{ total['value'] }}</strong>
+                    <svg data-loading class="animate-spin -ml-1 mr-3 h-5 w-5 text-accent-content" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
                 {% endfor %}
             </div>
         </div>
-        <div id="reviews" class="divider lg:divider-vertical"></div>
-        <div class="checkout__address-actions mt-4 grid gap-4 grid-cols-2 items-center content-center">
-            <a class="link" href="{{ path('app_checkout_address') }}">&lt;&lt; {{ 'Back to address'|trans }}</a>
-            <button
-                    class="btn text-accent-content btn-accent btn-sm text-right"
-                    data-action="click->live#action"
-                    data-action-name="prevent|savePaymentMethod"
-            >
-                <svg data-loading class="animate-spin -ml-1 mr-3 h-5 w-5 text-accent-content" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                <span data-loading="hide">
-                    {{ 'Next step'|trans }}&gt;&gt;
-                </span>
-            </button>
+        <div class="container py-4 px-8 border border-base-300 rounded-box shadow-md border-solid grid">
+            <div class="checkout-summary-container grid">
+                <h2 class="text-2xl mt-2">{{ 'Summary'|trans }}</h2>
+                <div class="items" style="max-height: 450px; overflow-y: scroll">
+                    {% for cartItem in cartItems %}
+                        <div class="checkout-summary-item flex justify-center items-center">
+                            <div class="flex grow col-span-2 gap-5 border-solid mt-4">
+                                <img class="block float-left" width="80" height="80" src="{{ cartItem['product']['small_image']['url']|cdn('auto', 'square', 80) }}" alt="{{ cartItem['product']['name'] }}"/>
+                                <div class="grow">
+                                    <strong class="block text-lg">{{ cartItem['product']['name']|replace({'(': "<br />", ')': ''})|raw }}</strong>
+                                    {% for option in cartItem['configurable_options'] %}
+                                        <span class="block">{{ option['option_label'] }}: {{ option['value_label'] }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div>
+                                <strong class="grow text-center m-auto">&euro;{{ cartItem['prices']['row_total_including_tax']['value'] }}</strong>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
 </div>

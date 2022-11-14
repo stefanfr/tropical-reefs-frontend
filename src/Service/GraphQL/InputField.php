@@ -30,7 +30,7 @@ class InputField
 
     public function __toString(): string
     {
-        $inputField = $this->name;
+        $inputField = ' ' . $this->name;
         $inputField .= ': ';
 
         if (null !== $this->value) {
@@ -50,6 +50,8 @@ class InputField
 
             if (is_bool($this->value)) {
                 $inputField .= $this->value ? 'true' : 'false';
+            } else if (is_int($this->value) || in_array($this->value, ['DESC', 'ASC'])) {
+                $inputField .= $this->value;
             } else {
                 $inputField .= '"' . $this->value . '"';
             }

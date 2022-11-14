@@ -14,7 +14,8 @@
                     </a>
                 </li>
                 {% for breadcrumb in category['breadcrumbs'] ?? [] %}
-                    <li><a href="/{{ breadcrumb['category_url_path'] }}">{{ breadcrumb['category_name']|trans }}</a></li>
+                    <li><a href="/{{ breadcrumb['category_url_path'] }}">{{ breadcrumb['category_name']|trans }}</a>
+                    </li>
                 {% endfor %}
                 <li>{{ category['name']|trans }}</li>
             </ul>
@@ -24,8 +25,42 @@
 
 {% block body %}
     <div class="container mx-auto">
-        <h1 class="text-4xl">{{ category['name']|trans }} <small>({{ category['products']['total_count'] }})</small></h1>
-        <div class="mt-8 grid grid-cols-8 gap-10">
+        <div class="category__header mt-8 grid grid-cols-8 gap-5">
+            <h1 class="col-span-2 text-4xl">{{ category['name']|trans }} <small>({{ catalog['total_count'] }})</small>
+            </h1>
+            <div class="flex items-end justify-end col-span-6 grow">
+                <div>
+                    <select aria-label="Per page" name="sort" class="select select-sm select-bordered w-full max-w-xs" id="catalog_sort">
+                        {% for perPage in perPageOptions %}
+                            <option {% if catalog['page_info']['page_size'] == perPage %} selected {% endif %} value="{{ perPage }}">{{ perPage }} per page</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="pagination grow flex justify-center">
+                    <div class="btn-group">
+                        <button class="btn btn-sm" {% if catalog['page_info']['current_page'] %} disabled {% endif %}>«</button>
+                        <button class="btn btn-sm btn">{{ catalog['page_info']['current_page'] }}</button>
+                        <button class="btn btn-sm" {% if catalog['page_info']['current_page'] == catalog['page_info']['total_pages'] %} disabled {% endif %}>»</button>
+                    </div>
+                </div>
+                <div>
+                    <select aria-label="Sort" name="sort" class="select select-sm select-bordered w-full max-w-xs" id="catalog_sort">
+                        {% for field in catalog['sort_fields']['options'] %}
+                            {% if field['value'] == 'name' %}
+                                <option value="{{ field['value'] }}_ASC">{{ field['label'] }} (A-Z)</option>
+                                <option value="{{ field['value'] }}_DESC">{{ field['label'] }} (Z-A)</option>
+                            {% elseif field['value'] == 'price' %}
+                                <option value="{{ field['value'] }}_ASC">{{ field['label'] }} ({{ 'Ascending'|trans }})</option>
+                                <option value="{{ field['value'] }}_DESC">{{ field['label'] }} ({{ 'Descending'|trans }})</option>
+                                {% else %}
+                                    <option value="{{ field['value'] }}_ASC">{{ field['label'] }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="mt-8 grid grid-cols-8 gap-5">
             <div class="filters col-span-2">
                 {% if category['children']|length > 0 %}
                     <div class="bg-base-200 p-4">
@@ -39,65 +74,7 @@
                         </ul>
                     </div>
                 {% endif %}
-                <div class="filters__filter mt-4">
-                    <h3 class="font-bold">{{ 'Size' }}</h3>
-                    <div class="filters__filter-options mt-2">
-                        <div class="filters__filter-option form-control">
-                            <label class="cursor-pointer label flex gap-3">
-                                <span class="label-text text-base">{{ 'T'|trans }}</span>
-                                <input type="checkbox" class="checkbox checkbox-accent"/>
-                            </label>
-                        </div>
-                        <div class="filters__filter-option form-control">
-                            <label class="cursor-pointer label flex gap-3">
-                                <span class="label-text text-base">{{ 'S'|trans }}</span>
-                                <input type="checkbox" class="checkbox checkbox-accent"/>
-                            </label>
-                        </div>
-                        <div class="filters__filter-option form-control">
-                            <label class="cursor-pointer label flex gap-3">
-                                <span class="label-text text-base">{{ 'M'|trans }}</span>
-                                <input type="checkbox" class="checkbox checkbox-accent"/>
-                            </label>
-                        </div>
-                        <div class="filters__filter-option form-control">
-                            <label class="cursor-pointer label flex gap-3">
-                                <span class="label-text text-base">{{ 'L'|trans }}</span>
-                                <input type="checkbox" class="checkbox checkbox-accent"/>
-                            </label>
-                        </div>
-                        <div class="filters__filter-option form-control">
-                            <label class="cursor-pointer label flex gap-3">
-                                <span class="label-text text-base">{{ 'XL'|trans }}</span>
-                                <input type="checkbox" class="checkbox checkbox-accent"/>
-                            </label>
-                        </div>
-                        <div class="filters__filter-option form-control">
-                            <label class="cursor-pointer label flex gap-3">
-                                <span class="label-text text-base">{{ 'XXL'|trans }}</span>
-                                <input type="checkbox" class="checkbox checkbox-accent"/>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="filters__filter mt-4">
-                    <h3 class="font-bold">{{ 'Coral options' }}</h3>
-                    <div class="filters__filter-options mt-2">
-                        <div class="filters__filter-option form-control">
-                            <label class="cursor-pointer label flex gap-3">
-                                <span class="label-text text-base">{{ 'Cultured corals'|trans }}</span>
-                                <input type="checkbox" class="checkbox checkbox-accent"/>
-                            </label>
-                        </div>
-                        <div class="filters__filter-option form-control">
-                            <label class="cursor-pointer label flex gap-3">
-                                <span class="label-text text-base">{{ 'Wild collected corals'|trans }}</span>
-                                <input type="checkbox" class="checkbox checkbox-accent"/>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-4 filter__range-slider">
+                <div class="mt-4 filter__range-slider hidden">
                     <h3 class="font-bold">{{ 'Price' }}</h3>
                     <input type="range" min="0" max="100" value="100" class="range range-xs range-accent mt-2"/>
                     <div class="filter__range-slider-input grid grid-cols-3 mt-1">
@@ -106,9 +83,24 @@
                         <input type="number" value="100" class="input input-bordered input-accent input-sm w-full"/>
                     </div>
                 </div>
+                {% for filter in catalog['aggregations'] %}
+                    <div class="filters__filter mt-4">
+                        <h3 class="font-bold">{{ filter['label'] }}</h3>
+                        <div class="filters__filter-options mt-2">
+                            {% for option in filter['options'] %}
+                                <div class="filters__filter-option form-control">
+                                    <label class="cursor-pointer label flex gap-3">
+                                        <span class="label-text text-base">{{ option['label'] }} ({{ option['count'] }})</span>
+                                        <input name="{{ filter['attribute_code'] }}[]" value="{{ option['value'] }}" type="checkbox" class="checkbox checkbox-accent"/>
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
-            <div class="product_row grid grid-cols-4 gap-4 col-span-6 auto-rows-min">
-                {% include 'catalog/_partials/product_list.html.twig' with {'items': category['products']['items']} %}
+            <div class="product_row grid grid-cols-4 gap-5 col-span-6 auto-rows-min">
+                {% include 'catalog/_partials/product_list.html.twig' with {'items': catalog['items']} %}
             </div>
         </div>
     </div>

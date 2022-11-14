@@ -51,4 +51,145 @@ class MagentoCheckoutPaymentApiService
 
         return $response['errors'] ?? false;
     }
+
+    public function removeCoupon(): array
+    {
+        $response = (new Request(
+            (new Mutation('removeCouponFromCart')
+            )->addParameter(
+                (new Input('input')
+                )->addFields(
+                    [
+                        new InputField('cart_id', $this->magentoCheckoutApiService->getQuoteMaskId()),
+                    ]
+                )
+            )->addField(
+                (new Field('cart')
+                )->addChildFields(
+                    [
+                        new Field('id'),
+                        (new Field('prices')
+                        )->addChildFields(
+                            [
+                                (new Field('subtotal_including_tax')
+                                )->addChildFields(
+                                    [
+                                        new Field('value'),
+                                        new Field('currency'),
+                                    ]
+                                ),
+                                (new Field('discounts')
+                                )->addChildFields(
+                                    [
+                                        new Field('label'),
+                                        (new Field('amount')
+                                        )->addChildFields(
+                                            [
+                                                new Field('value'),
+                                                new Field('currency'),
+                                            ]
+                                        ),
+                                    ]
+                                ),
+                                (new Field('applied_taxes')
+                                )->addChildFields(
+                                    [
+                                        new Field('label'),
+                                        (new Field('amount')
+                                        )->addChildFields(
+                                            [
+                                                new Field('value'),
+                                                new Field('currency'),
+                                            ]
+                                        ),
+                                    ]
+                                ),
+                                (new Field('grand_total')
+                                )->addChildFields(
+                                    [
+                                        new Field('value'),
+                                        new Field('currency'),
+                                    ]
+                                ),
+                            ]
+                        ),
+                    ]
+                )
+            ),
+            $this->mageGraphQlClient
+        ))->send();
+
+        return $response['data']['removeCouponFromCart']['cart'] ?? $response;
+    }
+
+    public function applyCoupon(string $couponCode): array
+    {
+        $response = (new Request(
+            (new Mutation('applyCouponToCart')
+            )->addParameter(
+                (new Input('input')
+                )->addFields(
+                    [
+                        new InputField('cart_id', $this->magentoCheckoutApiService->getQuoteMaskId()),
+                        new InputField('coupon_code', $couponCode),
+                    ]
+                )
+            )->addField(
+                (new Field('cart')
+                )->addChildFields(
+                    [
+                        new Field('id'),
+                        (new Field('prices')
+                        )->addChildFields(
+                            [
+                                (new Field('subtotal_including_tax')
+                                )->addChildFields(
+                                    [
+                                        new Field('value'),
+                                        new Field('currency'),
+                                    ]
+                                ),
+                                (new Field('discounts')
+                                )->addChildFields(
+                                    [
+                                        new Field('label'),
+                                        (new Field('amount')
+                                        )->addChildFields(
+                                            [
+                                                new Field('value'),
+                                                new Field('currency'),
+                                            ]
+                                        ),
+                                    ]
+                                ),
+                                (new Field('applied_taxes')
+                                )->addChildFields(
+                                    [
+                                        new Field('label'),
+                                        (new Field('amount')
+                                        )->addChildFields(
+                                            [
+                                                new Field('value'),
+                                                new Field('currency'),
+                                            ]
+                                        ),
+                                    ]
+                                ),
+                                (new Field('grand_total')
+                                )->addChildFields(
+                                    [
+                                        new Field('value'),
+                                        new Field('currency'),
+                                    ]
+                                ),
+                            ]
+                        ),
+                    ]
+                ),
+            ),
+            $this->mageGraphQlClient
+        ))->send();
+
+        return $response['data']['applyCouponToCart']['cart'] ?? $response;
+    }
 }

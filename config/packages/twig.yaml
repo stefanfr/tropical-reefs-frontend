@@ -3,6 +3,7 @@ twig:
     default_path: '%kernel.project_dir%/templates'
     globals:
         isCheckout: false
+        storeConfig: '@App\Twig\Global\Core\StoreConfig'
         categoryTree: '@App\Twig\Global\Catalog\CategoryTree'
 
 when@test:

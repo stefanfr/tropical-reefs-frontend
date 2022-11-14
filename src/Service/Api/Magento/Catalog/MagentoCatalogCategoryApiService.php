@@ -8,6 +8,8 @@ use App\Service\GraphQL\Field;
 use App\Service\GraphQL\Filter;
 use App\Service\GraphQL\Filters;
 use App\Service\GraphQL\Fragment;
+use App\Service\GraphQL\InputField;
+use App\Service\GraphQL\InputObject;
 use App\Service\GraphQL\Parameter;
 use App\Service\GraphQL\Query;
 use App\Service\GraphQL\Request;
@@ -119,10 +121,14 @@ class MagentoCatalogCategoryApiService
 
     public function collectCategory(string $uid, bool $debug = false): array
     {
+        if ($debug) {
+            $this->redisAdapter->delete('catalog_category_products_' . $uid);
+        }
+
         return $this->redisAdapter->get(
             'catalog_category_products_' . $uid,
             function (ItemInterface $item) use ($uid, $debug) {
-                $item->expiresAfter(1 * 60 * 60);
+                $item->expiresAfter(24 * 60 * 60);
 
                 $response = (new Request(
                     (new Query('category')
@@ -151,84 +157,6 @@ class MagentoCatalogCategoryApiService
                                     new Field('url_path'),
                                 ]
                             ),
-                            (new Field('products')
-                            )->addChildFields(
-                                [
-                                    (new Field('page_info')
-                                    )->addChildFields(
-                                        [
-                                            new Field('current_page'),
-                                            new Field('page_size'),
-                                            new Field('total_pages'),
-                                        ]
-                                    ),
-                                    new Field('total_count'),
-                                    (new Field('items')
-                                    )->addChildFields(
-                                        [
-                                            new Field('uid'),
-                                            new Field('type_id'),
-                                            new Field('url_key'),
-                                            new Field('name'),
-                                            new Field('sku'),
-                                            (new Field('price_range')
-                                            )->addChildField(
-                                                (new Field('minimum_price')
-                                                )->addChildFields(
-                                                    [
-                                                        (new Field('final_price'))
-                                                            ->addChildFields(
-                                                                [
-                                                                    new Field('value'),
-                                                                    new Field('currency'),
-                                                                ]
-                                                            ),
-                                                        (new Field('regular_price'))
-                                                            ->addChildFields(
-                                                                [
-                                                                    new Field('value'),
-                                                                    new Field('currency'),
-                                                                ]
-                                                            ),
-                                                        (new Field('discount'))
-                                                            ->addChildFields(
-                                                                [
-                                                                    new Field('amount_off'),
-                                                                    new Field('percent_off'),
-                                                                ]
-                                                            ),
-                                                    ]
-                                                )
-                                            ),
-                                            (new Field('small_image')
-                                            )->addChildFields(
-                                                [
-                                                    new Field('url'),
-                                                    new Field('label'),
-                                                ]
-                                            ),
-                                            (new Fragment('ConfigurableProduct')
-                                            )->addFields(
-                                                [
-                                                    (new Field('variants')
-                                                    )->addChildFields(
-                                                        [
-                                                            (new Field('product')
-                                                            )->addChildFields(
-                                                                [
-                                                                    (new Field('name')),
-                                                                    (new Field('sku')),
-                                                                    (new Field('size')),
-                                                                ]
-                                                            ),
-                                                        ]
-                                                    ),
-                                                ]
-                                            ),
-                                        ]
-                                    ),
-                                ]
-                            ),
                         ]
                     )
                     ,
@@ -241,6 +169,177 @@ class MagentoCatalogCategoryApiService
                 }
 
                 return $response['data']['category'] ?? throw new NotFoundHttpException('Category not found');
+            }
+        );
+    }
+
+    public function collectCategoryProducts(string $categoryUid, array $options = [], array $filters = [], bool $debug = false): array
+    {
+        $customFilter = new Filters('filter');
+
+        if ( ! empty($filters)) {
+            foreach ($filters as $filter) {
+                $customFilter->addFilter(
+                    (new Filter($filter['attribute']))
+                        ->addOperator(
+                            $filter['operator'],
+                            $filter['value']
+                        ),
+                );
+            }
+        }
+
+        if ( ! empty($options)) {
+            if (isset($options['search'])) {
+                $parameters[] = new InputField('search', $options['search']);
+            }
+            if (isset($options['pageSize'])) {
+                $parameters[] = new InputField('pageSize', $options['pageSize']);
+            }
+            if (isset($options['currentPage'])) {
+                $parameters[] = new InputField('currentPage', $options['currentPage']);
+            }
+            if (isset($options['sort'])) {
+                $parameters[] = new InputObject('sort', [
+                    new InputField($options['sort']['value'], $options['sort']['direction']),
+                ]);
+            }
+        }
+
+        $parameters = [
+            $customFilter->addFilter(
+                (new Filter('category_uid'))
+                    ->addOperator(
+                        'eq',
+                        $categoryUid
+                    ),
+            ),
+        ];
+
+        return $this->redisAdapter->get(
+            'catalog_category_products_' . sha1(serialize($parameters)),
+            function (ItemInterface $item) use ($parameters) {
+                $item->expiresAfter(4 * 60 * 60);
+
+                $response = (new Request(
+                    (new Query('products', $parameters)
+                    )->addFields(
+                        [
+                            new Field('total_count'),
+                            (new Field('items')
+                            )->addChildFields(
+                                [
+                                    new Field('uid'),
+                                    new Field('type_id'),
+                                    new Field('url_key'),
+                                    new Field('name'),
+                                    new Field('sku'),
+                                    (new Field('price_range')
+                                    )->addChildField(
+                                        (new Field('minimum_price')
+                                        )->addChildFields(
+                                            [
+                                                (new Field('final_price'))
+                                                    ->addChildFields(
+                                                        [
+                                                            new Field('value'),
+                                                            new Field('currency'),
+                                                        ]
+                                                    ),
+                                                (new Field('regular_price'))
+                                                    ->addChildFields(
+                                                        [
+                                                            new Field('value'),
+                                                            new Field('currency'),
+                                                        ]
+                                                    ),
+                                                (new Field('discount'))
+                                                    ->addChildFields(
+                                                        [
+                                                            new Field('amount_off'),
+                                                            new Field('percent_off'),
+                                                        ]
+                                                    ),
+                                            ]
+                                        )
+                                    ),
+                                    (new Field('small_image')
+                                    )->addChildFields(
+                                        [
+                                            new Field('url'),
+                                            new Field('label'),
+                                        ]
+                                    ),
+                                    (new Fragment('ConfigurableProduct')
+                                    )->addFields(
+                                        [
+                                            (new Field('variants')
+                                            )->addChildFields(
+                                                [
+                                                    (new Field('product')
+                                                    )->addChildFields(
+                                                        [
+                                                            (new Field('name')),
+                                                            (new Field('sku')),
+                                                            (new Field('size')),
+                                                        ]
+                                                    ),
+                                                ]
+                                            ),
+                                        ]
+                                    ),
+                                ]
+                            ),
+                            (new Field('aggregations')
+                            )->addChildFields(
+                                [
+                                    new Field('count'),
+                                    new Field('label'),
+                                    new Field('position'),
+                                    new Field('attribute_code'),
+                                    (new Field('options')
+                                    )->addChildFields(
+                                        [
+                                            new Field('count'),
+                                            new Field('label'),
+                                            new Field('value'),
+                                        ]
+                                    ),
+                                ]
+                            ),
+                            (new Field('page_info')
+                            )->addChildFields(
+                                [
+                                    new Field('current_page'),
+                                    new Field('page_size'),
+                                    new Field('total_pages'),
+                                ]
+                            ),
+                            (new Field('sort_fields')
+                            )->addChildFields(
+                                [
+                                    new Field('default'),
+                                    (new Field('options')
+                                    )->addChildFields(
+                                        [
+                                            new Field('label'),
+                                            new Field('value'),
+                                        ]
+                                    ),
+                                ]
+                            ),
+                            (new Field('suggestions')
+                            )->addChildFields(
+                                [
+                                    new Field('search'),
+                                ]
+                            ),
+                        ]
+                    ),
+                    $this->mageGraphQlClient
+                ))->send();
+
+                return $response['data']['products'] ?? $response['errors'];
             }
         );
     }

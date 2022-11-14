@@ -30,7 +30,10 @@ class Filters
     public function __toString(): string
     {
         $filters = $this->key . ': {';
-        foreach ($this->filters as $filter) {
+        foreach ($this->filters as $key => $filter) {
+            if ($key) {
+                $filters .= ' ';
+            }
             $filters .= $filter->__toString();
         }
 

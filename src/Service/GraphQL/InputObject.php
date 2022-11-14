@@ -29,7 +29,7 @@ class InputObject
 
     public function __toString(): string
     {
-        $inputField = $this->name;
+        $inputField = ' ' . $this->name;
         $inputField .= ': {';
 
         foreach ($this->childInputFields as $childInputField) {

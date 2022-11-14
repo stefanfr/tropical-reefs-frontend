@@ -30,7 +30,12 @@
         </form>
     </div>
     <div class="flex">
-        <strong class="grow text-center m-auto">&euro;{{ item['prices']['row_total_including_tax']['value'] }}</strong>
+        <div class="prices grow text-center m-auto">
+            {% if item['prices']['total_item_discount']['value'] > 0 %}
+                <small class="mr-4">&euro; {{ item['prices']['total_item_discount']['value'] }}</small>
+            {% endif %}
+            <strong class="">&euro;{{ item['prices']['row_total_including_tax']['value'] }}</strong>
+        </div>
         <form action="{{ path('app_checkout_cart_delete', {uid: item['uid']}) }}" method="post" class="flex">
             <input type='hidden' name='_method' value='DELETE'>
             <button>
