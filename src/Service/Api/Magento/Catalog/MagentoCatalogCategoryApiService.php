@@ -13,6 +13,7 @@ use App\Service\GraphQL\InputObject;
 use App\Service\GraphQL\Parameter;
 use App\Service\GraphQL\Query;
 use App\Service\GraphQL\Request;
+use App\Twig\Global\Core\StoreConfig;
 use Exception;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -22,6 +23,7 @@ class MagentoCatalogCategoryApiService
 {
     public function __construct(
         protected MageGraphQlClient $mageGraphQlClient,
+        protected StoreConfig       $storeConfig,
         protected RedisAdapter      $redisAdapter,
     )
     {
@@ -41,11 +43,7 @@ class MagentoCatalogCategoryApiService
         return $this->redisAdapter->get($cacheKey, function (ItemInterface $item) use ($uid, $debug) {
             $item->expiresAfter(24 * 60 * 60);
 
-            $parentId = '2';
-
-            if (null !== $uid) {
-                $parentId = base64_decode($uid);
-            }
+            $parentId = $uid ?? $this->storeConfig->getData('root_category_uid');
 
             try {
                 $response = (new Request(
@@ -53,7 +51,7 @@ class MagentoCatalogCategoryApiService
                     )->addParameter(
                         (new Filters)
                             ->addFilter(
-                                (new Filter('parent_id'))
+                                (new Filter('parent_category_uid'))
                                     ->addOperator(
                                         'in',
                                         [$parentId]
