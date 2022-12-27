@@ -46,6 +46,7 @@ class MagentoCodeStoreConfigService
                         new Field('default_title'),
                         new Field('secure_base_url'),
                         new Field('default_keywords'),
+                        new Field('root_category_uid'),
                         new Field('is_default_store'),
                         new Field('store_group_code'),
                         new Field('base_currency_code'),
