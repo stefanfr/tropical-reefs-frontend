@@ -12,14 +12,23 @@ class Mutation
     {
     }
 
-    public function addParameter(Parameter|Filters|Input $parameter): static
+    public function addParameter(Parameter|Filters|InputField|Input|InputObject $parameter): static
     {
         $this->params[] = $parameter;
 
         return $this;
     }
 
-    public function addField(Field $field): static
+    public function addParameters(array $parameters): static
+    {
+        foreach ($parameters as $parameter) {
+            $this->addParameter($parameter);
+        }
+
+        return $this;
+    }
+
+    public function addField(Field|Selection $field): static
     {
         $this->fields[] = $field;
 

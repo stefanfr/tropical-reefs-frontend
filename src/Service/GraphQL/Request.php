@@ -3,31 +3,38 @@
 namespace App\Service\GraphQL;
 
 use App\Service\Api\Magento\Http\MageGraphQlClient;
-use JsonException;
 
 class Request
 {
     public function __construct(
         protected Query|Mutation    $query,
-        protected MageGraphQlClient $mageGraphQlClient
+        protected MageGraphQlClient $mageGraphQlClient,
     )
     {
     }
 
     /**
-     * @throws JsonException
      */
     public function send(): array
     {
-        return json_decode(
-            $this->mageGraphQlClient->send(
+        try {
+            $headers = [
+                'Content-Type' => 'application/json',
+            ];
+
+            $response = $this->mageGraphQlClient->send(
                 $this->mageGraphQlClient->post(
                     $this->mageGraphQlClient->getApiUrl(),
                     json_encode(['query' => (string)$this->query], JSON_THROW_ON_ERROR)
                 ),
                 [
-                    'headers' => ['Content-Type' => 'application/json'],
+                    'headers' => $headers,
                 ]
-            )->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+            )->getBody()->getContents();
+
+            return json_decode($response, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\Exception $exception) {
+            dd($response);
+        }
     }
 }

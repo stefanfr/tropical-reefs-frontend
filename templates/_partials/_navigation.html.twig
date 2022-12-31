@@ -1,20 +1,23 @@
 {% set categories = categoryTree.collect %}
-<div class="bg-base-200 w-full top-0 border-solid border-gray-300 border-b hidden md:flex" id="sticky-nav" style="z-index: 10000">
-    <nav class="menu-bar container mx-auto flex py-5">
+<div class="transition-all bg-base-200 w-full top-0 border-solid border-gray-300 border-b hidden md:flex" id="sticky-nav" style="z-index: 10000">
+    <nav class="duration-500 transition-all menu-bar container mx-auto flex py-5" id="menu-bar">
         <div class="menu-items flex grow">
             <div class="flex gap-10">
-                {% for category in categories %}
-                    <div class="dropdown cursor-pointer h-full leading-5">
-                        <label tabindex="0" class="title cursor-pointer">{{ category['name']|trans }}</label>
-                        <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
-                            {% for childCategory in category['children'] %}
-                                <li>
-                                    <a href="/{{ childCategory['url_path'] }}">{{ childCategory['name'] }}</a>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                {% endfor %}
+                <div class="dropdown cursor-pointer h-full leading-5">
+                    <label tabindex="0" class="title cursor-pointer">{{ 'Products'|trans }}</label>
+                    <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box" style="width: 300px">
+                        {% for category in categories %}
+                            <li>
+                                <a href="/{{ category['url_path'] }}">{{ category['name'] }}</a>
+                            </li>
+                            {#                            {% for childCategory in category['children'] %} #}
+                            {#                                <li> #}
+                            {#                                    <a href="/{{ childCategory['url_path'] }}">{{ childCategory['name'] }}</a> #}
+                            {#                                </li> #}
+                            {#                            {% endfor %} #}
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
         </div>
         <div class="menu-items menu-right flex">

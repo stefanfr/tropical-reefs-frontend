@@ -1,0 +1,37 @@
+<div class="customer_menu col-span-2">
+    <ul class="menu bg-base-100 border border-base-300 rounded-box shadow-md border-solid">
+        <li>
+            <a
+                class="{% if app.request.get('_route') == 'app_customer' %}active bg-accent{% endif %}"
+                href="{{ path('app_customer') }}"
+            >{{ 'Account overview'|trans }}</a>
+        </li>
+        <li>
+            <a
+                    class="{% if 'app_customer_order' in app.request.get('_route') %}active bg-accent{% endif %}"
+                    href="{{ path('app_customer_order_overview') }}"
+            >{{ 'My orders'|trans }}</a>
+        </li>
+        <li>
+            <a
+                class="{% if 'app_customer_address' in app.request.get('_route') %}active bg-accent{% endif %}"
+                href="{{ path('app_customer_address') }}"
+            >{{ 'Addresses'|trans }}</a>
+        </li>
+        <li>
+            <a
+                    class="{% if 'app_customer_general' in app.request.get('_route') %}active bg-accent{% endif %}"
+                    href="{{ path('app_customer_general') }}"
+            >{{ 'Account details'|trans }}</a>
+        </li>
+        <li>
+            <a>{{ 'Newsletter'|trans }}</a>
+        </li>
+        <li>
+            <a>{{ 'Wishlist'|trans }}</a>
+        </li>
+        <li>
+            <a href="{{ path('app_customer_logout') }}">{{ 'Logout'|trans }}</a>
+        </li>
+    </ul>
+</div>

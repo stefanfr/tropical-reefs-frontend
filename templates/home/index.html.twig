@@ -4,7 +4,7 @@
 
 {% block body %}
     <div class="carousel w-full -mt-4">
-        <div id="slide1" class="carousel-item relative w-full">
+        <div id="slide1" class="carousel-item relative w-full pb-4">
             <picture>
                 <source media="(max-width: 640px)" srcset="https://via.placeholder.com/640x192">
                 <source media="(max-width: 678px)" srcset="https://via.placeholder.com/678x203">
@@ -19,8 +19,8 @@
     <div class="divider lg:divider-vertical w-full" style="margin-top: 2.5rem">
         <h2 style="font-size: 1.7rem; font-weight: bold">{{ 'Categories'|trans }}</h2>
     </div>
-    <div class="container mx-auto  mt-10">
-        <div class="category grid grid-cols-2 md:grid-cols-6 gap-10">
+    <div class="container mx-auto py-6">
+        <div class="category grid grid-cols-2 md:grid-cols-6 gap-10 mt-10">
             {% for category in categories %}
                 <a href="/{{ category['url_path'] }}" class="category__item relative rounded-full">
                     {% if null == category['image'] %}
@@ -41,21 +41,23 @@
             {% endfor %}
         </div>
     </div>
-    <div class="divider lg:divider-vertical w-full" style="margin-top: 2.5rem;">
-        <h2 style="font-size: 1.7rem; font-weight: bold">{{ 'Our brands'|trans }}</h2>
-    </div>
-    <div class="container mx-auto mt-10">
-        <div class="category grid grid-cols-2 lg:grid-cols-5 gap-5 mt-4 row">
-            {% for brand in brands %}
-                <a href="/{{ brand['url_path'] }}" class="category__item" aria-label="{{ brand['name'] }}">
-                    <picture>
-                        <source media="(max-width: 678px)" srcset="{{ brand['image']|cdn('auto', 310, 195) }}">
-                        <img alt="{{ brand['name'] }}" width="434" height="270" src="{{ brand['image']|cdn('auto', 434, 270) }}"/>
-                    </picture>
-                </a>
-            {% endfor %}
+    {% if brands|length > 0 %}
+        <div class="divider lg:divider-vertical w-full" style="margin-top: 2.5rem;">
+            <h2 style="font-size: 1.7rem; font-weight: bold">{{ 'Our brands'|trans }}</h2>
         </div>
-    </div>
+        <div class="container mx-auto py-6">
+            <div class="category grid grid-cols-2 lg:grid-cols-5 gap-5 mt-4 row">
+                {% for brand in brands %}
+                    <a href="/{{ brand['url_path'] }}" class="category__item" aria-label="{{ brand['name'] }}">
+                        <picture>
+                            <source media="(max-width: 678px)" srcset="{{ brand['image']|cdn('auto', 310, 195) }}">
+                            <img alt="{{ brand['name'] }}" width="434" height="270" src="{{ brand['image']|cdn('auto', 434, 270) }}"/>
+                        </picture>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
     <div class="grid md:grid-cols-2 seo_block flex gap-10 pr-20 mt-20 items-center mt-16 bg-base-300">
         <img class="grow" width="714" height="406" src="{{ asset('build/assets/images/cropped_coral_scene-816x464_1_.webp')|cdn('auto', 714, 406) }}" alt="">
         <div class="grow seo_block__content row">

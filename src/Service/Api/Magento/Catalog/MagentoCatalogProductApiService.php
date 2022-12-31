@@ -290,7 +290,7 @@ class MagentoCatalogProductApiService
 
     public function collectHomeFeaturedProducts($debug = false)
     {
-        $uid = base64_encode('254');
+        $uid = base64_encode('308');
         return $this->redisAdapter->get('catalog_home_featured_products_' . $uid,
             function (ItemInterface $item) use ($uid, $debug) {
                 $item->expiresAfter(24 * 60 * 60);

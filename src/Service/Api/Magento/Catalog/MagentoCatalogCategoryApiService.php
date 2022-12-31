@@ -136,6 +136,8 @@ class MagentoCatalogCategoryApiService
                         [
                             new Field('name'),
                             new Field('description'),
+                            new Field('product_count'),
+                            new Field('url_path'),
                             (new Field('breadcrumbs')
                             )->addChildFields(
                                 [
@@ -153,6 +155,7 @@ class MagentoCatalogCategoryApiService
                                     new Field('name'),
                                     new Field('path'),
                                     new Field('url_path'),
+                                    new Field('product_count'),
                                 ]
                             ),
                         ]
@@ -187,6 +190,16 @@ class MagentoCatalogCategoryApiService
             }
         }
 
+        $parameters = [
+            $customFilter->addFilter(
+                (new Filter('category_uid'))
+                    ->addOperator(
+                        'eq',
+                        $categoryUid
+                    ),
+            ),
+        ];
+
         if ( ! empty($options)) {
             if (isset($options['search'])) {
                 $parameters[] = new InputField('search', $options['search']);
@@ -203,16 +216,6 @@ class MagentoCatalogCategoryApiService
                 ]);
             }
         }
-
-        $parameters = [
-            $customFilter->addFilter(
-                (new Filter('category_uid'))
-                    ->addOperator(
-                        'eq',
-                        $categoryUid
-                    ),
-            ),
-        ];
 
         return $this->redisAdapter->get(
             'catalog_category_products_' . sha1(serialize($parameters)),
@@ -344,6 +347,10 @@ class MagentoCatalogCategoryApiService
 
     public function collectHomeCategories($debug = false)
     {
+        if ($debug) {
+            $this->redisAdapter->delete('catalog_category_homepage');
+        }
+
         return $this->redisAdapter->get('catalog_category_homepage',
             function (ItemInterface $item) use ($debug) {
                 $item->expiresAfter(24 * 60 * 60);
@@ -362,8 +369,8 @@ class MagentoCatalogCategoryApiService
                                 )->addFilter(
                                     (new Filter('is_brand'))
                                         ->addOperator(
-                                            'null',
-                                            ''
+                                            'eq',
+                                            0
                                         ),
                                 ),
                         )->addFields(
@@ -371,10 +378,12 @@ class MagentoCatalogCategoryApiService
                                 new Field('name'),
                                 new Field('image'),
                                 new Field('url_path'),
+                                new Field('is_brand'),
                                 new Field('homepage_position'),
+                                new Field('show_on_homepage'),
                             ]
-                        )
-                        , $this->mageGraphQlClient
+                        ),
+                        $this->mageGraphQlClient
                     ))->send();
 
                     if ($debug) {

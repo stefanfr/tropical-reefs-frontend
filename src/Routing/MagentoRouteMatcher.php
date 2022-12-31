@@ -59,7 +59,7 @@ class MagentoRouteMatcher implements UrlMatcherInterface
     protected function resolverCategoryRoute(array $magentoMatch): array
     {
         return [
-            '_controller' => 'App\Controller\CategoryController::index',
+            '_controller' => 'App\Controller\Catalog\CategoryController::index',
             'magentoMatch' => $magentoMatch,
         ];
     }
@@ -67,7 +67,7 @@ class MagentoRouteMatcher implements UrlMatcherInterface
     protected function resolverProductRoute(array $magentoMatch): array
     {
         return [
-            '_controller' => 'App\Controller\ProductController::index',
+            '_controller' => 'App\Controller\Catalog\ProductController::index',
             'magentoMatch' => $magentoMatch,
         ];
     }

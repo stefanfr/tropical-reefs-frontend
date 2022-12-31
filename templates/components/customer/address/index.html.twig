@@ -1,0 +1,63 @@
+<div {{ attributes }}>
+    {{ form_start(form, {attr: {
+        class: 'grid gap-4 mt-4',
+        'data-action': 'change->live#action',
+        'data-action-name': 'postcodeLookup'
+    }}) }}
+    {{ form_errors(form) }}
+    <div class="flex gap-4">
+        {{ form_widget(form.firstname) }}
+        {{ form_widget(form.lastname) }}
+    </div>
+    <div class="flex gap-4">
+        {{ form_widget(form.company) }}
+        {{ form_widget(form.telephone) }}
+    </div>
+    {{ form_widget(form.country_code) }}
+    <div class="flex gap-4">
+        {{ form_widget(form.postcode) }}
+        {{ form_widget(form.houseNr) }}
+        {{ form_widget(form.add) }}
+    </div>
+    <div class="hidden">
+        {{ form_widget(form.street) }}
+        {{ form_widget(form.city) }}
+    </div>
+
+    {% if lookupDetails is not empty %}
+        <div class="checkout__address-postcode-result bg-base-200 py-6 px-4 rounded-box shadow-md mt-4">
+            <strong>{{ 'We found this address'|trans }}:</strong>
+            <address class="mt-2">{{ lookupDetails['street'] }} {{ lookupDetails['house_nr_flat'] }}</address>
+            <address>{{ lookupDetails['zipcode'] }}, {{ lookupDetails['place'] }}</address>
+        </div>
+    {% endif %}
+
+    <div class="flex justify-end">
+        <div class="grid grow">
+            <label for="subscribe" class="label label-text justify-start gap-2">
+                {{ form_widget(form.isDefaultShipping) }}
+                {{ form_label(form.isDefaultShipping) }}
+            </label>
+            <label for="subscribe" class="label label-text justify-start gap-2">
+                {{ form_widget(form.isDefaultBilling) }}
+                {{ form_label(form.isDefaultBilling) }}
+            </label>
+        </div>
+        {% if address.id != null %}
+            <input
+                    type="submit"
+                    class="btn btn-accent self-end"
+                    value="{{ 'Update Address'|trans }}"
+                    data-action="click->live#action"
+                    data-action-name="prevent|saveAddress"/>
+        {% else %}
+            <input
+                    type="submit"
+                    class="btn btn-accent self-end"
+                    value="{{ 'Save Address'|trans }}"
+                    data-action="click->live#action"
+                    data-action-name="prevent|saveAddress"/>
+        {% endif %}
+    </div>
+    {{ form_end(form) }}
+</div>

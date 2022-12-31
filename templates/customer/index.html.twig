@@ -1,7 +1,52 @@
 {% extends 'base.html.twig' %}
-{% set showDivider = true %}
 
-{% block title %}{% endblock %}
+{% block title %}{{ 'Customer Account'|trans }}{% endblock %}
 
 {% block body %}
+    <div class="container mx-auto mt-4 grid grid-cols-12 gap-8">
+        {% include 'customer/_partials/account_menu.html.twig' %}
+        <div class="grow grid grid-cols-2 mt-4 auto-rows-min col-span-10 gap-6">
+            <div class="account__details-headers col-span-2 mb-4">
+                <h2 class="text-3xl">{{ 'My Account'|trans }}</h2>
+            </div>
+            <div class="account__details-default-address">
+                {% if null == defaultShippingAddress %}
+                    <span>{{ 'No default type address yet'|trans({type: 'shipping'|trans}) }}</span><br/>
+                    <a class="text-accent" href="{{ path('app_customer_address_create') }}">{{ 'Click here to create a new address'|trans }}</a>
+                {% else %}
+                    <div class="account__details-default-address-shipping relative border border-solid border-base-300 rounded-box py-4 px-6">
+                        <h3 class="text-xl mb-6">{{ 'Default shipping address'|trans }}</h3>
+                        <strong class="block">{{ defaultShippingAddress['firstname'] }} {{ defaultShippingAddress['lastname'] }}</strong>
+                        <span class="block">{{ defaultShippingAddress['company'] }}</span>
+                        <span class="block">{{ defaultShippingAddress['street']|join(' ') }}</span>
+                        <span class="block">{{ defaultShippingAddress['postcode'] }}, {{ defaultShippingAddress['city'] }}</span>
+                        <span class="block">{{ defaultShippingAddress['country_code'] }}</span>
+                        <a
+                                href="{{ path('app_customer_address_update', {'addressId': defaultShippingAddress['id']}) }}"
+                                class="btn btn-accent btn-sm absolute right-2 bottom-2"
+                        >{{ 'Edit'|trans }}</a>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="account__details-default-address">
+                {% if null == defaultBillingAddress %}
+                    <span>{{ 'No default type address yet'|trans({type: 'billing'|trans}) }}</span><br/>
+                    <a class="text-accent" href="{{ path('app_customer_address_create') }}">{{ 'Click here to create a new address'|trans }}</a>
+                {% else %}
+                    <div class="account__details-default-address-billing relative border border-solid border-base-300 rounded-box py-4 px-6">
+                        <h3 class="text-xl mb-6">{{ 'Default billing address'|trans }}</h3>
+                        <strong class="block">{{ defaultBillingAddress['firstname'] }} {{ defaultBillingAddress['lastname'] }}</strong>
+                        <span class="block">{{ defaultBillingAddress['company'] }}</span>
+                        <span class="block">{{ defaultBillingAddress['street']|join(' ') }}</span>
+                        <span class="block">{{ defaultBillingAddress['postcode'] }}, {{ defaultBillingAddress['city'] }}</span>
+                        <span class="block">{{ defaultBillingAddress['country_code'] }}</span>
+                        <a
+                                href="{{ path('app_customer_address_update', {'addressId': defaultBillingAddress['id']}) }}"
+                                class="btn btn-accent btn-sm absolute right-2 bottom-2"
+                        >{{ 'Edit'|trans }}</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 {% endblock %}

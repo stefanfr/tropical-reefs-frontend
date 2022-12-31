@@ -75,7 +75,7 @@ h1, h2, h3 {
 
 
 .maintenance {
-  margin: 0!important;
+  margin: 0 !important;
   overflow: hidden;
 
   .video-container {
@@ -83,4 +83,20 @@ h1, h2, h3 {
     height: 100vh;
     object-fit: cover;
   }
+}
+
+.cart__totals-totals {
+  strong {
+    text-align: right;
+  }
+
+  strong:nth-last-child(1), span:nth-last-child(2) {
+    margin-top: .75rem;
+    font-size: 1.12rem;
+    font-weight: bold;
+  }
+}
+
+.customer_menu {
+
 }

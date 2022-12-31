@@ -16,11 +16,11 @@
         <div class="mt-2 text-right grid mr-1">
             {% if this.getDiscountAmount > 0 %}
                 <small class="grow product_row__from_price line-through text-md">
-                    &euro;{{ this.getProductRegularPrice }}
+                    {{ this.getProductRegularPrice|format_currency('EUR', [], 'nl_NL') }}
                 </small>
             {% endif %}
             <strong class="grow product_row__final_price text-5xl">
-                &euro;{{ this.getProductFinalPrice }}
+                {{ this.getProductFinalPrice|format_currency('EUR', [], 'nl_NL') }}
             </strong>
         </div>
     </div>

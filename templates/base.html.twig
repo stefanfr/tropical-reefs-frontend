@@ -34,31 +34,22 @@
 
 <script>
     const stickNav = document.getElementById('sticky-nav');
+    const navBar = document.getElementById('menu-bar');
     const sticky = stickNav.offsetTop;
-
-    const stickyTotals = document.getElementById('sticky-totals');
-    const stickTotals = null !== stickyTotals ? stickyTotals.offsetTop : 0;
 
     addEventListener('scroll', () => {
         handleStickyHeader();
-        if (null !== stickyTotals) {
-            handleStickyTotals();
-        }
     });
 
     function handleStickyHeader() {
         if (window.scrollY > sticky) {
             stickNav.classList.add("fixed");
+            navBar.classList.add('py-3');
+            navBar.classList.remove('py-5');
         } else {
+            navBar.classList.add('py-5');
+            navBar.classList.remove('py-3');
             stickNav.classList.remove("fixed");
-        }
-    }
-
-    function handleStickyTotals() {
-        if (window.scrollY > stickTotals) {
-            stickyTotals.classList.add("sticky");
-        } else {
-            stickyTotals.classList.remove("sticky");
         }
     }
 </script>

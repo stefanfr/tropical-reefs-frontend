@@ -5,23 +5,23 @@
         <li class="step step-accent">{{ 'Payment'|trans }}</li>
         <li class="step">{{ 'Complete'|trans }}</li>
     </ul>
-    <div class="py-8 col-start-4 col-span-5 container border border-base-300 rounded-box shadow-md border-solid grid justify-center">
+    <div class="py-8 col-start-4 col-span-6 container border border-base-300 rounded-box shadow-md border-solid grid justify-center">
         <div class="checkout-step-container grid auto-rows-max">
             <h2 class="text-2xl mt-4">{{ '3. Payment method'|trans }}</h2>
             {% if errors %}
                 {{ errors|json_encode }}
             {% endif %}
-            <div class="checkout__payment-container mt-6 grid gap-4 mb-4">
+            <div class="checkout__payment-container mt-6 grid gap-6 mb-4">
                 <div class="checkout__payment-payment-methods w-full grid gap-3">
                     {% for paymentMethod in paymentMethods %}
                         <div
-                                class="checkout__payment-payment-method {% if paymentMethod['code'] == selectedPaymentMethod %} shadow-red border-accent {% else %} border-base-200 {% endif %} cursor-pointer flex gap-8 items-center border border-solid py-6 px-8 w-full rounded-box shadow-md"
+                                class="checkout__payment-payment-method {% if paymentMethod['code'] == selectedPaymentMethod %} shadow-red border-accent {% else %} border-base-200 {% endif %} cursor-pointer flex gap-4 items-center border border-solid py-3 px-8 w-full rounded-box shadow-md"
                                 data-action="click->live#action"
                                 data-action-name="setSelectedPaymentMethod(methodCode={{ paymentMethod['code'] }})"
                         >
-                            <img width="50" height="50" src="{{ asset('build/assets/images/ideal.png')|cdn('auto', 'square', 50) }}" alt="{{ paymentMethod['title'] }}">
+                            <img width="40" height="40" src="{{ asset('build/assets/images/ideal.png')|cdn('auto', 'square', 40) }}" alt="{{ paymentMethod['title'] }}">
                             <div class="checkout__payment-payment-method-details grow">
-                                <strong>{{ paymentMethod['title'] }}</strong>
+                                <span>{{ paymentMethod['title'] }}</span>
                             </div>
                         </div>
                     {% endfor %}
@@ -104,14 +104,13 @@
             </div>
         </div>
     </div>
-
-    <div class="col-span-4 grid gap-4 auto-rows-max">
+    <div class="col-start-4 col-span-6 grid gap-4 auto-rows-max">
         <div class="container py-4 px-8 border border-base-300 rounded-box shadow-md border-solid grid">
             <h2 class="text-2xl mt-2">{{ 'Totals'|trans }}</h2>
             <div class="cart__totals-totals grid grid-cols-3 gap-1 mt-2">
                 {% for total in this.totals %}
                     <span class="col-span-2">{{ total['label'] }}</span>
-                    <strong data-loading="hide">&euro; {{ total['value'] }}</strong>
+                    <strong data-loading="hide">{{ total['value']|format_currency('EUR', [], 'nl_NL') }}</strong>
                     <svg data-loading class="animate-spin -ml-1 mr-3 h-5 w-5 text-accent-content" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -135,7 +134,7 @@
                                 </div>
                             </div>
                             <div>
-                                <strong class="grow text-center m-auto">&euro;{{ cartItem['prices']['row_total_including_tax']['value'] }}</strong>
+                                <strong class="grow text-center m-auto">{{ cartItem['prices']['row_total_including_tax']['value']|format_currency('EUR', [], 'nl_NL') }}</strong>
                             </div>
                         </div>
                     {% endfor %}

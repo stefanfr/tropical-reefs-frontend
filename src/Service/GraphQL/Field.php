@@ -12,7 +12,7 @@ class Field
     {
     }
 
-    public function addChildField(Fragment|Field|Parameter $field): static
+    public function addChildField(Fragment|Field|Parameter|Selection $field): static
     {
         $this->childFields[] = $field;
 

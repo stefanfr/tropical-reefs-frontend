@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Customer Account'|trans }}{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto mt-8 grid gap-8 grid-cols-12">
+        {% include 'customer/_partials/account_menu.html.twig' %}
+        <div class="grow grid col-span-6 bg-base-100 border border-base-300 rounded-box shadow-md border-solid py-6 px-8">
+            <div class="account__details-headers mb-4">
+                <h2 class="text-3xl">{{ 'Create Address'|trans }}</h2>
+            </div>
+            <div class="messages_container px-8">
+                {% if errors is defined and errors is not empty %}
+                    {% for error in errors %}
+                        <div class="alert alert-error shadow-md alert-sm">
+                            <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <span>{{ error['message'] }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            {{ component('customer_address', {
+                address: address,
+            }) }}
+        </div>
+    </div>
+{% endblock %}

@@ -13,11 +13,15 @@
                         </svg>
                     </a>
                 </li>
-                {% for breadcrumb in category['breadcrumbs'] ?? [] %}
-                    <li><a href="/{{ breadcrumb['category_url_path'] }}">{{ breadcrumb['category_name']|trans }}</a>
-                    </li>
+                {% for breadcrumb in breadcrumbs ?? [] %}
+                    {% if breadcrumb['active'] ?? false %}
+                        <li>{{ breadcrumb['label']|trans }}</li>
+                    {% else %}
+                        <li>
+                            <a href="/{{ breadcrumb['url'] }}">{{ breadcrumb['label']|trans }}</a>
+                        </li>
+                    {% endif %}
                 {% endfor %}
-                <li>{{ category['name']|trans }}</li>
             </ul>
         </div>
     </div>
@@ -25,82 +29,103 @@
 
 {% block body %}
     <div class="container mx-auto">
-        <div class="category__header mt-8 grid grid-cols-8 gap-5">
-            <h1 class="col-span-2 text-4xl">{{ category['name']|trans }} <small>({{ catalog['total_count'] }})</small>
-            </h1>
-            <div class="flex items-end justify-end col-span-6 grow">
-                <div>
-                    <select aria-label="Per page" name="sort" class="select select-sm select-bordered w-full max-w-xs" id="catalog_sort">
-                        {% for perPage in perPageOptions %}
-                            <option {% if catalog['page_info']['page_size'] == perPage %} selected {% endif %} value="{{ perPage }}">{{ perPage }} per page</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="pagination grow flex justify-center">
-                    <div class="btn-group">
-                        <button class="btn btn-sm" {% if catalog['page_info']['current_page'] %} disabled {% endif %}>«</button>
-                        <button class="btn btn-sm btn">{{ catalog['page_info']['current_page'] }}</button>
-                        <button class="btn btn-sm" {% if catalog['page_info']['current_page'] == catalog['page_info']['total_pages'] %} disabled {% endif %}>»</button>
-                    </div>
-                </div>
-                <div>
-                    <select aria-label="Sort" name="sort" class="select select-sm select-bordered w-full max-w-xs" id="catalog_sort">
-                        {% for field in catalog['sort_fields']['options'] %}
-                            {% if field['value'] == 'name' %}
-                                <option value="{{ field['value'] }}_ASC">{{ field['label'] }} (A-Z)</option>
-                                <option value="{{ field['value'] }}_DESC">{{ field['label'] }} (Z-A)</option>
-                            {% elseif field['value'] == 'price' %}
-                                <option value="{{ field['value'] }}_ASC">{{ field['label'] }} ({{ 'Ascending'|trans }})</option>
-                                <option value="{{ field['value'] }}_DESC">{{ field['label'] }} ({{ 'Descending'|trans }})</option>
-                                {% else %}
-                                    <option value="{{ field['value'] }}_ASC">{{ field['label'] }}</option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="mt-8 grid grid-cols-8 gap-5">
-            <div class="filters col-span-2">
-                {% if category['children']|length > 0 %}
-                    <div class="bg-base-200 p-4">
-                        <h2 class="text-xl font-bold">{{ 'Subcategories'|trans }}</h2>
-                        <ul class="mt-2">
-                            {% for subCategory in category['children'] %}
-                                <li>
-                                    <a href="/{{ subCategory['url_path'] }}">{{ subCategory['name']|trans }}</a>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                {% endif %}
-                <div class="mt-4 filter__range-slider hidden">
-                    <h3 class="font-bold">{{ 'Price' }}</h3>
-                    <input type="range" min="0" max="100" value="100" class="range range-xs range-accent mt-2"/>
-                    <div class="filter__range-slider-input grid grid-cols-3 mt-1">
-                        <input type="number" value="0" class="input input-bordered input-accent input-sm w-full"/>
-                        <div></div>
-                        <input type="number" value="100" class="input input-bordered input-accent input-sm w-full"/>
-                    </div>
-                </div>
-                {% for filter in catalog['aggregations'] %}
-                    <div class="filters__filter mt-4">
-                        <h3 class="font-bold">{{ filter['label'] }}</h3>
-                        <div class="filters__filter-options mt-2">
-                            {% for option in filter['options'] %}
-                                <div class="filters__filter-option form-control">
-                                    <label class="cursor-pointer label flex gap-3">
-                                        <span class="label-text text-base">{{ option['label'] }} ({{ option['count'] }})</span>
-                                        <input name="{{ filter['attribute_code'] }}[]" value="{{ option['value'] }}" type="checkbox" class="checkbox checkbox-accent"/>
-                                    </label>
-                                </div>
-                            {% endfor %}
+        <h1 class="text-4xl mt-8">{{ category['name']|trans }} <small>({{ catalog['total_count'] }})</small></h1>
+        <div class="category mt-4 grid grid-cols-9 gap-5">
+            <div class="category__filters col-span-2">
+                <div class="filters">
+                    {% if category['children']|length > 0 %}
+                        <div class="bg-base-200 p-4">
+                            <h2 class="text-xl font-bold">{{ 'Subcategories'|trans }}</h2>
+                            <ul class="mt-2">
+                                {% for subCategory in category['children'] %}
+                                    {% if subCategory['product_count'] %}
+                                        <li>
+                                            <a href="/{{ subCategory['url_path'] }}">
+                                                {{ subCategory['name']|trans }} ({{ subCategory['product_count'] }})
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    <div class="mt-4 filter__range-slider hidden">
+                        <h3 class="font-bold">{{ 'Price' }}</h3>
+                        <input type="range" min="0" max="100" value="100" class="range range-xs range-accent mt-2"/>
+                        <div class="filter__range-slider-input grid grid-cols-3 mt-1">
+                            <input type="number" value="0" class="input input-bordered input-accent input-sm w-full"/>
+                            <div></div>
+                            <input type="number" value="100" class="input input-bordered input-accent input-sm w-full"/>
                         </div>
                     </div>
-                {% endfor %}
+                    {% for filter in catalog['aggregations'] %}
+                        {% if filter['attribute_code'] != 'category_uid' %}
+                            <div class="filters__filter mt-4">
+                                <h3 class="font-bold">{{ filter['label'] }}</h3>
+                                <div class="filters__filter-options mt-2">
+                                    {% for option in filter['options'] %}
+                                        <div class="filters__filter-option form-control">
+                                            <label class="cursor-pointer label flex gap-3">
+                                                <span class="label-text text-base">{{ option['label'] }} ({{ option['count'] }})</span>
+                                                <input aria-label="{{ option['label'] }}" name="{{ filter['attribute_code'] }}[]" value="{{ option['value'] }}" type="checkbox" class="checkbox checkbox-accent"/>
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
             </div>
-            <div class="product_row grid grid-cols-4 gap-5 col-span-6 auto-rows-min">
-                {% include 'catalog/_partials/product_list.html.twig' with {'items': catalog['items']} %}
+            <div class="products col-span-7">
+                <div class="flex items-end justify-end col-span-6 grow col-start-3">
+                    <div>
+                        <select aria-label="Per page" name="sort" class="select select-sm select-bordered w-full max-w-xs" id="catalog_sort">
+                            {% for perPage in perPageOptions %}
+                                <option {% if catalog['page_info']['page_size'] == perPage %} selected {% endif %} value="{{ perPage }}">{{ perPage }}
+                                    per page
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="pagination grow flex justify-center">
+                        <div class="btn-group">
+                            <a href="{{ pagination['prevPage'] }}" class="btn btn-sm" {% if catalog['page_info']['current_page'] == 1 %} disabled {% endif %}>
+                                «
+                            </a>
+                            {% for page in pagination['displayPages'] %}
+                                <a href="{{ page['url'] }}" class="btn btn-sm" {% if catalog['page_info']['current_page'] == page['value'] %} disabled {% endif %}>{{ page['value'] }}</a>
+                            {% endfor %}
+                            <a href="{{ pagination['nextPage'] }}" class="btn btn-sm" {% if catalog['page_info']['current_page'] == catalog['page_info']['total_pages'] %} disabled {% endif %}>
+                                »
+                            </a>
+                        </div>
+                    </div>
+                    <div>
+                        <select aria-label="Sort" name="sort" class="select select-sm select-bordered w-full max-w-xs" id="catalog_sort">
+                            {% for field in catalog['sort_fields']['options'] %}
+                                {% if field['value'] == 'name' %}
+                                    <option value="{{ field['value'] }}_ASC">{{ field['label'] }} (A-Z)</option>
+                                    <option value="{{ field['value'] }}_DESC">{{ field['label'] }} (Z-A)</option>
+                                {% elseif field['value'] == 'price' %}
+                                    <option value="{{ field['value'] }}_ASC">{{ field['label'] }}
+                                        ({{ 'Ascending'|trans }}
+                                        )
+                                    </option>
+                                    <option value="{{ field['value'] }}_DESC">{{ field['label'] }}
+                                        ({{ 'Descending'|trans }}
+                                        )
+                                    </option>
+                                {% else %}
+                                    <option value="{{ field['value'] }}_ASC">{{ field['label'] }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="product_row grid grid-cols-3 gap-5 col-span-6 auto-rows-min mt-8">
+                    {% include 'catalog/_partials/product_list.html.twig' with {'items': catalog['items']} %}
+                </div>
             </div>
         </div>
     </div>

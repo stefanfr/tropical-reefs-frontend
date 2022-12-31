@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Customer Account'|trans }}{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto mt-4 flex gap-8">
+        {% include 'customer/_partials/account_menu.html.twig' %}
+        <div class="grow grid mt-4 auto-rows-min">
+            <div class="account__details-headers mb-4">
+                <h2 class="text-3xl">{{ 'Edit personal settings'|trans }}</h2>
+            </div>
+            <div class="grid grid-cols-2 gap-6">
+                {{ component('customer_general_settings', {
+                    customerAccount: customerAccount
+                }) }}
+                {{ component('customer_general_password', {
+                    customerAccount: customerPassword
+                }) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

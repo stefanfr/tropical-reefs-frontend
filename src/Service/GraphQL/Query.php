@@ -19,7 +19,7 @@ class Query
         return $this;
     }
 
-    public function addField(Field $field): static
+    public function addField(Field|Selection $field): static
     {
         $this->fields[] = $field;
 

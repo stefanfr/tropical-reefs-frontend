@@ -8,16 +8,16 @@
             <div class="checkout__shipment-shipping-methods w-full grid gap-6">
                 {% for shippingMethod in shippingMethods %}
                     <div
-                            class="checkout__shipment-shipping-method {% if shippingMethod['carrier_code'] == selectedShippingMethod['carrier_code'] ?? '' %} shadow-red border-accent {% else %} border-base-200 {% endif %} cursor-pointer flex gap-8 items-center border border-solid py-6 px-8 w-full rounded-box shadow-md"
+                            class="checkout__shipment-shipping-method {% if shippingMethod['carrier_code'] == selectedShippingMethod['carrier_code'] ?? '' %} shadow-red border-accent {% else %} border-base-200 {% endif %} cursor-pointer flex gap-4 items-center border border-solid py-3 px-8 w-full rounded-box shadow-md"
                             data-action="click->live#action"
                             data-action-name="setSelectedShippingMethod(carrierCode={{ shippingMethod['carrier_code'] }}, methodeCode={{ shippingMethod['method_code'] }})"
                     >
-                        <img width="50" height="50" src="{{ asset('build/assets/images/postnl.png')|cdn('auto', 'square', 50) }}" alt="{{ shippingMethod['carrier_title'] }}">
+                        <img width="40" height="40" src="{{ asset('build/assets/images/postnl.png')|cdn('auto', 'square', 45) }}" alt="{{ shippingMethod['carrier_title'] }}">
                         <div class="checkout__shipment-shipping-method-details grow">
                             <strong>{{ shippingMethod['carrier_title'] }}</strong>
                             <small>{{ shippingMethod['carrier_title'] }}</small>
                         </div>
-                        <strong>&euro; {{ shippingMethod['price_incl_tax']['value'] }}</strong>
+                        <strong>{{ shippingMethod['price_incl_tax']['value']|format_currency('EUR', [], 'nl_NL') }}</strong>
                     </div>
                 {% endfor %}
             </div>

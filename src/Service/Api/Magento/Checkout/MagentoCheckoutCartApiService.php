@@ -310,15 +310,27 @@ class MagentoCheckoutCartApiService
         return $response['data'] ?? throw new BadRequestException('Failed to load cart');
     }
 
-    public function formatTotals(array $prices): array
+    public function formatTotals(array $cart): array
     {
         $cartTotals = [];
+        $prices = $cart['prices'];
+
+        if ($cart['shipping_addresses'][0]['selected_shipping_method'] ?? false) {
+            $shippingMethod = $cart['shipping_addresses'][0]['selected_shipping_method'];
+            $shippingCosts = [
+                'label' => 'Shipping ( ' . $shippingMethod['carrier_title'] . ' )',
+                'value' => $shippingMethod['price_incl_tax']['value'],
+            ];
+        }
 
         $prices = array_filter($prices, static function ($price) {
             return null !== $price;
         });
 
         foreach ($prices as $key => $price) {
+            if ($key === 'applied_taxes' && ! empty($shippingCosts)) {
+                $cartTotals[] = $shippingCosts;
+            }
             if (array_key_exists('value', $price)) {
                 $cartTotals[] = [
                     'label' => ucfirst(str_replace('_', ' ', $key)),
@@ -512,6 +524,13 @@ class MagentoCheckoutCartApiService
                             (new Field('selected_shipping_method')
                             )->addChildFields(
                                 [
+                                    (new Field('price_incl_tax')
+                                    )->addChildFields(
+                                        [
+                                            new Field('value'),
+                                            new Field('currency'),
+                                        ]
+                                    ),
                                     new Field('carrier_code'),
                                     new Field('carrier_title'),
                                     new Field('method_code'),

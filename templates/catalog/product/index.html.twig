@@ -13,10 +13,15 @@
                         </svg>
                     </a>
                 </li>
-                {#                <li><a href="{{ path('app_category') }}">{{ 'Coral'|trans }}</a></li> #}
-                {#                <li><a href="{{ path('app_category') }}">{{ 'LPS Corals'|trans }}</a></li> #}
-                {#                <li><a href="{{ path('app_category') }}">{{ 'Euphyllidae'|trans }}</a></li> #}
-                <li>{{ 'Euphyllia ancora (Pinkish)'|trans }}</li>
+                {% for breadcrumb in breadcrumbs ?? [] %}
+                    {% if breadcrumb['active'] ?? false %}
+                        <li>{{ breadcrumb['label']|trans }}</li>
+                    {% else %}
+                        <li>
+                            <a href="/{{ breadcrumb['url'] }}">{{ breadcrumb['label']|trans }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
             </ul>
         </div>
     </div>

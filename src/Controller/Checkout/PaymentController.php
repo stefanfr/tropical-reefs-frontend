@@ -19,7 +19,7 @@ class PaymentController extends AbstractCheckoutController
             $couponCode = current($cart['applied_coupons'])['code'];
         }
 
-        $totals = $this->magentoCheckoutCartApiService->formatTotals($cart['prices']);
+        $totals = $this->magentoCheckoutCartApiService->formatTotals($cart);
 
         return $this->render('checkout/checkout/payment.html.twig', [
             'totals' => $totals,

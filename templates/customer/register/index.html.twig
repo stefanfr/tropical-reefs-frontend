@@ -1,6 +1,53 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{% endblock %}
+{% block title %}{{ 'Customer Register'|trans }}{% endblock %}
 
 {% block body %}
+    <div class="messages_container px-8">
+        {% if errors is defined and errors is not empty %}
+            {% for error in errors %}
+                <div class="alert alert-error shadow-md alert-sm">
+                    <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span>{{ error['message'] }}</span>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div class="container mx-auto mt-2 grid grid-cols-8 items-center">
+        <div class="mt-4 py-8 px-12 col-start-3 col-span-4 container border border-base-300 rounded-box shadow-md border-solid grid">
+            <h2 class="text-2xl mt-4">{{ 'Registration'|trans }}</h2>
+            <p class="mt-4">
+                {{ 'If you create an account you get all your orders in one overview.'|trans }} <br/>
+                {{ 'Along with other benifits such as personalised discounts'|trans }}
+            </p>
+
+            {{ form_start(form, {attr: {class: 'grid gap-4 mt-4'}}) }}
+            {{ form_errors(form) }}
+            <div class="flex gap-4">
+                {{ form_widget(form.firstname) }}
+                {{ form_widget(form.lastname) }}
+            </div>
+            {{ form_widget(form.email) }}
+            {{ form_widget(form.password.first) }}
+            {{ form_widget(form.password.second) }}
+
+            <label for="subscribe" class="label label-text justify-start gap-2">
+                {{ form_widget(form.is_subscribed) }}
+                {{ 'Subscribe to our newsletter'|trans }}
+            </label>
+            <input type="submit" class="btn btn-accent" value="{{ 'Register'|trans }}">
+            {{ form_end(form) }}
+            <div class="register text-center mt-8">
+                <p>
+                    {{ 'Already an account?'|trans }}
+                    <br/>
+                    <a class="text-accent" href="{{ path('app_customer_login') }}">{{ 'Click here to login'|trans }}</a>
+                </p>
+            </div>
+        </div>
+    </div>
 {% endblock %}

@@ -22,11 +22,11 @@
                 <div class="mt-2 text-right grid mr-1">
                     {% if item['price_range']['minimum_price']['discount']['amount_off'] > 0 %}
                         <small class="grow product_row__from_price line-through text-xs">
-                            &euro;{{ item['price_range']['minimum_price']['regular_price']['value'] }}
+                            {{ item['price_range']['minimum_price']['regular_price']['value']|format_currency('EUR', [], 'nl_NL') }}
                         </small>
                     {% endif %}
                     <strong class="grow product_row__final_price text-lg">
-                        &euro;{{ item['price_range']['minimum_price']['final_price']['value'] }}
+                        {{ item['price_range']['minimum_price']['final_price']['value']|format_currency('EUR', [], 'nl_NL') }}
                     </strong>
                 </div>
             </div>

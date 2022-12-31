@@ -10,7 +10,7 @@
         </div>
     </div>
     <div class="m-auto">
-        <span>&euro;{{ item['prices']['price']['value'] }}</span>
+        <span>{{ item['prices']['price']['value']|format_currency('EUR', [], 'nl_NL') }}</span>
     </div>
     <div class="flex gap-2 m-auto">
         <form action="{{ path('app_checkout_cart_update', {uid: item['uid']}) }}" method="post">
@@ -32,9 +32,9 @@
     <div class="flex">
         <div class="prices grow text-center m-auto">
             {% if item['prices']['total_item_discount']['value'] > 0 %}
-                <small class="mr-4">&euro; {{ item['prices']['total_item_discount']['value'] }}</small>
+                <small class="mr-4">{{ item['prices']['total_item_discount']['value']|format_currency('EUR', [], 'nl_NL') }}</small>
             {% endif %}
-            <strong class="">&euro;{{ item['prices']['row_total_including_tax']['value'] }}</strong>
+            <strong class="">{{ item['prices']['row_total_including_tax']['value']|format_currency('EUR', [], 'nl_NL') }}</strong>
         </div>
         <form action="{{ path('app_checkout_cart_delete', {uid: item['uid']}) }}" method="post" class="flex">
             <input type='hidden' name='_method' value='DELETE'>

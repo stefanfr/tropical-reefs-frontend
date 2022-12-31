@@ -79,7 +79,7 @@ final class PaymentComponent extends AbstractController
             $this->couponCode = null;
             $this->useCoupon = false;
 
-            $this->totals = $this->magentoCheckoutCartApiService->formatTotals($cart['prices']);
+            $this->totals = $this->magentoCheckoutCartApiService->formatTotals($cart);
         }
     }
 
@@ -95,7 +95,7 @@ final class PaymentComponent extends AbstractController
             return;
         }
 
-        $this->totals = $this->magentoCheckoutCartApiService->formatTotals($cart['prices']);
+        $this->totals = $this->magentoCheckoutCartApiService->formatTotals($cart);
 
         $this->couponErrorMessage = null;
         $this->couponIsValid = true;

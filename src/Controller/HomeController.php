@@ -33,6 +33,7 @@ class HomeController extends AbstractController
     private function getHomeCategories(): array
     {
         $homepageCategories = $this->magentoCatalogCategoryApiService->collectHomeCategories();
+
         usort($homepageCategories, static function ($a, $b) {
             if ($a === $b) {
                 return 0;

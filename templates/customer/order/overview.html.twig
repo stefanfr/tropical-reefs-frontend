@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Customer Account'|trans }}{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto mt-4 flex gap-8">
+        {% include 'customer/_partials/account_menu.html.twig' %}
+        <div class="grow grid mt-4 auto-rows-min">
+            <div class="account__details-headers mb-4">
+                <h2 class="text-3xl">{{ 'Your orders'|trans }}</h2>
+            </div>
+            <div class="account__details-default-address">
+                {% if customerOrders is empty %}
+                    <span>{{ 'No orders yet.'|trans }}</span><br/>
+                    <a class="text-accent" href="{{ path('app_home') }}">{{ 'Click here to place your first order'|trans }}</a>
+                {% else %}
+                    {% for order in customerOrders %}
+                        <div class="account__details-default-address-shipping relative border border-solid border-base-300 rounded-box py-4 px-6">
+                            <strong class="block">{{ order['id'] }}</strong>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
