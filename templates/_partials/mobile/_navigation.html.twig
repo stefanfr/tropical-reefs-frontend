@@ -9,18 +9,14 @@
             <polygon points="400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49"/>
         </svg>
     </label>
-    <div id="mobileNav" class="fixed left-0 bottom-0 bg-base-300 h-full w-0 overflow-hidden" style="top: 62px">
+    <div id="mobileNav" class="fixed left-0 bg-base-300 h-full w-0 overflow-scroll" style="top: 62px">
         <div class="nav_title py-5 px-6 text-center">
             <h3>{{ 'All categories'|trans }}</h3>
         </div>
         <ul class="grid border-t border-solid border-base-200">
             {% for category in categories %}
                 <li class="border-b border-solid border-base-200 py-3 px-4">
-
-                    <a
-                            class="flex"
-                            href="/{{ category['url_path'] }}"
-                    >
+                    <a class="flex" href="/{{ category['url_path'] }}">
                         <span class="grow">{{ category['name'] }}</span>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
@@ -44,6 +40,7 @@
                 const mobileNave = document.getElementById('mobileNav');
                 mobileNave.classList.add('w-0');
                 mobileNave.classList.remove('w-3/4');
+                document.getElementById('mainContent').style.overflow = '';
             }
         }
     }
@@ -53,9 +50,11 @@
         if (event.target.checked) {
             mobileNave.classList.add('w-3/4');
             mobileNave.classList.remove('w-0');
+            document.getElementById('mainContent').style.overflow = 'hidden';
             return;
         }
         mobileNave.classList.add('w-0');
         mobileNave.classList.remove('w-3/4');
+        document.getElementById('mainContent').style.overflow = '';
     }
 </script>

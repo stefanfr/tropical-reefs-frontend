@@ -22,19 +22,37 @@
                                 <small class="block">{{ 'View all'|trans }}</small>
                                 <span class="float-left font-bold">{{ 'Categories'|trans }}</span>
                             </label>
-                            <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box" style="width: 300px">
-                                {% for category in categories %}
-                                    <li>
-                                        <a href="/{{ category['url_path'] }}">{{ category['name'] }}</a>
-                                    </li>
-                                {% endfor %}
-                            </ul>
+                            <div tabindex="0" class="dropdown-content card card-compact w-full shadow bg-base-100" style="width: 30rem">
+                                <div class="card-body grid border-base-200 grid-cols-2 gap-0" style="padding: 0;">
+                                    {% for category in categories %}
+                                        <div class="hover:bg-accent hover:text-white border-r border-b border-solid border-base-200 py-4 px-4">
+                                            <a class="flex" href="/{{ category['url_path'] }}">
+                                                <span class="grow">{{ category['name'] }}</span>
+                                            </a>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-span-4 xl:col-span-5 justify-end items-center hidden md:flex">
-                <input aria-label="Search products and categories" type="search" placeholder="{{ 'Where are you looking for?'|trans }}" class="input input-bordered input-accent grow"/>
+            <div class="col-span-4 xl:col-span-5 justify-center items-center hidden md:flex">
+                <div class="form-control w-2/3">
+                    <div class="input-group">
+                        <input
+                                aria-label="Search products and categories"
+                                type="search"
+                                placeholder="{{ 'Where are you looking for?'|trans }}"
+                                class="input input-bordered input-accent grow"
+                        />
+                        <button class="btn btn-square btn-accent">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
             </div>
             <div class="flex gap-2 items-center justify-end">
                 <a href="{{ path('app_customer') }}" aria-label="customer portal grow">

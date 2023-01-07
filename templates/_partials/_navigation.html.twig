@@ -3,12 +3,31 @@
     <div class="container mx-auto px-5 xl:px-0">
         <div class="flex gap-10 py-2">
             {% for category in categories|slice(0,8) %}
-                <a
-                        class=""
-                        href="/{{ category['url_path'] }}"
-                >
-                    {{ category['name'] }}
-                </a>
+                {% if category['children']|length > 0 %}
+                    <div class="dropdown dropdown-hover">
+                        <label tabindex="{{ loop.index }}">{{ category['name'] }}</label>
+                        <ul tabindex="{{ loop.index }}" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-60">
+                            <li>
+                                <a class="font-bold" href="/{{ category['url_path'] }}">
+                                    {{ category['name'] }}
+                                </a>
+                            </li>
+                            {% for subCategory in category['children'] %}
+                                {% if subCategory['product_count'] > 0 %}
+                                    <li>
+                                        <a class="text-bold" href="/{{ subCategory['url_path'] }}">
+                                            {{ subCategory['name'] }} ({{ subCategory['product_count'] }})
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% else %}
+                    <a class="font" href="/{{ category['url_path'] }}">
+                        {{ category['name'] }}
+                    </a>
+                {% endif %}
             {% endfor %}
         </div>
     </div>

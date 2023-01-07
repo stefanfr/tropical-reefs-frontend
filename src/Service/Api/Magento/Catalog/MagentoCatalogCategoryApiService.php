@@ -51,6 +51,13 @@ class MagentoCatalogCategoryApiService
                     )->addParameter(
                         (new Filters)
                             ->addFilter(
+                                (new Filter('include_in_menu'))
+                                    ->addOperator(
+                                        'eq',
+                                        1
+                                    ),
+                            )
+                            ->addFilter(
                                 (new Filter('parent_category_uid'))
                                     ->addOperator(
                                         'in',
@@ -64,7 +71,7 @@ class MagentoCatalogCategoryApiService
                             new Field('name'),
                             new Field('path'),
                             new Field('url_path'),
-                            new Field('include_in_menu'),
+                            new Field('product_count'),
                             (new Field('children')
                             )->addChildFields(
                                 [
@@ -72,6 +79,7 @@ class MagentoCatalogCategoryApiService
                                     new Field('name'),
                                     new Field('path'),
                                     new Field('url_path'),
+                                    new Field('product_count'),
                                     (new Field('children')
                                     )->addChildFields(
                                         [
@@ -79,6 +87,7 @@ class MagentoCatalogCategoryApiService
                                             new Field('name'),
                                             new Field('path'),
                                             new Field('url_path'),
+                                            new Field('product_count'),
                                             (new Field('children')
                                             )->addChildFields(
                                                 [
@@ -86,6 +95,7 @@ class MagentoCatalogCategoryApiService
                                                     new Field('name'),
                                                     new Field('path'),
                                                     new Field('url_path'),
+                                                    new Field('product_count'),
                                                     (new Field('children')
                                                     )->addChildFields(
                                                         [
