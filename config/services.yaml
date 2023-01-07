@@ -49,6 +49,11 @@ services:
       - '../src/Entity/'
       - '../src/Kernel.php'
 
+  App\Command\:
+    resource: '../src/Command'
+    arguments:
+      - '@service_container'
+
   Symfony\Component\HttpKernel\EventListener\RouterListener:
     arguments:
       - '@App\Routing\MagentoRouteMatcher'
