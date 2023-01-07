@@ -70,6 +70,7 @@ class MagentoCatalogProductApiService
                                         [
                                             new Field('url'),
                                             new Field('label'),
+                                            new Field('position'),
                                             (new Fragment('ProductVideo')
                                             )->addField(
                                                 (new Field('video_content')
@@ -279,8 +280,9 @@ class MagentoCatalogProductApiService
                 )->send();
 
                 if ($debug) {
-                    echo json_encode($response['data']['product']['product'] ?? $response, JSON_THROW_ON_ERROR);
-                    die;
+                    dd(
+                        $response['data']['product']['product'] ?? $response
+                    );
                 }
 
                 return $response['data']['product']['product'] ?? throw new NotFoundHttpException('Product not found');
@@ -314,6 +316,8 @@ class MagentoCatalogProductApiService
                                     new Field('uid'),
                                     new Field('url_key'),
                                     new Field('name'),
+                                    new Field('type_id'),
+                                    new Field('sku'),
                                     (new Field('small_image')
                                     )->addChildFields(
                                         [

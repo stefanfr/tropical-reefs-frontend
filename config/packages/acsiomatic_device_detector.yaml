@@ -1,0 +1,17 @@
+# config/packages/acsiomatic_device_detector.yaml
+
+acsiomatic_device_detector:
+  cache:
+    pool: 'cache.app'
+
+  bot:
+    discard_information: false
+    skip_detection: false
+
+  twig:
+    variable_name: 'device'
+  auto_parse: true
+  version_truncation: 'minor'
+
+  routing:
+    condition_service_alias: 'device'

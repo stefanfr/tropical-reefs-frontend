@@ -128,7 +128,7 @@
                                 <img class="block float-left" width="80" height="80" src="{{ cartItem['product']['small_image']['url']|cdn('auto', 'square', 80) }}" alt="{{ cartItem['product']['name'] }}"/>
                                 <div class="grow">
                                     <strong class="block text-lg">{{ cartItem['product']['name']|replace({'(': "<br />", ')': ''})|raw }}</strong>
-                                    {% for option in cartItem['configurable_options'] %}
+                                    {% for option in cartItem['configurable_options'] ?? [] %}
                                         <span class="block">{{ option['option_label'] }}: {{ option['value_label'] }}</span>
                                     {% endfor %}
                                 </div>

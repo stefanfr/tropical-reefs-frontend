@@ -5,12 +5,6 @@ namespace App\Service\Api\Magento\Http;
 use App\Service\Api\Http\HttpClient;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Utils;
-use Psr\Http\Message\MessageInterface;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class MageHttpClient extends HttpClient
@@ -20,7 +14,7 @@ class MageHttpClient extends HttpClient
 
     public function __construct(
         protected ContainerInterface $container,
-        ?array                        $options = []
+        ?array                       $options = []
     )
     {
         $this->config = $container->getParameter('mage_client');

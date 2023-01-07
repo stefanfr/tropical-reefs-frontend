@@ -3,11 +3,11 @@
 {% endif %}
 
 {% for item in items %}
-    <div class="product_row__item card shadow-md">
+    <div class="product_row__item card shadow-md border">
         <a href="/{{ item['url_key'] }}" class="category__item">
-            <div class="product_row__item-image-holder relative">
+            <div class="product_row__item-image-holder relative flex justify-items-center justify-center">
                 <picture>
-                    <img alt="{{ item['name'] }}" class="w-full aspect-square" src="{{ item['small_image']['url']|cdn('auto', 'square', 450) }}"/>
+                    <img alt="{{ item['name'] }}" width="250" class="aspect-square" src="{{ item['small_image']['url']|cdn('fill', 'square', 250) }}"/>
                 </picture>
             </div>
             <div class="product_row__item-label absolute top-3 left-3">
@@ -17,19 +17,24 @@
                     </label>
                 {% endif %}
             </div>
-            <div class="product_row__item-info py-4 px-3 grid grid-cols-4">
-                <strong class="product_row__title mt-2 grow col-span-3">{{ item['name']|replace({'(': "<br />", ')': ''})|raw }}</strong>
-                <div class="mt-2 text-right grid mr-1">
-                    {% if item['price_range']['minimum_price']['discount']['amount_off'] > 0 %}
-                        <small class="grow product_row__from_price line-through text-xs">
-                            {{ item['price_range']['minimum_price']['regular_price']['value']|format_currency('EUR', [], 'nl_NL') }}
-                        </small>
-                    {% endif %}
-                    <strong class="grow product_row__final_price text-lg">
-                        {{ item['price_range']['minimum_price']['final_price']['value']|format_currency('EUR', [], 'nl_NL') }}
-                    </strong>
+        </a>
+            <div class="product_row__item-info py-4 px-3 border-t border-solid border-base-300">
+                <strong class="product_row__title mt-2">{{ item['name']|replace({'(': "<br />", ')': ''})|raw }}</strong>
+                <div class="flex gap-10">
+                    <div>
+                        {% if item['price_range']['minimum_price']['discount']['amount_off'] > 0 %}
+                            <small class="grow product_row__from_price line-through text-xs">
+                                {{ item['price_range']['minimum_price']['regular_price']['value']|format_currency('EUR', [], 'nl_NL') }}
+                            </small>
+                        {% endif %}
+                        <strong class="grow product_row__final_price text-lg">
+                            {{ item['price_range']['minimum_price']['final_price']['value']|format_currency('EUR', [], 'nl_NL') }}
+                        </strong>
+                    </div>
+                    {{ component('catalog_category_configuration', {
+                        product: item,
+                    }) }}
                 </div>
             </div>
-        </a>
     </div>
 {% endfor %}

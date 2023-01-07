@@ -1,0 +1,61 @@
+{% set categories = categoryTree.collect %}
+<nav id="mobileNavHolder">
+    <label class="swap swap-rotate">
+        <input id="toggleMobileNav" onchange="toggleNav(event)" type="checkbox"/>
+        <svg class="swap-off fill-current w-6 aspect-square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <path d="M64,384H448V341.33H64Zm0-106.67H448V234.67H64ZM64,128v42.67H448V128Z"/>
+        </svg>
+        <svg class="swap-on fill-current w-6 aspect-square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <polygon points="400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49"/>
+        </svg>
+    </label>
+    <div id="mobileNav" class="fixed left-0 bottom-0 bg-base-300 h-full w-0 overflow-hidden" style="top: 62px">
+        <div class="nav_title py-5 px-6 text-center">
+            <h3>{{ 'All categories'|trans }}</h3>
+        </div>
+        <ul class="grid border-t border-solid border-base-200">
+            {% for category in categories %}
+                <li class="border-b border-solid border-base-200 py-3 px-4">
+
+                    <a
+                            class="flex"
+                            href="/{{ category['url_path'] }}"
+                    >
+                        <span class="grow">{{ category['name'] }}</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
+                        </svg>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</nav>
+
+<script>
+    let navIsVisible = false;
+
+    document.onclick = function (event) {
+        const toggle = document.getElementById('toggleMobileNav');
+        const nav = event.target.parentElement.closest('nav');
+        if (toggle.checked) {
+            if (null === nav || event.target.parentElement.closest('nav').id !== 'mobileNavHolder') {
+                toggle.checked = false;
+                const mobileNave = document.getElementById('mobileNav');
+                mobileNave.classList.add('w-0');
+                mobileNave.classList.remove('w-3/4');
+            }
+        }
+    }
+
+    function toggleNav(event) {
+        const mobileNave = document.getElementById('mobileNav');
+        if (event.target.checked) {
+            mobileNave.classList.add('w-3/4');
+            mobileNave.classList.remove('w-0');
+            return;
+        }
+        mobileNave.classList.add('w-0');
+        mobileNave.classList.remove('w-3/4');
+    }
+</script>

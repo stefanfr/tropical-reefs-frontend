@@ -1,18 +1,43 @@
-<header>
-    {% include '_partials/_usps.html.twig' %}
-    <div class="container mx-auto mt-10 pb-5">
-        <div class="flex gap-10">
-            <a href="{{ path('app_home') }}">
+{% set categories = categoryTree.collect %}
+<header class="sticky top-0 bg-base-100 border-b border-solid border-base-200 shadow-xl z-50">
+    {#    {% include '_partials/_usps.html.twig' %} #}
+    <div class="container mx-auto px-5 xl:px-0">
+        <div class="gap-8 grid grid-cols-3 md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-8">
+            <div class="flex items-center">
+                {% if device.isSmartphone %}
+                    {% include '_partials/mobile/_navigation.html.twig' %}
+                {% endif %}
+            </div>
+            <a href="{{ path('app_home') }}" class="pt-3 pb-3">
                 <picture class="logo_full">
                     <source srcset="{{ asset('build/assets/images/logo.png'|cdn('auto', 400, 144)) }}"/>
-                    <img width="200" height="72" src="{{ asset('build/assets/images/logo.png'|cdn('auto', 200, 72)) }}" alt="logo"/>
+                    <img width="150" height="72" src="{{ asset('build/assets/images/logo.png'|cdn('auto', 200, 72)) }}" alt="logo"/>
                 </picture>
             </a>
-            <div class="grow items-end flex hidden md:flex">
-                <input type="search" placeholder="{{ 'Where are you looking for?'|trans }}" class="input input-bordered input-accent grow"/>
+            <div class="hidden lg:flex items-center justify-center bg-base-200">
+                <div class="menu-items flex w-full h-full">
+                    <div class="flex gap-10 w-full h-full">
+                        <div tabindex="0" class="dropdown cursor-pointer py-4 px-4 leading-5 w-full h-full">
+                            <label class="title cursor-pointer">
+                                <small class="block">{{ 'View all'|trans }}</small>
+                                <span class="float-left font-bold">{{ 'Categories'|trans }}</span>
+                            </label>
+                            <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box" style="width: 300px">
+                                {% for category in categories %}
+                                    <li>
+                                        <a href="/{{ category['url_path'] }}">{{ category['name'] }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="flex gap-2 items-end">
-                <a href="{{ path('app_customer') }}" aria-label="customer portal">
+            <div class="col-span-4 xl:col-span-5 justify-end items-center hidden md:flex">
+                <input aria-label="Search products and categories" type="search" placeholder="{{ 'Where are you looking for?'|trans }}" class="input input-bordered input-accent grow"/>
+            </div>
+            <div class="flex gap-2 items-center justify-end">
+                <a href="{{ path('app_customer') }}" aria-label="customer portal grow">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 aspect-square">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
                     </svg>
@@ -27,5 +52,7 @@
             </div>
         </div>
     </div>
-    {% include '_partials/_navigation.html.twig' %}
+    {% if device.isSmartphone != true %}
+        {% include '_partials/_navigation.html.twig' %}
+    {% endif %}
 </header>

@@ -4,7 +4,7 @@
         <div class="grow">
             <a href="/{{ item['product']['url_key'] }}"><strong class="block text-lg">{{ item['product']['name']|replace({'(': "<br />", ')': ''})|raw }}</strong></a>
             <span class="block">SKU: {{ item['product']['sku'] }}</span>
-            {% for option in item['configurable_options'] %}
+            {% for option in item['configurable_options'] ?? [] %}
                 <span class="block">{{ option['option_label'] }}: {{ option['value_label'] }}</span>
             {% endfor %}
         </div>

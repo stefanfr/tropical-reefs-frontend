@@ -131,7 +131,7 @@ class CategoryController extends AbstractController
             )
         );
 
-        return $relativeUrl . '?' . $queryString;
+        return '/' . $relativeUrl . '?' . $queryString;
     }
 
 }
