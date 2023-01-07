@@ -1,4 +1,57 @@
 <div {{ attributes }}>
+    {% if this.addToCartResponse is not empty %}
+        <div class="product__details-configuration_messages">
+            {% if this.addToCartResponse['user_errors'] is empty %}
+                <input aria-label="add to cart popup" type="checkbox" id="addToCartModal" class="modal-toggle" checked/>
+                <div class="modal modal-bottom sm:modal-middle md:px-60">
+                    <div class="modal-box">
+                        <h3 class="font-bold text-lg text-center">{{ 'Succesfully added to cart'|trans }}</h3>
+                        <div class="py-4">
+                            <div class="flex gap-5">
+                                <div class="grid auto-rows-min">
+                                    {% if device.isSmartphone %}
+                                        <img height="75" width="75" src="{{ product['small_image']['url']|cdn('auto', 'square', 75) }}" alt="">
+                                    {% else %}
+                                        <img height="120" width="120" src="{{ product['small_image']['url']|cdn('auto', 'square', 120) }}" alt="">
+                                    {% endif %}
+                                </div>
+                                <div class="details grid gap-0 auto-rows-min grow">
+                                    <strong>{{ product['name'] }}</strong>
+                                    <span><strong>{{ 'Sku: '|trans }}</strong> {{ product['sku'] }}</span>
+                                    <span><strong>{{ 'Quantity: '|trans }}</strong> {{ selectedQty }}</span>
+                                    <span><strong>{{ 'Price: '|trans }}</strong> {{ (this.getProductFinalPrice * selectedQty)|format_currency('EUR', [], 'nl_NL') }}</span>
+                                </div>
+                            </div>
+                            {% if device.isSmartphone != true and product['related_products']|length > 0 %}
+                                <div class="divider lg:divider-vertical" style="margin-top: 4rem">
+                                    <h3 class="text-3xl font-bold">{{ 'Related products'|trans }}</h3>
+                                </div>
+                                <div class="container mx-auto">
+                                    <div class="product_row grid grid-cols-2 gap-4 mt-10 col-span-6">
+                                        {% include 'catalog/_partials/product_list.html.twig' with {'limit': 2, 'items': product['related_products']} %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="modal-action justify-between">
+                            <a href="{{ path('app_checkout_cart') }}" class="btn btn-outline btn-accent btn-sm">{{ 'Go to cart'|trans }}</a>
+                            <label for="addToCartModal" class="btn btn-outline btn-sm">{{ 'Continue shopping'|trans }}</label>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                {% for error in this.addToCartResponse['user_errors'] %}
+                    <div class="toast z-50 toast-top">
+                        <div class="alert alert-error">
+                            <div>
+                                <span>{{ error['message']|trans }}</span>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    {% endif %}
     <div class="flex gap-3">
         <div class="grid">
             {% if false %}
@@ -33,34 +86,11 @@
         </div>
     {% endif %}
     <div class="product__details-configuration mt-5 hidden md:block" id="productConfiguration">
-        {% if this.addToCartResponse is not empty %}
-            <div class="product__details-configuration_messages">
-                {% if this.addToCartResponse['user_errors'] is empty %}
-                    <div class="toast z-50 toast-top">
-                        <div class="alert alert-success">
-                            <div>
-                                <span>{{ 'Succesfully added product to cart'|trans }}</span>
-                            </div>
-                        </div>
-                    </div>
-                {% else %}
-                    {% for error in this.addToCartResponse['user_errors'] %}
-                        <div class="toast z-50 toast-top">
-                            <div class="alert alert-error">
-                                <div>
-                                    <span>{{ error['message']|trans }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            </div>
-        {% endif %}
         <div class="grid gap-4">
             {% if product['type_id'] == 'configurable' %}
                 {% for attribute in product['configurable_options'] %}
                     <strong class="block">{{ 'Select a ' }}{{ attribute['label']|lower }}:</strong>
-                    <div class="product__details-configuration-items flex gap-2">
+                    <div class="product__details-configuration-items grid grid-cols-5 auto-cols-max gap-2">
                         {% for value in attribute['values'] %}
                             <label
                                     for="{{ value['uid'] }}"

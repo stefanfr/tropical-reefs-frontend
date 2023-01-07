@@ -79,6 +79,10 @@ task('deploy:restart:fpm', function () {
     run('systemctl restart php-fpm');
 });
 
+task('deploy:redis:flush', function () {
+    run('redis-cli flushall');
+});
+
 /**
  * Main task
  */
@@ -98,9 +102,10 @@ task('deploy', [
     'deploy:database:update',
     'deploy:symlink',
     'deploy:permissions',
+    'deploy:restart:fpm',
+    'deploy:redis:flush',
 //    'deploy:supervisor',
     'deploy:unlock',
-    'deploy:restart:fpm',
     'cleanup',
 ])->desc('Deploy your project');
 

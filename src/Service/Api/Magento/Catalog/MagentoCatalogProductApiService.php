@@ -57,6 +57,13 @@ class MagentoCatalogProductApiService
                                     new Field('url_key'),
                                     new Field('name'),
                                     new Field('sku'),
+                                    (new Field('small_image')
+                                    )->addChildFields(
+                                        [
+                                            new Field('url'),
+                                            new Field('label'),
+                                        ]
+                                    ),
                                     (new Field('custom_attributes')
                                     )->addChildFields(
                                         [

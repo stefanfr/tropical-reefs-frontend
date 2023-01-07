@@ -20,7 +20,7 @@
         </a>
             <div class="product_row__item-info py-4 px-3 border-t border-solid border-base-300">
                 <strong class="product_row__title mt-2">{{ item['name']|replace({'(': "<br />", ')': ''})|raw }}</strong>
-                <div class="flex gap-10">
+                <div class="flex gap-10 mt-2">
                     <div>
                         {% if item['price_range']['minimum_price']['discount']['amount_off'] > 0 %}
                             <small class="grow product_row__from_price line-through text-xs">
