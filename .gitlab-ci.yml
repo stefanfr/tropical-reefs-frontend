@@ -12,7 +12,7 @@ build_php:
     - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
   script:
     - docker build -t $CI_REGISTRY_IMAGE/frontend-php ./docker/php
-    - docker push $CI_REGISTRY_IMAGE
+    - docker push $CI_REGISTRY_IMAGE/frontend-php
 
 build_nginx:
   stage: build
@@ -25,4 +25,4 @@ build_nginx:
     - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
   script:
     - docker build -t $CI_REGISTRY_IMAGE/frontend ./docker/nginx
-    - docker push $CI_REGISTRY_IMAGE
+    - docker push $CI_REGISTRY_IMAGE/frontend
