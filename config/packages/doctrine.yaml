@@ -18,14 +18,24 @@ doctrine:
             default:
                 connection: default
                 naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+                mappings:
+                    Frontend:
+                        is_bundle: false
+                        type: attribute
+                        dir: '%kernel.project_dir%/src/Entity/Frontend'
+                        prefix: 'App\Entity\Frontend'
+                        alias: Main
+            manager:
+                connection: default
+                naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
                 auto_mapping: true
                 mappings:
                     Frontend:
                         is_bundle: false
-                        type: annotation
-                        dir: '%kernel.project_dir%/src/Entity/Frontend'
-                        prefix: 'App\Entity\Frontend'
-                        alias: Main
+                        type: attribute
+                        dir: '%kernel.project_dir%/src/Entity/Manager'
+                        prefix: 'App\Entity\Manager'
+                        alias: Manager
             magento:
                 connection: magento
                 naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
