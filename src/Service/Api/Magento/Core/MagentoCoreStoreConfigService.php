@@ -9,7 +9,7 @@ use App\Service\GraphQL\Query;
 use App\Service\GraphQL\Request;
 use Symfony\Contracts\Cache\ItemInterface;
 
-class MagentoCodeStoreConfigService
+class MagentoCoreStoreConfigService
 {
     protected array $storeConfig = [];
 
@@ -48,6 +48,7 @@ class MagentoCodeStoreConfigService
                         new Field('default_keywords'),
                         new Field('root_category_uid'),
                         new Field('is_default_store'),
+                        new Field('featured_category_id'),
                         new Field('store_group_code'),
                         new Field('base_currency_code'),
                         new Field('grid_per_page'),

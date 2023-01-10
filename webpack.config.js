@@ -16,6 +16,7 @@ Encore
     .enablePostCssLoader()
     .setOutputPath('public/build/')
     .setPublicPath('/build')
+    .addStyleEntry('manager', './assets/styles/manager.scss')
     .enableStimulusBridge('./assets/controllers.json')
     .addEntry('app', './assets/app.ts')
     .splitEntryChunks()

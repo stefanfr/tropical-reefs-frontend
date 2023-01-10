@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Service\Api\Magento\Catalog\MagentoCatalogCategoryApiService;
 use App\Service\Api\Magento\Catalog\MagentoCatalogProductApiService;
-use App\Service\Api\Magento\Checkout\MagentoCheckoutCartApiService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;

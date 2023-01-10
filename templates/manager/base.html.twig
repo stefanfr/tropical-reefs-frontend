@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Tropical Reefs - {% block title %}{% endblock %}</title>
+    <title>Tropical Reefs Manager - {% block title %}{% endblock %}</title>
     <meta name="description" content="{% block description %}Shop top saltwater aquarium equipment at Tropical Reefs. We carry everything you will need for your saltwater aquarium or reef tank. {% endblock %}"/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,25 +15,43 @@
     <meta name="theme-color" content="#ffffff">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% block stylesheets %}
-        {{ encore_entry_link_tags('app') }}
+        {{ encore_entry_link_tags('manager') }}
     {% endblock %}
     <script async="" id="truendoAutoBlock" type="text/javascript" src="https://cdn.priv.center/pc/truendo_cmp.pid.js" data-siteid="24666d8a-5835-49e2-b752-affc3ef9075e"></script>
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','GTM-5NZKBCF');</script>
+    <script>
+        (function (w, d, s, l, i) {
+            w[l] = w[l] || [];
+            w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            });
+            var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l !== 'dataLayer' ? '&l=' + l : '';
+            j.async = true;
+            j.src =
+                'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+            f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-5NZKBCF');
+    </script>
     {% block javascripts %}
         {{ encore_entry_script_tags('app') }}
     {% endblock %}
 </head>
 <body id="mainContent">
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5NZKBCF" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-{% include '_partials/header.html.twig' %}
-<main class="mt-4 2xl:container 2xl:mx-auto">
-    {% block breadcrumbs %}{% endblock %}
-    {% block body %}{% endblock %}
+<noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5NZKBCF" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+</noscript>
+{{ include('manager/_partials/_header.html.twig') }}
+<main class="grid grid-cols-12 h-screen">
+    {{ include('manager/_partials/_navigation.html.twig') }}
+    <section class="col-span-10">
+        <section class="bg-base-300 px-6 h-full pt-20">
+            {% block body %}{% endblock %}
+        </section>
+    </section>
 </main>
-{% include '_partials/footer.html.twig' %}
+<footer>
+
+</footer>
 </body>
 </html>

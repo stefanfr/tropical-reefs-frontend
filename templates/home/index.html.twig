@@ -11,8 +11,8 @@
                 <source media="(max-width: 1024px)" srcset="https://via.placeholder.com/1024x307">
                 <source media="(max-width: 1280px)" srcset="https://via.placeholder.com/1280x384">
                 <source media="(max-width: 1440px)" srcset="https://via.placeholder.com/1440x432">
-                <source media="(max-width: 2160px)" srcset="https://via.placeholder.com/2160x648">
-                <img width="1600" height="500" alt="header_image" src="https://via.placeholder.com/1600x480" class="w-full"/>
+                <source media="(max-width: 2160px)" srcset="{{ asset('build/assets/images/pexels-serggucci-13674522.jpg')|cdn('auto', 2160, 648) }}">
+                <img width="1600" height="500" alt="header_image" src="{{ asset('build/assets/images/pexels-serggucci-13674522.jpg')|cdn('auto', 1600, 500) }}" class="w-full"/>
             </picture>
         </div>
     </div>
@@ -58,11 +58,10 @@
             </div>
         </div>
     {% endif %}
-    <div class="grid md:grid-cols-2 seo_block flex gap-10 pr-20 mt-20 items-center mt-16 bg-base-300">
+    <div class="grid grid-cols-1 md:grid-cols-2 seo_block gap-5 md:gap-10 md:pr-20 mt-20 items-center bg-base-200 md:py-0 py-6">
         <img class="grow" width="714" height="406" src="{{ asset('build/assets/images/cropped_coral_scene-816x464_1_.webp')|cdn('auto', 714, 406) }}" alt="">
-        <div class="grow seo_block__content row">
-            <h2 class="seo_block__title" style="font-size: 2rem; font-weight: bold">Quality Saltwater Aquarium Supplies
-                with Expert Advice</h2>
+        <div class="grow seo_block__content row md:px-0 px-5">
+            <h2 class="seo_block__title font-bold text-3xl">Quality Saltwater Aquarium Supplies with Expert Advice</h2>
             <p class="seo_block__text mt-3">
                 We want to make reefing fun and easy. That's why we provide expert reefing knowledge and quality
                 saltwater aquarium products. From saltwater tanks with clownfish and anemones to full-blown reef tanks,
@@ -75,11 +74,11 @@
             </div>
         </div>
     </div>
-    <div class="divider lg:divider-vertical w-full" style="margin-top: 2.5rem">
+    <div class="divider lg:divider-vertical w-full" style="margin-top: 3.5rem">
         <h2 style="font-size: 1.7rem; font-weight: bold">{{ 'Featured products'|trans }}</h2>
     </div>
-    <div class="container mx-auto">
-        <div class="product_row grid md:grid-cols-5 gap-4 mt-8 col-span-6">
+    <div class="container mx-auto pt-1">
+        <div class="product_row grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mt-8 col-span-6">
             {% include 'catalog/_partials/product_list.html.twig' with {'items': featuredProducts, 'count': 5} %}
         </div>
     </div>

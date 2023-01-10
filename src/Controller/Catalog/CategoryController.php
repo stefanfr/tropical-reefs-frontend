@@ -3,7 +3,7 @@
 namespace App\Controller\Catalog;
 
 use App\Service\Api\Magento\Catalog\MagentoCatalogCategoryApiService;
-use App\Service\Api\Magento\Core\MagentoCodeStoreConfigService;
+use App\Service\Api\Magento\Core\MagentoCoreStoreConfigService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -13,7 +13,7 @@ class CategoryController extends AbstractController
 {
     public function __construct(
         protected RequestStack                     $requestStack,
-        protected MagentoCodeStoreConfigService    $magentoCodeStoreConfigService,
+        protected MagentoCoreStoreConfigService    $magentoCoreStoreConfigService,
         protected MagentoCatalogCategoryApiService $magentoCatalogCategoryApiService,
     )
     {
@@ -25,7 +25,7 @@ class CategoryController extends AbstractController
         $filters = [];
         $options = [
             'search' => '',
-            'pageSize' => $this->magentoCodeStoreConfigService->getStoreConfigData('grid_per_page'),
+            'pageSize' => $this->magentoCoreStoreConfigService->getStoreConfigData('grid_per_page'),
             'currentPage' => $request->get('page', 1),
 //            'sort' => [
 //                'value' => 'catalog_default_sort_by',
@@ -49,7 +49,7 @@ class CategoryController extends AbstractController
             'category' => $category,
             'catalog' => $catalog,
             'breadcrumbs' => $this->generateBreadcrumbs($category),
-            'perPageOptions' => explode(',', $this->magentoCodeStoreConfigService->getStoreConfigData('grid_per_page_values')),
+            'perPageOptions' => explode(',', $this->magentoCoreStoreConfigService->getStoreConfigData('grid_per_page_values')),
         ]);
     }
 

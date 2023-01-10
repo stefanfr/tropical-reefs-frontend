@@ -59,7 +59,8 @@ task('deploy:statics', static function () {
  * UpdateDB
  */
 task('deploy:database:update', static function () {
-    run('cd {{release_path}} && php bin/console doctrine:schema:update --force');
+    run('cd {{release_path}} && php bin/console doctrine:schema:update --force --complete');
+    run('cd {{release_path}} && php bin/console doctrine:schema:update --force -em=manager --complete');
 })->desc('Updating database');
 
 task('deploy:secrets', function () {

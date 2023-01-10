@@ -72,6 +72,10 @@
             <div class="product__description-text">
                 <h3 class="text-lg md:text-xl font-bold">{{ 'Characteristics'|trans }}</h3>
                 <table class="table table-compact w-full mt-3">
+                    <tr>
+                        <td class="font-bold">{{ 'SKU' }}</td>
+                        <td>{{ product['sku'] }}</td>
+                    </tr>
                     {% for attribute in product['custom_attributes'] %}
                         {% if null != attribute['value'] %}
                             <tr>

@@ -3,19 +3,18 @@
 namespace App\Twig\Global\Core;
 
 use App\Cache\Adapter\RedisAdapter;
-use App\Service\Api\Magento\Core\MagentoCodeStoreConfigService;
-use Psr\Cache\InvalidArgumentException;
+use App\Service\Api\Magento\Core\MagentoCoreStoreConfigService;
 
 class StoreConfig
 {
     protected mixed $storeConfigData;
 
     public function __construct(
-        protected MagentoCodeStoreConfigService $magentoCodeStoreConfigService,
+        protected MagentoCoreStoreConfigService $magentoCoreStoreConfigService,
         protected RedisAdapter                  $redisAdapter
     )
     {
-        $this->storeConfigData = $this->magentoCodeStoreConfigService->collectStoreConfig();
+        $this->storeConfigData = $this->magentoCoreStoreConfigService->collectStoreConfig();
     }
 
     public function getData(string $key): mixed

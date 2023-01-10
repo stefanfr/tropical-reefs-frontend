@@ -3,6 +3,7 @@
 namespace App\Service\Api\Magento\Catalog;
 
 use App\Cache\Adapter\RedisAdapter;
+use App\Service\Api\Magento\Core\MagentoCoreStoreConfigService;
 use App\Service\Api\Magento\Http\MageGraphQlClient;
 use App\Service\GraphQL\Field;
 use App\Service\GraphQL\Filter;
@@ -18,8 +19,9 @@ use Symfony\Contracts\Cache\ItemInterface;
 class MagentoCatalogProductApiService
 {
     public function __construct(
-        protected MageGraphQlClient $mageGraphQlClient,
-        protected RedisAdapter      $redisAdapter,
+        protected RedisAdapter                  $redisAdapter,
+        protected MageGraphQlClient             $mageGraphQlClient,
+        protected MagentoCoreStoreConfigService $magentoCoreStoreConfigService,
     )
     {
     }
@@ -299,7 +301,7 @@ class MagentoCatalogProductApiService
 
     public function collectHomeFeaturedProducts($debug = false)
     {
-        $uid = base64_encode('308');
+        $uid = base64_encode($this->magentoCoreStoreConfigService->getStoreConfigData('featured_category_id'));
         return $this->redisAdapter->get('catalog_home_featured_products_' . $uid,
             function (ItemInterface $item) use ($uid, $debug) {
                 $item->expiresAfter(24 * 60 * 60);

@@ -32,38 +32,52 @@ class MagentoCatalogCategoryApiService
     /**
      * @throws InvalidArgumentException
      */
-    public function collectCategoryTree(?string $uid = null, bool $debug = false): array
+    public function collectCategoryTree(?string $uid = null, ?array $filters = null, bool $debug = false): array
     {
-        $cacheKey = 'catalog_category_tree';
+        $cacheKey = 'catalog_category_tree_' . md5(serialize($filters));
         if (null !== $uid) {
             $cacheKey .= '_' . $uid;
             $this->redisAdapter->clear($cacheKey);
         }
 
-        return $this->redisAdapter->get($cacheKey, function (ItemInterface $item) use ($uid, $debug) {
+        return $this->redisAdapter->get($cacheKey, function (ItemInterface $item) use ($uid, $filters, $debug) {
             $item->expiresAfter(24 * 60 * 60);
 
             $parentId = $uid ?? $this->storeConfig->getData('root_category_uid');
+
+            $queryFilters = (new Filters)
+                ->addFilter(
+                    (new Filter('include_in_menu'))
+                        ->addOperator(
+                            'eq',
+                            1
+                        ),
+                )
+                ->addFilter(
+                    (new Filter('parent_category_uid'))
+                        ->addOperator(
+                            'in',
+                            [$parentId]
+                        ),
+                );
+
+            if (is_array($filters)) {
+                foreach ($filters as $key => $value) {
+                    $queryFilters->addFilter(
+                        (new Filter($key))
+                            ->addOperator(
+                                'eq',
+                                $value
+                            ),
+                    );
+                }
+            }
 
             try {
                 $response = (new Request(
                     (new Query('categoryList')
                     )->addParameter(
-                        (new Filters)
-                            ->addFilter(
-                                (new Filter('include_in_menu'))
-                                    ->addOperator(
-                                        'eq',
-                                        1
-                                    ),
-                            )
-                            ->addFilter(
-                                (new Filter('parent_category_uid'))
-                                    ->addOperator(
-                                        'in',
-                                        [$parentId]
-                                    ),
-                            ),
+                        $queryFilters
                     )->addFields(
                         [
                             new Field('children_count'),

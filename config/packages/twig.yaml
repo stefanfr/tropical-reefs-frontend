@@ -5,6 +5,7 @@ twig:
         isCheckout: false
         storeConfig: '@App\Twig\Global\Core\StoreConfig'
         categoryTree: '@App\Twig\Global\Catalog\CategoryTree'
+        quickMenuTree: '@App\Twig\Global\Catalog\QuickMenuTree'
 
 when@test:
     twig:
