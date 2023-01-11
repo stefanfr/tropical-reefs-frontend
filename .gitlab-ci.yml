@@ -11,13 +11,13 @@ build:
   before_script:
     - apk update
     - apk add zip unzip php
-#    - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-#    - php composer-setup.php
-#    - php -r "unlink('composer-setup.php');"
-#    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
+    - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    - php composer-setup.php
+    - php -r "unlink('composer-setup.php');"
   script:
     - php -v
-#    - composer install
+    - composer install
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
 #    - docker build -f ./docker/php/Dockerfile -t $CI_REGISTRY_IMAGE/frontend-php ./
 #    - docker push $CI_REGISTRY_IMAGE/frontend-php
 #    - docker build -f ./docker/nginx/Dockerfile -t $CI_REGISTRY_IMAGE/frontend-nginx ./
