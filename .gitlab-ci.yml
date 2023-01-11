@@ -12,7 +12,7 @@ build:
     - apk update
     - |
       apk add \
-      zip unzip \
+      zip unzip pecl \
       php php-fpm php-openssl php-curl \
       php-phar php-mbstring php-json php-iconv \
       php-ctype php-tokenizer php-xml
