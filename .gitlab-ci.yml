@@ -11,7 +11,7 @@ build_php:
   before_script:
     - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
   script:
-    - docker build -t $CI_REGISTRY_IMAGE/frontend-php ./docker/php
+    - docker build -f ./docker/php/Dockerfile -t $CI_REGISTRY_IMAGE/frontend-php ./
     - docker push $CI_REGISTRY_IMAGE/frontend-php
-    - docker build -t $CI_REGISTRY_IMAGE/frontend ./docker/nginx
-    - docker push $CI_REGISTRY_IMAGE/frontend
+    - docker build -f ./docker/nginx/Dockerfile -t $CI_REGISTRY_IMAGE/frontend-nginx ./
+    - docker push $CI_REGISTRY_IMAGE/frontend-nginx
