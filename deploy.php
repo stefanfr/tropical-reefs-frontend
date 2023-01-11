@@ -8,7 +8,7 @@ set('http_user', 'nginx');
 set('application', 'tropical-reefs-frontend');
 
 // Project repository
-set('repository', 'git@gitlab.hostplus.nl:root/aquastore-frontend.git');
+set('repository', 'git@gitlab.hostplus.nl:tropical-reefs/frontend.git');
 
 // [Optional] Allocate tty for git clone. Default value is false.
 set('pty', true);
