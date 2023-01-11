@@ -8,24 +8,9 @@ build:
   image: docker
   services:
     - docker:dind
-  before_script:
-    - apk update
-    - |
-      apk add \
-      zip unzip php-pecl-redis \
-      php php-fpm php-openssl php-curl \
-      php-phar php-mbstring php-json php-iconv \
-      php-ctype php-tokenizer php-xml
-    - pecl install redis
-    - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-    - php composer-setup.php
-    - php -r "unlink('composer-setup.php');"
-    - mv composer.phar /usr/local/bin/composer
   script:
-    - php -v
-    - composer install
     - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
-#    - docker build -f ./docker/php/Dockerfile -t $CI_REGISTRY_IMAGE/frontend-php ./
-#    - docker push $CI_REGISTRY_IMAGE/frontend-php
-#    - docker build -f ./docker/nginx/Dockerfile -t $CI_REGISTRY_IMAGE/frontend-nginx ./
-#    - docker push $CI_REGISTRY_IMAGE/frontend-nginx
+    - docker build -f ./docker/php/Dockerfile -t $CI_REGISTRY_IMAGE/frontend-php ./
+    - docker push $CI_REGISTRY_IMAGE/frontend-php
+    - docker build -f ./docker/nginx/Dockerfile -t $CI_REGISTRY_IMAGE/frontend-nginx ./
+    - docker push $CI_REGISTRY_IMAGE/frontend-nginx
