@@ -10,7 +10,7 @@ build:
     - docker:dind
   before_script:
     - apk update
-    - apk add zip unzip
+    - apk add zip unzip php8
     - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
     - php composer-setup.php
     - php -r "unlink('composer-setup.php');"
