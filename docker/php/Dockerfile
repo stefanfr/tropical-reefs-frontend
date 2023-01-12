@@ -2,11 +2,12 @@ FROM gitlab.hostplus.nl:5050/tropical-reefs/docker/php8.1:latest
 
 # copy code
 COPY . /var/www/html
+COPY ./docker/config/.env /var/www/html
 
 WORKDIR /var/www/html
 
 #install symfony and its dependencies
-RUN composer install --optimize-autoloader --no-dev
+RUN composer install --optimize-autoloader --no-dev --no-plugins --no-scripts
 
 # Install npm dependencies and build assets
 RUN npm ci
