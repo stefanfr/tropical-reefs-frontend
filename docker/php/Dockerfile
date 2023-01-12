@@ -5,13 +5,6 @@ COPY . /var/www/html
 
 WORKDIR /var/www/html
 
-#install symfony and its dependencies
-RUN composer install --optimize-autoloader --no-dev --no-plugins --no-scripts
-
-# Install npm dependencies and build assets
-RUN npm ci
-RUN npm run build
-
 # change ownership
 RUN chown -R www-data:www-data /var/www/html
 RUN chmod -R 777 /var/www/html/var/
