@@ -53,7 +53,7 @@ task('deploy:permissions', static function () {
 task('deploy:statics', static function () {
     run('cd {{release_path}} && npm install');
     run('cd {{release_path}} && ./node_modules/.bin/encore production');
-})->desc('Chowning uploads');
+})->desc('Deploying statics');
 
 /**
  * UpdateDB

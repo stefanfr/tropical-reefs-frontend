@@ -10,6 +10,7 @@ build:
     - docker:dind
   script:
     - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
+    - cp $ENV .env
     - docker build -f ./docker/php/Dockerfile -t $CI_REGISTRY_IMAGE/frontend-php ./
     - docker push $CI_REGISTRY_IMAGE/frontend-php
 #    - docker build -f ./docker/nginx/Dockerfile -t $CI_REGISTRY_IMAGE/frontend-nginx ./

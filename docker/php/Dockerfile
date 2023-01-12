@@ -2,7 +2,6 @@ FROM gitlab.hostplus.nl:5050/tropical-reefs/docker/php8.1:latest
 
 # copy code
 COPY . /var/www/html
-COPY $ENV /var/www/html
 
 WORKDIR /var/www/html
 
