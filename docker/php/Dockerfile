@@ -1,4 +1,16 @@
 FROM gitlab.hostplus.nl:5050/tropical-reefs/docker/php8.1:latest
-COPY ./docker/php/zzz-tropicalreefs-fpm.ini /usr/local/etc/php-fpm.d/
+
+# copy code
 COPY . /var/www/html
-COPY ./docker/php/docker-frontend-entrypoint.sh /usr/local/bin/docker-frontend-entrypoint.sh
+
+WORKDIR /var/www/html
+
+#install symfony and its dependencies
+RUN composer install --optimize-autoloader --no-dev
+
+# Install npm dependencies and build assets
+RUN npm ci
+RUN npm run build
+
+# change ownership
+RUN chown -R www-data:www-data /var/www/html
