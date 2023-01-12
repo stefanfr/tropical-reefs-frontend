@@ -1,7 +1,6 @@
 FROM gitlab.hostplus.nl:5050/tropical-reefs/docker/php8.1:latest
 
 # copy code
-COPY ./docker/config/.env ./.env
 COPY . /var/www/html
 
 WORKDIR /var/www/html
@@ -15,3 +14,4 @@ RUN npm run build
 
 # change ownership
 RUN chown -R www-data:www-data /var/www/html
+RUN chmod -R 777 /var/www/html/var/
