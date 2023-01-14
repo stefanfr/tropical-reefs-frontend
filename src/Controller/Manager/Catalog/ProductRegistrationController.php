@@ -5,6 +5,7 @@ namespace App\Controller\Manager\Catalog;
 use App\Entity\Manager\Product;
 use App\Repository\Manager\ProductRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
 use League\Csv\Exception;
 use League\Csv\InvalidArgument;
 use League\Csv\Reader;
@@ -24,21 +25,34 @@ class ProductRegistrationController extends AbstractController
     }
 
     #[Route('/manager/catalog/product/registration', name: 'app_manager_catalog_product_registration')]
-    public function index(): Response
+    public function index(PaginatorInterface $paginator, Request $request): Response
     {
         $products = $this->productRepository->findAll();
 
+        $pagination = $paginator->paginate(
+            $products, /* query NOT result */
+            $request->query->getInt('page', 1),
+            100,
+            [
+                'sortFieldAllowList' => [
+                    'brand',
+                    'supplier_code',
+                    'sku',
+                ],
+            ]
+        );
+
         return $this->render('manager/catalog/product_registration/index.html.twig', [
-            'products' => $products,
+            'pagination' => $pagination,
         ]);
     }
 
     #[Route('/manager/catalog/product/registration/edit/{product}', name: 'app_manager_catalog_product_registration_edit')]
-    public function edit(Request $request, Product $product)
+    public function edit(Request $request, Product $product): Response
     {
-        $files = $request->files->all();
-
-        return $this->render('manager/catalog/product_registration/edit.html.twig');
+        return $this->render('manager/catalog/product_registration/edit.html.twig', [
+            'product' => $product,
+        ]);
     }
 
     #[Route('/manager/catalog/product/registration/update', name: 'app_manager_catalog_product_registration_update', methods: ['PUT'])]
@@ -54,7 +68,7 @@ class ProductRegistrationController extends AbstractController
      * @throws Exception
      */
     #[Route('/manager/catalog/product/registration/upload', name: 'app_manager_catalog_product_registration_upload', methods: ['POST'])]
-    public function upload(Request $request)
+    public function upload(Request $request): \Symfony\Component\HttpFoundation\RedirectResponse
     {
         /** @var UploadedFile $csv */
         $csv = $request->files->get('uploadCsv');
@@ -65,7 +79,6 @@ class ProductRegistrationController extends AbstractController
         $csv->setHeaderOffset(0);
         $headers = $csv->getHeader();
         $csv->chunk(1);
-        $index = 1;
         foreach ($csv->getRecords($headers) as $record) {
             $oldProductData = $this->productRepository->findOneBy(
                 [
@@ -73,21 +86,14 @@ class ProductRegistrationController extends AbstractController
                 ]
             );
 
-            if (null === $oldProductData) {
-                $lastSku = $this->productRepository->findBy(
-                    [
-                        'brand' => ucfirst(strtolower($record['category'])),
-                    ]
-                );
+            $record['name'] = trim(str_replace([ucfirst(strtolower($record['category'])), $record['category'], strtolower($record['category']), strtoupper($record['category'])], '', $record['name']));
+            $record['name'] = preg_replace('/(AMA |- |-Futter |-Futter\/Granulat |-Futter\/Pulver |, )/', '', $record['name']);
+            $record['name'] = preg_replace("/[\n\r]/", ' ', $record['name']);
 
-                $newSku = str_pad((string)$index, 4, '0', STR_PAD_LEFT);
-                $index++;
+            if (null === $oldProductData) {
                 $product = new Product();
                 $product->setSupplierCode($record['supplier_code'])
                     ->setBrand(ucfirst(strtolower($record['category'])))
-                    ->setSku(
-                        'AH-' . $newSku
-                    )
                     ->setProductData($record);
 
                 $em->persist($product);

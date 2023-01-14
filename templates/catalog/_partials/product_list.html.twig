@@ -7,7 +7,7 @@
         <a href="/{{ item['url_key'] }}" class="category__item">
             <div class="product_row__item-image-holder relative flex justify-items-center justify-center">
                 <picture>
-                    <img alt="{{ item['name'] }}" width="250" class="aspect-square" src="{{ item['small_image']['url']|cdn('fill', 'square', 250) }}"/>
+                    <img alt="{{ item['name'] }}" width="250" class="aspect-square" src="{{ item['small_image']['url']|cdn('fit', 'square', 250) }}"/>
                 </picture>
             </div>
             <div class="product_row__item-label absolute top-3 left-3">

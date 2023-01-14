@@ -2,16 +2,27 @@
 
 namespace App\Twig\Extension;
 
+use App\Service\Api\Magento\Core\MagentoCoreCmsBlockService;
 use App\Service\ImgProxy\ImgProxyService;
+use Psr\Cache\InvalidArgumentException;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
+use Twig\TwigFunction;
 
 class AppExtension extends AbstractExtension
 {
     public function __construct(
-        protected ImgProxyService $imgProxyService,
+        protected ImgProxyService            $imgProxyService,
+        protected MagentoCoreCmsBlockService $magentoCoreCmsBlockService,
     )
     {
+    }
+
+    public function getFunctions()
+    {
+        return [
+            new TwigFunction('cmsBlock', $this->cmsBlock(...)),
+        ];
     }
 
     public function getFilters(): array
@@ -21,8 +32,23 @@ class AppExtension extends AbstractExtension
         ];
     }
 
-    public function cdn(string $uri, string $method, int|string $width, int $height): string
+    /**
+     * @throws InvalidArgumentException
+     */
+    public function cmsBlock(string $identifier): string
     {
+        return $this->magentoCoreCmsBlockService->collectCmsBlock($identifier) ?? '';
+    }
+
+    public function cdn(?string $uri, string $method, int|string $width, ?int $height = null): string
+    {
+        if (null === $uri) {
+            $uri = match ($width) {
+                'square' => sprintf('https://via.placeholder.com/%s', $height),
+                default => sprintf('https://via.placeholder.com/%sx%s', $width, $height),
+            };
+        }
+
         $uri = str_replace('aquastore.test', 'dev.tropicalreefs.nl', $uri);
         if ( ! preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i', $uri)) {
             $uri = 'https://dev.tropicalreefs.nl/' . $uri;
@@ -45,7 +71,9 @@ class AppExtension extends AbstractExtension
             default => sprintf('%s:%s', $width, $height),
         };
 
-        $filters .= '/gravity:ce';
+        $filters .= '/ex:1';
+        $filters .= '/g:ce';
+        $filters .= '/ar:1';
 
         return $this->imgProxyService->getUrl(
             preg_replace('/cache\/.*\//U', '', $uri),

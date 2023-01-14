@@ -78,7 +78,7 @@
         <div class="divider lg:divider-vertical w-full" style="margin-top: 3.5rem">
             <h2 style="font-size: 1.7rem; font-weight: bold">{{ 'Featured products'|trans }}</h2>
         </div>
-        <div class="container mx-auto pt-1">
+        <div class="container mx-auto pt-1 mb-10">
             <div class="product_row grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mt-8 col-span-6">
                 {% include 'catalog/_partials/product_list.html.twig' with {'items': featuredProducts, 'count': 5} %}
             </div>

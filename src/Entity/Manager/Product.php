@@ -14,7 +14,7 @@ class Product
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $sku = null;
 
     #[ORM\Column(length: 255)]
@@ -25,6 +25,9 @@ class Product
 
     #[ORM\Column]
     private array $productData = [];
+
+    #[ORM\ManyToOne(inversedBy: 'childProducts')]
+    private ?ProductModel $parent = null;
 
     public function getId(): ?int
     {
@@ -81,6 +84,18 @@ class Product
     public function setProductData(array $productData): self
     {
         $this->productData = $productData;
+
+        return $this;
+    }
+
+    public function getParent(): ?ProductModel
+    {
+        return $this->parent;
+    }
+
+    public function setParent(?ProductModel $parent): self
+    {
+        $this->parent = $parent;
 
         return $this;
     }

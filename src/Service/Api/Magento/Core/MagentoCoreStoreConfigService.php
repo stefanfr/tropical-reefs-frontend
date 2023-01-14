@@ -48,6 +48,7 @@ class MagentoCoreStoreConfigService
                         new Field('default_keywords'),
                         new Field('root_category_uid'),
                         new Field('is_default_store'),
+                        new Field('brand_category_id'),
                         new Field('featured_category_id'),
                         new Field('store_group_code'),
                         new Field('base_currency_code'),

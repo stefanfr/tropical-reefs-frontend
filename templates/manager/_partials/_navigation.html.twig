@@ -1,9 +1,9 @@
-<div class="drawer-side h-screen col-span-2" style="scroll-behavior: smooth; scroll-padding-top: 5rem;">
-    <aside class="bg-base-200 h-screen w-full">
-        <div class="z-20 bg-base-300 bg-opacity-90 backdrop-blur sticky top-0 items-center gap-2 px-4 py-3 hidden lg:flex ">
+<div class="drawer-side h-screen col-span-2 relative z-30" style="scroll-behavior: smooth; scroll-padding-top: 5rem;">
+    <aside class="bg-base-200 h-screen fixed top-0" style="width: 16.666667%">
+        <div class="z-20 bg-base-300 bg-opacity-90 backdrop-blur sticky top-0 items-center gap-2 px-4 py-3 hidden lg:flex">
             <a href="/" aria-current="page" aria-label="Homepage" class="flex-0 btn btn-ghost px-2">
                 <div class="font-title md:text-3xl">
-                    <span class="lowercase">Storemanager</span>
+                    <span class="uppercase">Manager</span>
                 </div>
             </a>
         </div>
@@ -31,6 +31,22 @@
                         </svg>
                     </span>
                     <span class="flex-1">Product Registration</span>
+                </a>
+                <a href="{{ path('app_manager_catalog_generated_products') }}" class="flex gap-4 {% if 'app_manager_catalog_generated_products' in app.request.get('_route') %} active {% endif %}">
+                    <span class="flex-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/>
+                        </svg>
+                    </span>
+                    <span class="flex-1">Generated Products</span>
+                </a>
+                <a href="{{ path('app_manager_catalog_generated_product_models') }}" class="flex gap-4 {% if 'app_manager_catalog_generated_product_models' in app.request.get('_route') %} active {% endif %}">
+                    <span class="flex-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/>
+                        </svg>
+                    </span>
+                    <span class="flex-1">Generated Models</span>
                 </a>
             </li>
         </ul>

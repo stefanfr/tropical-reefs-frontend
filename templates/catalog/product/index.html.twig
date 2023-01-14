@@ -28,113 +28,101 @@
 {% endblock %}
 
 {% block body %}
-    <div class="container mx-auto mt-4 px-5 xl:px-0">
-        <div class="grid lg:grid-cols-5 gap-10 sm:grid-cols-1">
-            <div class="product__images-container col-span-3">
-                <div class="flex gap-2">
-                    {% if product['media_gallery']|length == 1 %}
-                        {% for image in product['media_gallery'] %}
-                            <div class="slide">
-                                <img style="aspect-ratio: 1" width="640" src="{{ image['url']|cdn('auto', 'square', 640) }}" alt="">
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="slideshow-container" id="product_image_slider">
+    <div class="mb-20">
+        <div class="container mx-auto mt-4 px-5 xl:px-0">
+            <div class="grid lg:grid-cols-5 gap-10 sm:grid-cols-1">
+                <div class="product__images-container col-span-3">
+                    <div class="flex gap-2">
+                        {% if product['media_gallery']|length == 1 %}
                             {% for image in product['media_gallery'] %}
-                                <div class="slide">
-                                    <img style="aspect-ratio: 1" width="640" src="{{ image['url']|cdn('auto', 'square', 640) }}" alt="">
+                                <div class="slide px-0 md:px-20">
+                                    <picture>
+                                        <source media="(max-width: 640px)" srcset="{{ image['url']|cdn('auto', 335, 335) }}">
+                                        <source media="(max-width: 678px)" srcset="{{ image['url']|cdn('auto', 592, 592) }}">
+                                        <source media="(max-width: 1024px)" srcset="{{ image['url']|cdn('auto', 414, 414) }}">
+                                        <img style="aspect-ratio: 1" class="w-full" src="{{ image['url']|cdn('auto', 592, 592) }}" alt="">
+                                    </picture>
                                 </div>
                             {% endfor %}
-                            <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-                            <a class="next" onclick="plusSlides(1)">&#10095;</a>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="product__details-container col-span-3 md:col-span-2">
-                <div class="product__details-title grid">
-                    <h1 class="text-2xl md:text-4xl font-bold">{{ product['name']|replace({'(': "<br />", ')': ''})|raw }}</h1>
-                    {{ component('catalog_product_configuration', {
-                        product: product,
-                    }) }}
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="divider lg:divider-vertical" style="margin-top: 2rem" id="product-description">
-        <h3 class="text-2xl md:text-3xl font-bold">{{ 'Product description'|trans }}</h3>
-    </div>
-    <div class="container mx-auto mt-10 px-5 xl:px-0">
-        <div class="product__description grid md:grid-cols-3 grid-cols-1 md:gap-20 gap-5">
-            <div class="product__description-text md:col-span-2">
-                {{ product['description']['html']|raw }}
-            </div>
-            <div class="product__description-text">
-                <h3 class="text-lg md:text-xl font-bold">{{ 'Characteristics'|trans }}</h3>
-                <table class="table table-compact w-full mt-3">
-                    <tr>
-                        <td class="font-bold">{{ 'SKU' }}</td>
-                        <td>{{ product['sku'] }}</td>
-                    </tr>
-                    {% for attribute in product['custom_attributes'] %}
-                        {% if null != attribute['value'] %}
-                            <tr>
-                                <td class="font-bold">{{ attribute['label'] }}</td>
-                                <td>{{ attribute['value'] }}</td>
-                            </tr>
+                        {% else %}
+                            <div class="glide">
+                                <div class="glide__track" data-glide-el="track">
+                                    <ul class="glide__slides">
+                                        {% for image in product['media_gallery'] %}
+                                            <li class="glide__slide px-0 md:px-20">
+                                                <img style="aspect-ratio: 1" class="w-full" src="{{ image['url']|cdn('auto', 592, 592) }}" alt="">
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                <div class="glide__arrows" data-glide-el="controls">
+                                    <a data-glide-dir="<" class="glide__arrow glide__arrow--left">&#10094;</a>
+                                    <a data-glide-dir=">" class="glide__arrow glide__arrow--right">&#10095;</a>
+                                </div>
+                            </div>
                         {% endif %}
-                    {% endfor %}
-                </table>
+                    </div>
+                </div>
+                <div class="product__details-container col-span-3 md:col-span-2">
+                    <div class="product__details-title grid">
+                        <h1 class="text-2xl md:text-4xl font-bold">{{ product['name']|replace({'(': "<br />", ')': ''})|raw }}</h1>
+                        {{ component('catalog_product_configuration', {
+                            product: product,
+                        }) }}
+                    </div>
+                </div>
             </div>
         </div>
+        <div class="divider lg:divider-vertical" style="margin-top: 2rem" id="product-description">
+            <h3 class="text-2xl md:text-3xl font-bold">{{ 'Product description'|trans }}</h3>
+        </div>
+        <div class="container mx-auto mt-10 px-5 xl:px-0">
+            <div class="product__description grid md:grid-cols-3 grid-cols-1 md:gap-20 gap-5">
+                <div class="product__description-text md:col-span-2">
+                    {{ product['description']['html']|raw }}
+                </div>
+                <div class="product__description-text">
+                    <h3 class="text-lg md:text-xl font-bold">{{ 'Characteristics'|trans }}</h3>
+                    <table class="table table-compact w-full mt-3">
+                        <tr>
+                            <td class="font-bold">{{ 'SKU' }}</td>
+                            <td>{{ product['sku'] }}</td>
+                        </tr>
+                        {% for attribute in product['custom_attributes'] %}
+                            {% if null != attribute['value'] %}
+                                <tr>
+                                    <td class="font-bold">{{ attribute['label'] }}</td>
+                                    <td>{{ attribute['value'] }}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% if product['related_products']|length > 0 %}
+            <div class="divider lg:divider-vertical" style="margin-top: 4rem">
+                <h3 class="text-3xl font-bold">{{ 'Related products'|trans }}</h3>
+            </div>
+            <div class="container mx-auto">
+                <div class="product_row grid grid-cols-5 gap-4 mt-10 col-span-6">
+                    {% include 'catalog/_partials/product_list.html.twig' with {'limit': 5, 'items': product['related_products']} %}
+                </div>
+            </div>
+        {% endif %}
+        {% if false %}
+            <div id="reviews" class="divider lg:divider-vertical" style="margin-top: 4rem">
+                <h3 class="text-3xl font-bold">{{ 'Product reviews'|trans }}</h3>
+            </div>
+        {% endif %}
     </div>
-    {% if product['related_products']|length > 0 %}
-        <div class="divider lg:divider-vertical" style="margin-top: 4rem">
-            <h3 class="text-3xl font-bold">{{ 'Related products'|trans }}</h3>
-        </div>
-        <div class="container mx-auto">
-            <div class="product_row grid grid-cols-5 gap-4 mt-10 col-span-6">
-                {% include 'catalog/_partials/product_list.html.twig' with {'limit': 5, 'items': product['related_products']} %}
-            </div>
-        </div>
-    {% endif %}
-    {% if false %}
-        <div id="reviews" class="divider lg:divider-vertical" style="margin-top: 4rem">
-            <h3 class="text-3xl font-bold">{{ 'Product reviews'|trans }}</h3>
-        </div>
-    {% endif %}
-
-    {% if product['media_gallery']|length != 1 %}
-        <script>
-            let slideIndex = 1;
-            showSlides(slideIndex);
-
-            function plusSlides(n) {
-                showSlides(slideIndex += n);
-            }
-
-            function currentSlide(n) {
-                showSlides(slideIndex = n);
-            }
-
-            function showSlides(n) {
-                let slides = document.getElementById("product_image_slider").querySelectorAll('.slide');
-                // dots[slideIndex - 1].className += " active";
-                // let dots = document.getElementsByClassName("dot");
-                if (n > slides.length) {
-                    slideIndex = 1
-                }
-                if (n < 1) {
-                    slideIndex = slides.length
-                }
-                for (let i = 0; i < slides.length; i++) {
-                    slides[i].style.display = "none";
-                }
-                // for (i = 0; i < dots.length; i++) {
-                //     dots[i].className = dots[i].className.replace(" active", "");
-                // }
-                slides[slideIndex - 1].style.display = "block";
-            }
-        </script>
+    {% if product['media_gallery']|length > 1 %}
+        {% block addtionalStylesheets %}
+            {{ encore_entry_link_tags('glide') }}
+            {{ encore_entry_script_tags('glide') }}
+        {% endblock %}
+        {% block additionalScripts %}
+            {{ encore_entry_script_tags('glide') }}
+        {% endblock %}
     {% endif %}
 {% endblock %}

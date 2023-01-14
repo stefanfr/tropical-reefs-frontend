@@ -1,0 +1,5 @@
+knp_paginator:
+  template:
+    pagination: "Pagination/pagination.html.twig"
+    sortable: "Pagination/sortable.html.twig"
+    filtration: "Pagination/filtration.html.twig"

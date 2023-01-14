@@ -1,7 +1,6 @@
 <?php
 
-$test1 = [['t', 'a'], ['t']];
-$test2 = ['t', 't2'];
+$string = "Hello, world!";
+$translated = translate_with_api($string, "es");
 
-print_r($test1[0]);
-print_r($test2);
+echo $translated;

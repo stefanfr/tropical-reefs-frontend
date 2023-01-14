@@ -1,0 +1,15 @@
+<form method="get" action="{{ action }}" enctype="application/x-www-form-urlencoded" class="flex gap-2">
+    {% if fields|length > 1 %}
+        <select class="grow select select-bordered select-sm" name="{{ filterFieldName }}">
+            {% for field, label in fields %}
+                <option value="{{ field }}"{% if selectedField == field %} selected="selected"{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+    {% else %}
+        <input class="grow input input-bordered input-sm" type="hidden" name="{{ filterFieldName }}" value="{{ fields|keys|first }}" />
+    {% endif %}
+
+    <input class="grow input input-bordered input-sm" type="text" value="{{ selectedValue }}" name="{{ filterValueName }}" />
+
+    <button class="btn btn-accent btn-sm">{{ options.button }}</button>
+</form>

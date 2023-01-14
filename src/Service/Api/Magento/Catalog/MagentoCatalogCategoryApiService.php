@@ -424,9 +424,16 @@ class MagentoCatalogCategoryApiService
 
     public function collectHomeBrandCategories($debug = false)
     {
-        return $this->redisAdapter->get('catalog_category_brand_homepage',
+        $cacheKey = 'catalog_category_brand_homepage';
+
+        if ($debug) {
+            $this->redisAdapter->clear($cacheKey);
+        }
+
+        return $this->redisAdapter->get($cacheKey,
             function (ItemInterface $item) use ($debug) {
                 $item->expiresAfter(24 * 60 * 60);
+
 
                 try {
                     $response = (new Request(
