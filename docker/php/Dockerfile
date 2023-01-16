@@ -7,4 +7,4 @@ WORKDIR /var/www/html
 
 # change ownership
 RUN chown -R www-data:www-data /var/www/html
-RUN chmod -R 777 /var/www/html/var/
+RUN chmod -R 775 /var/www/html/var/
