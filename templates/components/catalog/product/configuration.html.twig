@@ -90,7 +90,7 @@
             {% if product['type_id'] == 'configurable' %}
                 {% for attribute in product['configurable_options'] %}
                     <strong class="block">{{ 'Select a ' }}{{ attribute['label']|lower }}:</strong>
-                    <div class="product__details-configuration-items grid grid-cols-5 auto-cols-max gap-2">
+                    <div class="product__details-configuration-items grid grid-cols-4 auto-cols-max gap-2">
                         {% for value in attribute['values'] %}
                             <label
                                     for="{{ value['uid'] }}"
@@ -117,6 +117,7 @@
         </div>
         <div class="grid grid-cols-4 xl:grid-cols-5 gap-4 mt-4">
             <div>
+                {{ product['only_x_left_in_stock'] }}
                 <select aria-label="select qty" required name="qty" id="qty" class="select select-accent w-full" data-model="selectedQty">
                     {% for index in 1..qtySelectorLimit %}
                         <option value="{{ index }}" {% if index == selectedQty %}selected {% endif %}>{{ index }}</option>
@@ -125,6 +126,8 @@
             </div>
             <div class="col-span-3 md:col-span-4 grid gap-3">
                 <button
+                        {% if product['configurable_product_options_selection']['variant']['stock_status']
+                            ?? product['stock_status'] != 'IN_STOCK' %}disabled {% endif %}
                         class="btn btn-outline btn-accent flex"
                         data-action="click->live#action"
                         data-action-name="addProductToCart"

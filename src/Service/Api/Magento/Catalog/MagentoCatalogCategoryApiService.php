@@ -198,7 +198,7 @@ class MagentoCatalogCategoryApiService
         );
     }
 
-    public function collectCategoryProducts(string $categoryUid, array $options = [], array $filters = [], bool $debug = false): array
+    public function collectCategoryProducts(?string $categoryUid, array $options = [], array $filters = [], bool $debug = false): bool|array
     {
         $customFilter = new Filters('filter');
 
@@ -214,15 +214,17 @@ class MagentoCatalogCategoryApiService
             }
         }
 
-        $parameters = [
-            $customFilter->addFilter(
-                (new Filter('category_uid'))
-                    ->addOperator(
-                        'eq',
-                        $categoryUid
-                    ),
-            ),
-        ];
+        if (null !== $categoryUid) {
+            $parameters = [
+                $customFilter->addFilter(
+                    (new Filter('category_uid'))
+                        ->addOperator(
+                            'eq',
+                            $categoryUid
+                        ),
+                ),
+            ];
+        }
 
         if ( ! empty($options)) {
             if (isset($options['search'])) {
@@ -241,9 +243,14 @@ class MagentoCatalogCategoryApiService
             }
         }
 
+        $cacheKey = 'catalog_category_products_' . sha1(serialize($parameters));
+        if ($debug) {
+            $this->redisAdapter->clear($cacheKey);
+        }
+
         return $this->redisAdapter->get(
-            'catalog_category_products_' . sha1(serialize($parameters)),
-            function (ItemInterface $item) use ($parameters) {
+            $cacheKey,
+            function (ItemInterface $item) use ($parameters, $debug) {
                 $item->expiresAfter(4 * 60 * 60);
 
                 $response = (new Request(
@@ -364,7 +371,11 @@ class MagentoCatalogCategoryApiService
                     $this->mageGraphQlClient
                 ))->send();
 
-                return $response['data']['products'] ?? $response['errors'];
+                if ($debug) {
+                    dd($response['data']['products'] ?? $response['errors']);
+                }
+
+                return $response['data']['products'] ?? false;
             }
         );
     }

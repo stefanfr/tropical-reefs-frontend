@@ -3,6 +3,7 @@
 namespace App\Service\GraphQL;
 
 use App\Service\Api\Magento\Http\MageGraphQlClient;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class Request
 {
@@ -34,7 +35,8 @@ class Request
 
             return json_decode($response, true, 512, JSON_THROW_ON_ERROR);
         } catch (\Exception $exception) {
-            dd($response);
+            echo (string)$this->query;
+            dd($exception->getMessage());
         }
     }
 }

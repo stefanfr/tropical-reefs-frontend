@@ -13,11 +13,15 @@
                             data-action-name="setSelectedShippingMethod(carrierCode={{ shippingMethod['carrier_code'] }}, methodeCode={{ shippingMethod['method_code'] }})"
                     >
                         <img width="40" height="40" src="{{ asset('build/assets/images/postnl.png')|cdn('auto', 'square', 45) }}" alt="{{ shippingMethod['carrier_title'] }}">
-                        <div class="checkout__shipment-shipping-method-details grow">
+                        <div class="checkout__shipment-shipping-method-details grow grid">
                             <strong>{{ shippingMethod['carrier_title'] }}</strong>
-                            <small>{{ shippingMethod['carrier_title'] }}</small>
+                            <small class="text-2xs">{{ shippingMethod['method_title'] }}</small>
                         </div>
-                        <strong>{{ shippingMethod['price_incl_tax']['value']|format_currency('EUR', [], 'nl_NL') }}</strong>
+                        {% if shippingMethod['price_incl_tax']['value'] %}
+                            <strong>{{ shippingMethod['price_incl_tax']['value']|format_currency('EUR', [], 'nl_NL') }}</strong>
+                        {% else %}
+                            <strong class="text-success">{{ 'Free'|trans }}</strong>
+                        {% endif %}
                     </div>
                 {% endfor %}
             </div>

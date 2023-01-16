@@ -30,7 +30,7 @@ final class PaymentComponent extends AbstractController
     public ?string $selectedPaymentMethod = null;
 
     #[LiveProp(writable: true)]
-    public ?bool $useCoupon = false;
+    public bool $useCoupon = false;
 
     #[LiveProp(writable: true)]
     public ?string $couponCode = null;
@@ -58,12 +58,14 @@ final class PaymentComponent extends AbstractController
     #[LiveAction]
     public function setSelectedPaymentMethod(#[LiveArg] string $methodCode): void
     {
+        $this->magentoCheckoutPaymentApiService->savePaymentMethod($methodCode);
         $this->selectedPaymentMethod = $methodCode;
     }
 
     #[LiveAction]
     public function changeUseCoupon(): void
     {
+        $this->useCoupon = ! $this->useCoupon;
         if ( ! $this->useCoupon) {
             $this->removeCoupon();
         }
@@ -89,7 +91,7 @@ final class PaymentComponent extends AbstractController
         $cart = $this->magentoCheckoutPaymentApiService->applyCoupon($this->couponCode);
 
         if (array_key_exists('errors', $cart)) {
-            $this->couponErrorMessage = $cart[0]['message'];
+            $this->couponErrorMessage = $cart['errors'][0]['message'];
             $this->couponIsValid = false;
 
             return;
@@ -102,7 +104,7 @@ final class PaymentComponent extends AbstractController
     }
 
     #[LiveAction]
-    public function savePaymentMethod(): null|RedirectResponse
+    public function placeOrder(): null|RedirectResponse
     {
         $this->errors = $this->magentoCheckoutPaymentApiService->savePaymentMethod($this->selectedPaymentMethod);
 

@@ -1,66 +1,89 @@
 <div class="mt-4 py-8 col-start-3 col-span-4 container border border-base-300 rounded-box shadow-md border-solid grid justify-center" {{ attributes }}>
-    {{ form_start(form, {
-        attr: {
-            'class': 'checkout-step-container',
-            'data-action': 'change->live#action',
-            'data-action-name': 'postcodeLookup'
-        }
-    }) }}
     <h2 class="text-2xl mt-4">{{ '1. Address'|trans }}</h2>
-    {% if errors %}
-        {{ errors|json_encode }}
+    {% if this.collectAddresses()|length > 0 %}
+        <section>
+            <select
+                    name="customer_address_id" class="mt-6 select select-bordered w-full"
+                    aria-label="{{ 'Select an address'|trans }}"
+                    data-model="addressId"
+                    data-action="change->live#action"
+                    data-action-name="setAddressId">
+                <option selected disabled value="null">{{ 'Select an address'|trans }}</option>
+                {% for address in this.collectAddresses() %}
+                    <option value="{{ address['id'] }}">{{ address['company'] }}
+                        , {{ address['firstname'] }} {{ address['lastname'] }}
+                        , {{ address['street']|join(' ') }}</option>
+                {% endfor %}
+                <option value="newAddress">{{ 'Create an new address'|trans }}</option>
+            </select>
+        </section>
     {% endif %}
-    <div class="checkout__address-container mt-6 grid gap-4 mb-4">
-        <div class="w-full">
-            {{ form_widget(form.customerEmail) }}
-        </div>
-
-        <div class="checkout__address-name flex gap-4 max-w-md">
-            {{ form_widget(form.firstname) }}
-            {{ form_widget(form.lastname) }}
-        </div>
-        <div class="w-full">
-            {{ form_widget(form.company) }}
-        </div>
-        <div class="w-full">
-            {{ form_widget(form.phone) }}
-        </div>
-        <div class="w-full">
-            {{ form_widget(form.country_code, {
+    <section>
+        {% if this.collectAddresses()|length == 0 or addressId == 'newAddress' %}
+            {{ form_start(form, {
+                attr: {
+                    'class': 'checkout-step-container',
+                    'data-action': 'change->live#action',
+                    'data-action-name': 'postcodeLookup'
+                }
             }) }}
-        </div>
+            {% if errors %}
+                {{ errors|json_encode }}
+            {% endif %}
+            <div class="checkout__address-container mt-6 grid gap-4 mb-4">
+                <div class="w-full {% if isLoggedIn %} hidden {% endif %}">
+                    {{ form_widget(form.customerEmail) }}
+                </div>
 
-        <div class="w-full hidden">
-            {{ form_widget(form.street, {
-            }) }}
-        </div>
+                <div class="checkout__address-name flex gap-4 max-w-md">
+                    {{ form_widget(form.firstname) }}
+                    {{ form_widget(form.lastname) }}
+                </div>
+                <div class="w-full">
+                    {{ form_widget(form.company) }}
+                </div>
+                <div class="w-full">
+                    {{ form_widget(form.phone) }}
+                </div>
+                <div class="w-full">
+                    {{ form_widget(form.country_code, {
+                    }) }}
+                </div>
 
-        <div class="w-full hidden">
-            {{ form_widget(form.city, {
-            }) }}
-        </div>
+                <div class="w-full hidden">
+                    {{ form_widget(form.street, {
+                    }) }}
+                </div>
 
-        <div class="flex gap-4 max-w-md">
-            <div class="w-full">
-                {{ form_widget(form.postcode) }}
-            </div>
-            <div class="w-full">
-                {{ form_widget(form.houseNr) }}
-            </div>
-            <div class="w-full">
-                {{ form_widget(form.add) }}
-            </div>
-        </div>
+                <div class="w-full hidden">
+                    {{ form_widget(form.city, {
+                    }) }}
+                </div>
 
-        {% if lookupDetails is not empty %}
-            <div class="checkout__address-postcode-result bg-base-200 py-6 px-4 rounded-box shadow-md mt-4">
-                <strong>{{ 'We found this address'|trans }}:</strong>
-                <address class="mt-2">{{ lookupDetails['street'] }} {{ lookupDetails['house_nr_flat'] }}</address>
-                <address>{{ lookupDetails['zipcode'] }}, {{ lookupDetails['place'] }}</address>
+                <div class="flex gap-4 max-w-md">
+                    <div class="w-full">
+                        {{ form_widget(form.postcode) }}
+                    </div>
+                    <div class="w-full">
+                        {{ form_widget(form.houseNr) }}
+                    </div>
+                    <div class="w-full">
+                        {{ form_widget(form.add) }}
+                    </div>
+                </div>
+
+                {% if lookupDetails is not empty %}
+                    <div class="checkout__address-postcode-result bg-base-200 py-6 px-4 rounded-box shadow-md mt-4">
+                        <strong>{{ 'We found this address'|trans }}:</strong>
+                        <address class="mt-2">{{ lookupDetails['street'] }} {{ lookupDetails['house_nr_flat'] }}</address>
+                        <address>{{ lookupDetails['zipcode'] }}, {{ lookupDetails['place'] }}</address>
+                    </div>
+                {% endif %}
             </div>
+            {{ form_end(form) }}
         {% endif %}
-    </div>
-    <div id="reviews" class="divider lg:divider-vertical"></div>
+    </section>
+    <div class="divider lg:divider-vertical"></div>
     <div class="checkout__address-actions mt-4 grid gap-4 grid-cols-2 items-center content-center">
         <a class="link" href="{{ path('app_checkout_cart') }}">&lt;&lt; {{ 'Back to cart'|trans }}</a>
         <button
@@ -77,5 +100,4 @@
                 </span>
         </button>
     </div>
-    {{ form_end(form) }}
 </div>

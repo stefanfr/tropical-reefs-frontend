@@ -1,6 +1,6 @@
 <div class="border-gray-300 border md:grid grid-cols-5 gap-2 py-5 px-5 shadow-md rounded-box overflow-hidden">
     <div class="flex col-span-2 gap-5 border-solid">
-        <img class="-my-5 -ml-5 block float-left" width="144" src="{{ item['product']['small_image']['url']|cdn('auto', 'square', 144) }}" alt="{{ item['product']['name'] }}"/>
+        <img class="border-r-accent border-solid border-r -my-5 -ml-5 py-4 px-2 block float-left" width="144" src="{{ item['product']['small_image']['url']|cdn('auto', 'square', 127) }}" alt="{{ item['product']['name'] }}"/>
         <div class="grow">
             <a href="/{{ item['product']['url_key'] }}"><strong class="block text-lg">{{ item['product']['name']|replace({'(': "<br />", ')': ''})|raw }}</strong></a>
             <span class="block">SKU: {{ item['product']['sku'] }}</span>

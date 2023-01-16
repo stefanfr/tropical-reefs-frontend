@@ -1,5 +1,5 @@
 import './styles/glide.scss';
-import Glide from '@glidejs/glide';
+import Glide  from '@glidejs/glide/dist/glide.modular.esm'
 
 const ready = require('document-ready');
 

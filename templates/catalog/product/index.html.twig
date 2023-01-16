@@ -50,7 +50,12 @@
                                     <ul class="glide__slides">
                                         {% for image in product['media_gallery'] %}
                                             <li class="glide__slide px-0 md:px-20">
-                                                <img style="aspect-ratio: 1" class="w-full" src="{{ image['url']|cdn('auto', 592, 592) }}" alt="">
+                                                <picture>
+                                                    <source media="(max-width: 640px)" srcset="{{ image['url']|cdn('auto', 335, 335) }}">
+                                                    <source media="(max-width: 678px)" srcset="{{ image['url']|cdn('auto', 592, 592) }}">
+                                                    <source media="(max-width: 1024px)" srcset="{{ image['url']|cdn('auto', 414, 414) }}">
+                                                    <img style="aspect-ratio: 1" class="w-full" src="{{ image['url']|cdn('auto', 592, 592) }}" alt="">
+                                                </picture>
                                             </li>
                                         {% endfor %}
                                     </ul>

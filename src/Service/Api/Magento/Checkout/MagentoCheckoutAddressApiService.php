@@ -132,4 +132,67 @@ class MagentoCheckoutAddressApiService
 
         return $response['errors'] ?? false;
     }
+
+    public function saveShippingAddressId(int $addressId): array|bool
+    {
+        $response = (new Request(
+            (new Mutation('setBillingAddressOnCart')
+            )->addParameter(
+                (new Input('input')
+                )->addFields(
+                    [
+                        new InputField('cart_id', $this->magentoCheckoutApiService->getQuoteMaskId()),
+                        (new InputObject('billing_address')
+                        )->addInputFields(
+                            [
+                                new InputField('customer_address_id', $addressId),
+                            ]
+                        ),
+                    ]
+                )
+            )->addFields(
+                [
+                    (new Field('cart')
+                    )->addChildField(
+                        new Field('id')
+                    ),
+                ]
+            ),
+            $this->mageGraphQlClient
+        ))->send();
+
+        return $response['errors'] ?? false;
+    }
+
+    public function saveBillingAddressId(int $addressId, bool $sameAsShipping = true): array|bool
+    {
+        $response = (new Request(
+            (new Mutation('setBillingAddressOnCart')
+            )->addParameter(
+                (new Input('input')
+                )->addFields(
+                    [
+                        new InputField('cart_id', $this->magentoCheckoutApiService->getQuoteMaskId()),
+                        (new InputObject('billing_address')
+                        )->addInputFields(
+                            [
+                                new InputField('customer_address_id', $addressId),
+                                (new InputField('use_for_shipping', $sameAsShipping)),
+                            ]
+                        ),
+                    ]
+                )
+            )->addFields(
+                [
+                    (new Field('cart')
+                    )->addChildField(
+                        new Field('id')
+                    ),
+                ]
+            ),
+            $this->mageGraphQlClient
+        ))->send();
+
+        return $response['errors'] ?? false;
+    }
 }

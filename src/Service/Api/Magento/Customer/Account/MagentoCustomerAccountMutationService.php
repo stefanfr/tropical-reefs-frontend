@@ -2,17 +2,35 @@
 
 namespace App\Service\Api\Magento\Customer\Account;
 
+use App\Cache\Adapter\RedisAdapter;
 use App\DataClass\Customer\CustomerAccount;
 use App\Service\Api\Magento\BaseMagentoService;
+use App\Service\Api\Magento\Checkout\MagentoCheckoutApiService;
+use App\Service\Api\Magento\Http\MageGraphQlClient;
 use App\Service\GraphQL\Field;
 use App\Service\GraphQL\Input;
 use App\Service\GraphQL\InputField;
 use App\Service\GraphQL\Mutation;
 use App\Service\GraphQL\Parameter;
 use App\Service\GraphQL\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class MagentoCustomerAccountMutationService extends BaseMagentoService
 {
+    public function __construct(
+        MageGraphQlClient                   $mageGraphQlClient,
+        RedisAdapter                        $redisAdapter,
+        RequestStack                        $requestStack,
+        protected MagentoCheckoutApiService $magentoCheckoutApiService
+    )
+    {
+        $this->mageGraphQlClient = $mageGraphQlClient;
+        $this->redisAdapter = $redisAdapter;
+        $this->requestStack = $requestStack;
+
+        parent::__construct($mageGraphQlClient, $redisAdapter, $requestStack);
+    }
+
     public function generateCustomerToken(CustomerAccount $customerAccount): false|array
     {
         $response = (new Request(
@@ -106,5 +124,27 @@ class MagentoCustomerAccountMutationService extends BaseMagentoService
         ))->send();
 
         return $response['errors'] ?? false;
+    }
+
+    public function mergeGuestQuote(string $guestQuoteMask): bool
+    {
+        $response = (new Request(
+            (new Mutation('assignCustomerToGuestCart')
+            )->addParameter(
+                new Parameter('cart_id', $guestQuoteMask)
+            )->addField(
+                new Field('total_quantity'),
+            ),
+            $this->mageGraphQlClient
+        ))->send();
+
+        $this->magentoCheckoutApiService->getQuoteMaskId(true);
+
+        if (isset($response['data']['assignCustomerToGuestCart']['total_quantity'])) {
+            $session = $this->requestStack->getSession();
+            $session->set('checkout_cart_item_count', $response['data']['assignCustomerToGuestCart']['total_quantity']);
+        }
+
+        return ! isset($response['errors']);
     }
 }

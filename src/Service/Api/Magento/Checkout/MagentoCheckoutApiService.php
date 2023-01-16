@@ -33,7 +33,7 @@ class MagentoCheckoutApiService
                 $this->mageGraphQlClient
             ))->send();
 
-            if ( ! ($quoteMask = $response['data']['createEmptyCart'])) {
+            if ( ! ($response['data']['createEmptyCart'])) {
                 throw new BadRequestException('Unable to create cart');
             }
 

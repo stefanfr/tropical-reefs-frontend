@@ -14,6 +14,7 @@
         </ul>
         {{ component('checkout_address', {
             type: 'billing',
+            isLoggedIn: isLoggedIn,
             address: billingAddress
         }) }}
     </div>

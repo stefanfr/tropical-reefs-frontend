@@ -3,14 +3,17 @@
 namespace App\Controller\Checkout;
 
 use App\DataClass\Checkout\Address\Address;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class AddressController extends AbstractCheckoutController
 {
     #[Route('/checkout/address', name: 'app_checkout_address')]
-    public function index(): Response
+    public function index(RequestStack $requestStack): Response
     {
+        $session = $requestStack->getSession();
+
         $cart = $this->magentoCheckoutCartApiService->collectFullCart();
         $shippingAddress = new Address();
         $billingAddress = new Address();
@@ -31,6 +34,7 @@ class AddressController extends AbstractCheckoutController
             'cart' => $cart,
             'shippingAddress' => $shippingAddress,
             'billingAddress' => $billingAddress,
+            'isLoggedIn' => $session->has('customerToken'),
         ]);
     }
 
@@ -40,6 +44,7 @@ class AddressController extends AbstractCheckoutController
         $houseNrParts = explode(' ', $street[1]);
 
         return $address
+            ->setId($quoteAddress['id'] ?? null)
             ->setFirstname($quoteAddress['firstname'])
             ->setLastname($quoteAddress['lastname'])
             ->setStreet($street[0])

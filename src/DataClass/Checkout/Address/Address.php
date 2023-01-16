@@ -4,27 +4,36 @@ namespace App\DataClass\Checkout\Address;
 
 class Address
 {
-    protected ?string $customerEmail = 'stefanfransen1@hotmail.com';
-
-    protected ?string $firstname = 'Stefan';
-
-    protected ?string $lastname = 'Fransen';
-
-    protected ?string $company = 'Tropical Reefs';
-
-    protected ?string $phone = '06123456789';
-
-    protected ?string $countryCode = 'NL';
-
-    protected ?string $postcode = '5051SP';
-
-    protected ?int $houseNr = 8;
-
+    protected ?int $id = null;
+    protected ?string $customerEmail = null;
+    protected ?string $firstname = null;
+    protected ?string $lastname = null;
+    protected ?string $company = null;
+    protected ?string $phone = null;
+    protected ?string $countryCode = null;
+    protected ?string $postcode = null;
+    protected ?int $houseNr = null;
     protected ?string $add = null;
-
     protected ?string $street = null;
-
     protected ?string $city = null;
+
+    /**
+     * @return int|null
+     */
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int|null $id
+     * @return Address
+     */
+    public function setId(?int $id): Address
+    {
+        $this->id = $id;
+        return $this;
+    }
 
     /**
      * @return string|null

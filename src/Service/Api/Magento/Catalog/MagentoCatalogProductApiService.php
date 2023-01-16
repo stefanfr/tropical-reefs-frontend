@@ -34,6 +34,10 @@ class MagentoCatalogProductApiService
             $cacheKey .= '_' . implode('_', $selectedOptions);
         }
 
+        if ($debug) {
+            $this->redisAdapter->clear($cacheKey);
+        }
+
         return $this->redisAdapter->get($cacheKey,
             function (ItemInterface $item) use ($uid, $debug, $selectedOptions) {
                 $item->expiresAfter(24 * 60 * 60);
@@ -54,11 +58,40 @@ class MagentoCatalogProductApiService
                             (new Field('product')
                             )->addChildFields(
                                 [
+                                    (new Fragment('ConfigurableProduct')
+                                    )->addFields(
+                                        [
+                                            (new Field('variants')
+                                            )->addChildFields(
+                                                [
+                                                    (new Field('product')
+                                                    )->addChildFields(
+                                                        [
+                                                            new Field('sku'),
+                                                            new Field('size'),
+                                                            new Field('stock_status'),
+                                                            new Field('only_x_left_in_stock'),
+                                                        ]
+                                                    ),
+                                                ]
+                                            ),
+                                        ]
+                                    ),
                                     new Field('uid'),
                                     new Field('type_id'),
                                     new Field('url_key'),
                                     new Field('name'),
                                     new Field('sku'),
+                                    new Field('stock_status'),
+                                    new Field('only_x_left_in_stock'),
+                                    (new Field('description')
+                                    )->addChildField(
+                                        new Field('html')
+                                    ),
+                                    (new Field('short_description')
+                                    )->addChildField(
+                                        new Field('html')
+                                    ),
                                     (new Field('small_image')
                                     )->addChildFields(
                                         [
@@ -124,14 +157,6 @@ class MagentoCatalogProductApiService
                                                     ),
                                             ]
                                         )
-                                    ),
-                                    (new Field('description')
-                                    )->addChildField(
-                                        new Field('html')
-                                    ),
-                                    (new Field('short_description')
-                                    )->addChildField(
-                                        new Field('html')
                                     ),
                                     (new Field('related_products')
                                     )->addChildFields(
@@ -211,6 +236,8 @@ class MagentoCatalogProductApiService
                                                     )->addChildFields(
                                                         [
                                                             new Field('sku'),
+                                                            new Field('stock_status'),
+                                                            new Field('only_x_left_in_stock'),
                                                             (new Field('price_range')
                                                             )->addChildField(
                                                                 (new Field('minimum_price')

@@ -28,70 +28,43 @@
                 </div>
             </div>
             <div class="divider lg:divider-vertical"></div>
-            <small>{{ couponErrorMessage }}</small>
-            <div class="flex gap-4 items-center">
-                <label class="cursor-pointer label gap-4">
-                    <strong class="label-text">{{ 'I wan\'t to use a coupon'|trans }}</strong>
+            <div class="flex gap-2 items-center">
+                <div class="input-group">
                     <input
-                            type="checkbox"
-                            class="checkbox checkbox-md checkbox-accent grow"
-                            {% if useCoupon %}checked{% endif %}
-                            data-model="useCoupon"
-                            data-action="change->live#action"
-                            data-action-name="changeUseCoupon"
+                            aria-label="apply coupon"
+                            type="text"
+                            placeholder="{{ 'Coupon code'|trans }}"
+                            class="input input-bordered {% if couponIsValid %} border-accent {% elseif couponErrorMessage %} border-error {% endif %} input-sm"
+                            data-model="norender|couponCode"
+                            value="{{ couponCode }}"
                     />
-                </label>
-                {% if useCoupon %}
-                    <div class="input-group" style="width: auto;">
-                        <input
-                                aria-label="apply coupon"
-                                type="text"
-                                placeholder="{{ 'Coupon code'|trans }}"
-                                class="input input-bordered {% if couponIsValid %} border-accent {% elseif couponErrorMessage %} border-error {% endif %} input-sm"
-                                data-model="norender|couponCode"
-                                value="{{ couponCode }}"
-                        />
-                        {% if couponIsValid %}
-                            <button
-                                    class="btn btn-square btn-accent btn-sm"
-                                    data-action="click->live#action"
-                                    data-action-name="removeCoupon"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
-                                </svg>
-                            </button>
-                        {% elseif couponErrorMessage %}
-                            <button
-                                    class="btn btn-square btn-error btn-sm"
-                                    data-action="click->live#action"
-                                    data-action-name="applyCoupon"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"/>
-                                </svg>
-                            </button>
-                        {% else %}
-                            <button
-                                    class="btn btn-square btn-sm"
-                                    data-action="click->live#action"
-                                    data-action-name="applyCoupon"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"/>
-                                </svg>
-                            </button>
-                        {% endif %}
-                    </div>
-                {% endif %}
+                    {% if couponIsValid %}
+                        <button
+                                class="btn btn-error btn-sm"
+                                data-action="click->live#action"
+                                data-action-name="removeCoupon"
+                        >
+                            {{ 'Remove'|trans }}
+                        </button>
+                    {% else %}
+                        <button
+                                class="btn {% if couponErrorMessage %}btn-error{% else %}btn-accent{% endif%} btn-sm"
+                                data-action="click->live#action"
+                                data-action-name="applyCoupon"
+                        >
+                            {{ 'Apply'|trans }}
+                        </button>
+                    {% endif %}
+                </div>
             </div>
+            <small class="text-error">{{ couponErrorMessage }}</small>
             <div class="divider lg:divider-vertical"></div>
             <div class="checkout__address-actions mt-4 grid gap-4 grid-cols-2 items-center content-center">
                 <a class="link" href="{{ path('app_checkout_address') }}">&lt;&lt; {{ 'Back to address'|trans }}</a>
                 <button
                         class="btn text-accent-content btn-accent btn-sm text-right"
                         data-action="click->live#action"
-                        data-action-name="prevent|savePaymentMethod"
+                        data-action-name="prevent|placeOrder"
                 >
                     <svg data-loading class="animate-spin -ml-1 mr-3 h-5 w-5 text-accent-content" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

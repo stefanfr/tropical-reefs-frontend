@@ -77,7 +77,7 @@ final class CustomerAddressComponent extends AbstractController
         $this->errors = $this->magentoCustomerAddressMutationService->saveAddress($this->address);
 
         if ( ! $this->errors) {
-            return $this->redirectToRoute('app_checkout_shipment');
+            return $this->redirectToRoute('app_customer_address');
         }
 
         return null;

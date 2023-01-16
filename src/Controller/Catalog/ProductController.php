@@ -18,7 +18,7 @@ class ProductController extends AbstractController
 
     public function index(array $magentoMatch): Response
     {
-        $product = $this->magentoCatalogProductApiService->collectProduct($magentoMatch['entity_uid'], []);
+        $product = $this->magentoCatalogProductApiService->collectProduct($magentoMatch['entity_uid'], [], );
 
         return $this->render('catalog/product/index.html.twig', [
             'product' => $product,

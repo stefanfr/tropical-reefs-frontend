@@ -35,7 +35,7 @@ final class ConfigurationComponent
     public array $addToCartResponse = [];
 
     #[LiveAction]
-    public function updateProduct()
+    public function updateProduct(): void
     {
         $this->product = $this->magentoCatalogProductApiService->collectProduct($this->product['uid'], [$this->selectedSize]);
     }
