@@ -5,11 +5,12 @@ namespace App\Service\GraphQL;
 class InputFieldEnum
 {
     public function __construct(
-        protected string $name,
-        protected ?string  $value = null,
+        protected string  $name,
+        protected ?string $value = null,
     )
     {
     }
+
     public function __toString(): string
     {
         $inputField = ' ' . $this->name;

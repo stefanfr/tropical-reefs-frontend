@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -23,7 +24,7 @@ class SearchController extends AbstractController
     }
 
     #[Route('/search', name: 'app_catalog_search')]
-    public function search(TranslatorInterface $translator, Request $request): \Symfony\Component\HttpFoundation\Response
+    public function search(TranslatorInterface $translator, Request $request): Response
     {
         $query = $request->query->get('q');
         $options = [];

@@ -11,6 +11,7 @@ use League\Csv\InvalidArgument;
 use League\Csv\Reader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -68,7 +69,7 @@ class ProductRegistrationController extends AbstractController
      * @throws Exception
      */
     #[Route('/manager/catalog/product/registration/upload', name: 'app_manager_catalog_product_registration_upload', methods: ['POST'])]
-    public function upload(Request $request): \Symfony\Component\HttpFoundation\RedirectResponse
+    public function upload(Request $request): RedirectResponse
     {
         /** @var UploadedFile $csv */
         $csv = $request->files->get('uploadCsv');

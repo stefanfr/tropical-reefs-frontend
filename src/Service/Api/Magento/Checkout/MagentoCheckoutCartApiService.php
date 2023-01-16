@@ -12,6 +12,7 @@ use App\Service\GraphQL\Mutation;
 use App\Service\GraphQL\Parameter;
 use App\Service\GraphQL\Query;
 use App\Service\GraphQL\Request;
+use Exception;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -256,7 +257,7 @@ class MagentoCheckoutCartApiService
 
         try {
             $cartData = $response['data']['cart'] ?? $response['data']['customerCart'];
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new BadRequestException('Failed to load cart');
         }
 
@@ -353,8 +354,12 @@ class MagentoCheckoutCartApiService
         ))->send();
 
         if (isset($response['data']['addProductsToCart']['cart']['total_quantity'])) {
-            $session = $this->requestStack->getSession();
-            $session->set('checkout_cart_item_count', $response['data']['addProductsToCart']['cart']['total_quantity']);
+            try {
+                $session = $this->requestStack->getSession();
+                $session->set('checkout_cart_item_count', $response['data']['addProductsToCart']['cart']['total_quantity']);
+            } catch (SessionNotFoundException $exception) {
+
+            }
         }
 
         return $response['data']['addProductsToCart'] ?? throw new BadRequestException('Something went wrong');

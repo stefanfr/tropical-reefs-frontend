@@ -42,7 +42,7 @@ final class ConfigurationComponent
     {
         $this->product = $this->magentoCatalogProductApiService->collectProduct($this->product['uid'], [$this->selectedSize]);
     }
-    
+
     #[LiveAction]
     public function toggleConfiguration(): void
     {

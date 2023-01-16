@@ -6,6 +6,7 @@ use App\DataClass\Customer\CustomerAccount;
 use App\Form\Customer\Account\LoginType;
 use App\Service\Api\Magento\Customer\Account\MagentoCustomerAccountMutationService;
 use App\Service\Api\Magento\Customer\Account\MagentoCustomerAccountQueryService;
+use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,8 +46,11 @@ class LoginController extends AbstractCustomerController
             }
 
             if ( ! $errors) {
-                $session = $this->requestStack->getSession();
-                $this->magentoCustomerAccountMutationService->mergeGuestQuote($session->get('checkout_quote_mask'));
+                try {
+                    $session = $this->requestStack->getSession();
+                    $this->magentoCustomerAccountMutationService->mergeGuestQuote($session->get('checkout_quote_mask'));
+                } catch (SessionNotFoundException $exception) {
+                }
                 return $this->redirectToRoute('app_customer');
             }
         }

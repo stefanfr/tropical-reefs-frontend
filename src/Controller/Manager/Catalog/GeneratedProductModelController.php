@@ -7,6 +7,7 @@ use App\Repository\Manager\GeneratedProductModelRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class GeneratedProductModelController extends AbstractController
@@ -18,7 +19,7 @@ class GeneratedProductModelController extends AbstractController
     }
 
     #[Route('/manager/catalog/generated/product-models', name: 'app_manager_catalog_generated_product_models')]
-    public function index(PaginatorInterface $paginator, Request $request): \Symfony\Component\HttpFoundation\Response
+    public function index(PaginatorInterface $paginator, Request $request): Response
     {
         $products = $this->generatedProductModelRepository->findAll();
 

@@ -6,7 +6,6 @@ use App\Service\Api\Magento\Core\MagentoCoreRouteResolverService;
 use Illuminate\Support\Str;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Symfony\Component\Routing\RequestContext;
-use function PHPUnit\Framework\stringStartsWith;
 
 class MagentoRouteMatcher implements UrlMatcherInterface
 {

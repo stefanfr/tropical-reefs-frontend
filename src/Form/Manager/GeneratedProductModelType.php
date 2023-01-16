@@ -18,8 +18,7 @@ class GeneratedProductModelType extends AbstractType
             ->add('productEnabled')
             ->add('brand')
             ->add('name')
-            ->add('description')
-        ;
+            ->add('description');
     }
 
     public function configureOptions(OptionsResolver $resolver): void

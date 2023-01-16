@@ -13,6 +13,7 @@ use App\Service\GraphQL\InputField;
 use App\Service\GraphQL\Mutation;
 use App\Service\GraphQL\Parameter;
 use App\Service\GraphQL\Request;
+use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class MagentoCustomerAccountMutationService extends BaseMagentoService
@@ -46,8 +47,11 @@ class MagentoCustomerAccountMutationService extends BaseMagentoService
         ))->send();
 
         if ( ! array_key_exists('errors', $response)) {
-            $session = $this->requestStack->getSession();
-            $session->set('customerToken', $response['data']['generateCustomerToken']['token']);
+            try {
+                $session = $this->requestStack->getSession();
+                $session->set('customerToken', $response['data']['generateCustomerToken']['token']);
+            } catch (SessionNotFoundException $exception) {
+            }
 
             return false;
         }
@@ -141,8 +145,12 @@ class MagentoCustomerAccountMutationService extends BaseMagentoService
         $this->magentoCheckoutApiService->getQuoteMaskId(true);
 
         if (isset($response['data']['assignCustomerToGuestCart']['total_quantity'])) {
-            $session = $this->requestStack->getSession();
-            $session->set('checkout_cart_item_count', $response['data']['assignCustomerToGuestCart']['total_quantity']);
+            try {
+                $session = $this->requestStack->getSession();
+                $session->set('checkout_cart_item_count', $response['data']['assignCustomerToGuestCart']['total_quantity']);
+            } catch (SessionNotFoundException $exception) {
+
+            }
         }
 
         return ! isset($response['errors']);

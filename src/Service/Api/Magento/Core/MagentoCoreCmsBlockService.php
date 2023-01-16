@@ -8,6 +8,7 @@ use App\Service\GraphQL\Field;
 use App\Service\GraphQL\Parameter;
 use App\Service\GraphQL\Query;
 use App\Service\GraphQL\Request;
+use JsonException;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Contracts\Cache\ItemInterface;
 
@@ -49,7 +50,7 @@ class MagentoCoreCmsBlockService
                 ))->send();
 
                 return preg_replace("~<style(.*)>(.*)</style>~", " ", current($response['data']['cmsBlocks']['items'])['content'] ?? '');
-            } catch (\JsonException $e) {
+            } catch (JsonException $e) {
                 return null;
             }
         });

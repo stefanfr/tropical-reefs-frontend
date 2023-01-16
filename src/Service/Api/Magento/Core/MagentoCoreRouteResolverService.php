@@ -8,6 +8,7 @@ use App\Service\GraphQL\Field;
 use App\Service\GraphQL\Parameter;
 use App\Service\GraphQL\Query;
 use App\Service\GraphQL\Request;
+use JsonException;
 use Symfony\Contracts\Cache\ItemInterface;
 
 class MagentoCoreRouteResolverService
@@ -47,7 +48,7 @@ class MagentoCoreRouteResolverService
                     ))->send();
 
                     return $response['data']['urlResolver'] ?? false;
-                } catch (\JsonException $e) {
+                } catch (JsonException $e) {
                     return false;
                 }
             }

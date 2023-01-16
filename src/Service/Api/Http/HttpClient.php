@@ -7,7 +7,6 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Utils;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 abstract class HttpClient
 {

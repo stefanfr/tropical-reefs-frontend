@@ -9,6 +9,7 @@ use App\Service\GraphQL\Mutation;
 use App\Service\GraphQL\Query;
 use App\Service\GraphQL\Request;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class MagentoCheckoutApiService
@@ -23,9 +24,13 @@ class MagentoCheckoutApiService
 
     public function getQuoteMaskId(bool $fresh = false): string
     {
-        $session = $this->requestStack->getSession();
+        $session = null;
+        try {
+            $session = $this->requestStack->getSession();
+        } catch (SessionNotFoundException $exception) {
+        }
 
-        if ($fresh || ! $session->has('checkout_quote_mask')) {
+        if ($fresh || ! $session?->has('checkout_quote_mask')) {
             $response = (new Request(
                 new Mutation(
                     'createEmptyCart'
@@ -37,10 +42,10 @@ class MagentoCheckoutApiService
                 throw new BadRequestException('Unable to create cart');
             }
 
-            $session->set('checkout_quote_mask', $response['data']['createEmptyCart']);
+            $session?->set('checkout_quote_mask', $response['data']['createEmptyCart']);
         }
 
-        return $session->get('checkout_quote_mask');
+        return $session?->get('checkout_quote_mask');
     }
 
     public function collectCountries(): array

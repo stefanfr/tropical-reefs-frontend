@@ -10,6 +10,7 @@ use App\Service\Postcode\PostcodeService;
 use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
@@ -56,10 +57,14 @@ final class AddressComponent extends AbstractController
         if (null !== $addresses) {
             return $addresses;
         }
-        $session = $this->requestStack->getSession();
-        if ($session->has('customerToken')) {
-            $addresses = $this->magentoCustomerAddressQueryService->collectCustomerAddresses();
-            return $addresses;
+        try {
+            $session = $this->requestStack->getSession();
+            if ($session->has('customerToken')) {
+                $addresses = $this->magentoCustomerAddressQueryService->collectCustomerAddresses();
+                return $addresses;
+            }
+        } catch (SessionNotFoundException $exception) {
+
         }
         $addresses = [];
 

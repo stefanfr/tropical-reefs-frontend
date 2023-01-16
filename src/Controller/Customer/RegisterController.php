@@ -34,7 +34,7 @@ class RegisterController extends AbstractController
 
 
             if ( ! $errors) {
-                return $this->redirectToRoute('app_customer_login');;
+                return $this->redirectToRoute('app_customer_login');
             }
         }
 

@@ -2,7 +2,6 @@
 
 namespace App\Security;
 
-use RuntimeException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,7 +44,7 @@ class AdminUserAuthenticator extends AbstractLoginFormAuthenticator
             return new RedirectResponse($targetPath);
         }
 
-         return new RedirectResponse($this->urlGenerator->generate('app_manager_dashboard'));
+        return new RedirectResponse($this->urlGenerator->generate('app_manager_dashboard'));
     }
 
     protected function getLoginUrl(Request $request): string
