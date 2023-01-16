@@ -5,6 +5,7 @@ namespace App\Controller\Customer;
 use App\Service\Api\Magento\Customer\Account\MagentoCustomerAccountLoginService;
 use App\Service\Api\Magento\Customer\Account\MagentoCustomerAccountMutationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,10 +23,14 @@ class LogoutController extends AbstractController
     #[Route('/customer/account/logout', name: 'app_customer_logout')]
     public function index(Request $request): Response
     {
-        $session = $this->requestStack->getSession();
-        $session->remove('customerToken');
-        $session->remove('checkout_quote_mask');
-        $session->remove('checkout_cart_item_count');
+        try {
+            $session = $this->requestStack->getSession();
+            $session->remove('customerToken');
+            $session->remove('checkout_quote_mask');
+            $session->remove('checkout_cart_item_count');
+        } catch (SessionNotFoundException $exception) {
+
+        }
 
         $this->magentoCustomerAccountMutationService->revokeCustomerToken();
 

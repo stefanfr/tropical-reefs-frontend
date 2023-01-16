@@ -4,6 +4,7 @@ namespace App\Service\Api\Magento;
 
 use App\Cache\Adapter\RedisAdapter;
 use App\Service\Api\Magento\Http\MageGraphQlClient;
+use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 abstract class BaseMagentoService
@@ -21,14 +22,18 @@ abstract class BaseMagentoService
         if (isset($response['errors'])) {
             foreach ($response['errors'] as $error) {
                 if (($error['extensions']['category'] ?? null) === 'graphql-authorization') {
-                    $session = $this->requestStack->getSession();
-                    switch ($target) {
-                        case 'customer':
-                            $session->remove('customerToken');
-                            break;
-                        default:
-                            $session->clear();
-                            break;
+                    try {
+                        $session = $this->requestStack->getSession();
+                        switch ($target) {
+                            case 'customer':
+                                $session->remove('customerToken');
+                                break;
+                            default:
+                                $session->clear();
+                                break;
+                        }
+                    } catch (SessionNotFoundException $exception) {
+
                     }
                 }
             }

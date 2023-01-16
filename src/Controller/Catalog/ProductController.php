@@ -4,6 +4,7 @@ namespace App\Controller\Catalog;
 
 use App\Service\Api\Magento\Catalog\MagentoCatalogProductApiService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -18,7 +19,7 @@ class ProductController extends AbstractController
 
     public function index(array $magentoMatch): Response
     {
-        $product = $this->magentoCatalogProductApiService->collectProduct($magentoMatch['entity_uid'], [], );
+        $product = $this->magentoCatalogProductApiService->collectProduct($magentoMatch['entity_uid'], [],);
 
         return $this->render('catalog/product/index.html.twig', [
             'product' => $product,
@@ -29,8 +30,12 @@ class ProductController extends AbstractController
     protected function generateBreadcrumbs(array $product): array
     {
         $breadcrumbs = [];
-        $session = $this->requestStack->getSession();;
-        foreach ($session->get('breadcrumbs', []) ?? [] as $breadcrumb) {
+        $session = null;
+        try {
+            $session = $this->requestStack->getSession();
+        } catch (SessionNotFoundException $exception) {
+        }
+        foreach ($session?->get('breadcrumbs', []) ?? [] as $breadcrumb) {
             $breadcrumbs[] = [
                 'label' => $breadcrumb['label'],
                 'url' => $breadcrumb['url'],

@@ -5,6 +5,7 @@ namespace App\Controller\Catalog;
 use App\Service\Api\Magento\Catalog\MagentoCatalogCategoryApiService;
 use App\Service\Api\Magento\Core\MagentoCoreStoreConfigService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -69,8 +70,11 @@ class CategoryController extends AbstractController
             'url' => $category['url_path'],
         ];
 
-        $session = $this->requestStack->getSession();
-        $session->set('breadcrumbs', $breadcrumbs);
+        try {
+            $session = $this->requestStack->getSession();
+            $session->set('breadcrumbs', $breadcrumbs);
+        } catch (SessionNotFoundException $exception) {
+        }
 
         return $breadcrumbs;
     }

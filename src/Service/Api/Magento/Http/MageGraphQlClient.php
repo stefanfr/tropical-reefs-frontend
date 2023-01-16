@@ -6,6 +6,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class MageGraphQlClient extends MageHttpClient
@@ -27,9 +28,13 @@ class MageGraphQlClient extends MageHttpClient
     public function send(MessageInterface $request, array $options = []): ResponseInterface
     {
         try {
-            $session = $this->requestStack->getSession();
-            if ($session->has('customerToken')) {
-                $options['headers']['Authorization'] = 'Bearer ' . $session->get('customerToken');
+            try {
+                $session = $this->requestStack->getSession();
+                if ($session->has('customerToken')) {
+                    $options['headers']['Authorization'] = 'Bearer ' . $session->get('customerToken');
+                }
+            } catch (SessionNotFoundException $exception) {
+
             }
 
             return $this->client->send($request, $options);

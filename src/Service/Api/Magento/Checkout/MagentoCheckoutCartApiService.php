@@ -13,6 +13,7 @@ use App\Service\GraphQL\Parameter;
 use App\Service\GraphQL\Query;
 use App\Service\GraphQL\Request;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class MagentoCheckoutCartApiService
@@ -28,9 +29,13 @@ class MagentoCheckoutCartApiService
 
     public function collectFullCart()
     {
-        $session = $this->requestStack->getSession();
+        $session = null;
+        try {
+            $session = $this->requestStack->getSession();
+        } catch (SessionNotFoundException $exception) {
+        }
 
-        if ($session->has('customerToken')) {
+        if ($session?->has('customerToken')) {
             $query = (new Query('customerCart'));
         } else {
             $query = (new Query('cart')
