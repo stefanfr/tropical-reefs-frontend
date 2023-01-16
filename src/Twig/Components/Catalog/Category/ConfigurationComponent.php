@@ -28,6 +28,9 @@ final class ConfigurationComponent
     public ?string $selectedSize = null;
 
     #[LiveProp(writable: true)]
+    public bool $showConfigurationModal = false;
+
+    #[LiveProp(writable: true)]
     public int $selectedQty = 1;
 
     public int $qtySelectorLimit = 10;
@@ -38,6 +41,12 @@ final class ConfigurationComponent
     public function updateProduct()
     {
         $this->product = $this->magentoCatalogProductApiService->collectProduct($this->product['uid'], [$this->selectedSize]);
+    }
+    
+    #[LiveAction]
+    public function toggleConfiguration(): void
+    {
+        $this->showConfigurationModal = ! $this->showConfigurationModal;
     }
 
     #[LiveAction]

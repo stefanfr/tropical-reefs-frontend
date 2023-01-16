@@ -29,54 +29,122 @@
 
 {% block body %}
     <div class="container mx-auto px-5 xl:px-0">
-        <h1 class="text-4xl mt-8">{{ category['name']|trans }} <small>({{ catalog['total_count'] }})</small></h1>
-        <div class="category mt-4 grid grid-cols-9 gap-5">
-            <div class="category__filters col-span-2 hidden lg:block">
-                <div class="filters">
-                    {% if category['children']|length > 0 %}
-                        <div class="bg-base-200 p-4">
-                            <h2 class="text-xl font-bold">{{ 'Subcategories'|trans }}</h2>
-                            <ul class="mt-2">
-                                {% for subCategory in category['children'] %}
-                                    {% if subCategory['product_count'] %}
-                                        <li>
-                                            <a href="/{{ subCategory['url_path'] }}">
-                                                {{ subCategory['name']|trans }} ({{ subCategory['product_count'] }})
-                                            </a>
-                                        </li>
+        <div class="flex gap-3 align-middle mt-2 md:mt-8">
+            {% if device.isSmartphone %}
+                <nav id="filterNavHolder" class="flex">
+                    <label class="swap swap-rotate">
+                        <input id="toggleFilterNav" onchange="toggleFilterNav(event)" type="checkbox">
+                        <svg class="swap-off fill-current w-6 aspect-square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                            <path d="M64,384H448V341.33H64Zm0-106.67H448V234.67H64ZM64,128v42.67H448V128Z"></path>
+                        </svg>
+                        <svg class="swap-on fill-current w-6 aspect-square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                            <polygon points="400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49"></polygon>
+                        </svg>
+                    </label>
+                    <div id="mobileFilterNav" class="fixed right-0 bottom-0 bg-base-300 w-0 overflow-scroll z-20" style="top: 3.7rem">
+                        <div class="nav_title py-5 px-6 text-center">
+                            <h3>{{ 'Filters' }}</h3>
+                        </div>
+                        <div class="category__filters col-span-2 px-3">
+                            <div class="filters">
+                                {% if category['children']|length > 0 %}
+                                    <div class="bg-base-200 p-4">
+                                        <h2 class="text-xl font-bold">{{ 'Subcategories'|trans }}</h2>
+                                        <ul class="mt-2">
+                                            {% for subCategory in category['children'] %}
+                                                {% if subCategory['product_count'] %}
+                                                    <li>
+                                                        <a href="/{{ subCategory['url_path'] }}">
+                                                            {{ subCategory['name']|trans }} ({{ subCategory['product_count'] }})
+                                                        </a>
+                                                    </li>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                {% endif %}
+                                <div class="mt-4 filter__range-slider hidden">
+                                    <h3 class="font-bold">{{ 'Price' }}</h3>
+                                    <input aria-label="Price filter" type="range" min="0" max="100" value="100" class="range range-xs range-accent mt-2"/>
+                                    <div class="filter__range-slider-input grid grid-cols-3 mt-1">
+                                        <input aria-label="Price filter min" type="number" value="0" class="input input-bordered input-accent input-sm w-full"/>
+                                        <div></div>
+                                        <input aria-label="Price filter max" type="number" value="100" class="input input-bordered input-accent input-sm w-full"/>
+                                    </div>
+                                </div>
+                                {% for filter in catalog['aggregations'] %}
+                                    {% if filter['attribute_code'] != 'category_uid' and filter['options']|length > 1 %}
+                                        <div class="mt-2 px-4">
+                                            <h3 class="font-bold p-0 min-h-[2rem]">{{ filter['label'] }}</h3>
+                                            <div class="filters__filter-options px-2">
+                                                {% for option in filter['options'] %}
+                                                    <div class="filters__filter-option form-control">
+                                                        <label class="cursor-pointer label flex gap-3">
+                                                            <span class="label-text text-base">{{ option['label'] }} ({{ option['count'] }})</span>
+                                                            <input aria-label="{{ option['label'] }}" name="{{ filter['attribute_code'] }}[]" value="{{ option['value'] }}" type="checkbox" class="checkbox checkbox-accent"/>
+                                                        </label>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
                                     {% endif %}
                                 {% endfor %}
-                            </ul>
-                        </div>
-                    {% endif %}
-                    <div class="mt-4 filter__range-slider hidden">
-                        <h3 class="font-bold">{{ 'Price' }}</h3>
-                        <input type="range" min="0" max="100" value="100" class="range range-xs range-accent mt-2"/>
-                        <div class="filter__range-slider-input grid grid-cols-3 mt-1">
-                            <input type="number" value="0" class="input input-bordered input-accent input-sm w-full"/>
-                            <div></div>
-                            <input type="number" value="100" class="input input-bordered input-accent input-sm w-full"/>
+                            </div>
                         </div>
                     </div>
-                    {% for filter in catalog['aggregations'] %}
-                        {% if filter['attribute_code'] != 'category_uid' %}
-                            <div class="filters__filter mt-4">
-                                <h3 class="font-bold">{{ filter['label'] }}</h3>
-                                <div class="filters__filter-options mt-2">
-                                    {% for option in filter['options'] %}
-                                        <div class="filters__filter-option form-control">
-                                            <label class="cursor-pointer label flex gap-3">
-                                                <span class="label-text text-base">{{ option['label'] }} ({{ option['count'] }})</span>
-                                                <input aria-label="{{ option['label'] }}" name="{{ filter['attribute_code'] }}[]" value="{{ option['value'] }}" type="checkbox" class="checkbox checkbox-accent"/>
-                                            </label>
-                                        </div>
+                </nav>
+            {% endif %}
+            <h1 class="text-4xl">{{ category['name']|trans }} <small>({{ catalog['total_count'] }})</small></h1>
+        </div>
+        <div class="category mt-0 md:mt-4 grid grid-cols-9 gap-5">
+            {% if device.isSmartphone != true %}
+                <div class="category__filters col-span-2 hidden lg:block">
+                    <div class="filters">
+                        {% if category['children']|length > 0 %}
+                            <div class="bg-base-200 p-4">
+                                <h2 class="text-xl font-bold">{{ 'Subcategories'|trans }}</h2>
+                                <ul class="mt-2">
+                                    {% for subCategory in category['children'] %}
+                                        {% if subCategory['product_count'] %}
+                                            <li>
+                                                <a href="/{{ subCategory['url_path'] }}">
+                                                    {{ subCategory['name']|trans }} ({{ subCategory['product_count'] }})
+                                                </a>
+                                            </li>
+                                        {% endif %}
                                     {% endfor %}
-                                </div>
+                                </ul>
                             </div>
                         {% endif %}
-                    {% endfor %}
+                        <div class="mt-4 filter__range-slider hidden">
+                            <h3 class="font-bold">{{ 'Price' }}</h3>
+                            <input aria-label="Price filter" type="range" min="0" max="100" value="100" class="range range-xs range-accent mt-2"/>
+                            <div class="filter__range-slider-input grid grid-cols-3 mt-1">
+                                <input aria-label="Price filter min" type="number" value="0" class="input input-bordered input-accent input-sm w-full"/>
+                                <div></div>
+                                <input aria-label="Price filter max" type="number" value="100" class="input input-bordered input-accent input-sm w-full"/>
+                            </div>
+                        </div>
+                        {% for filter in catalog['aggregations'] %}
+                            {% if filter['attribute_code'] != 'category_uid' %}
+                                <div class="filters__filter mt-4">
+                                    <h3 class="font-bold">{{ filter['label'] }}</h3>
+                                    <div class="filters__filter-options mt-2">
+                                        {% for option in filter['options'] %}
+                                            <div class="filters__filter-option form-control">
+                                                <label class="cursor-pointer label flex gap-3">
+                                                    <span class="label-text text-base">{{ option['label'] }} ({{ option['count'] }})</span>
+                                                    <input aria-label="{{ option['label'] }}" name="{{ filter['attribute_code'] }}[]" value="{{ option['value'] }}" type="checkbox" class="checkbox checkbox-accent"/>
+                                                </label>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
                 </div>
-            </div>
+            {% endif %}
             <div class="products lg:col-span-7 col-span-9">
                 <div class="items-end justify-end col-span-6 grow col-start-3 hidden lg:flex">
                     <div>
@@ -123,10 +191,40 @@
                         </select>
                     </div>
                 </div>
-                <div class="product_row grid lg:grid-cols-4 md:grid-cols-2 gap-5 col-span-6 auto-rows-min mt-8">
+                <div class="product_row grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 col-span-6 auto-rows-min mt-4 md:mt-8">
                     {% include 'catalog/_partials/product_list.html.twig' with {'items': catalog['items']} %}
                 </div>
             </div>
         </div>
     </div>
+    <script>
+        document.onclick = function (event) {
+            const toggle = document.getElementById('toggleFilterNav');
+            const nav = event.target.parentElement.closest('nav');
+            if (toggle.checked) {
+                if (null === nav || event.target.parentElement.closest('nav').id !== 'filterNavHolder') {
+                    toggle.checked = false;
+                    const mobileFilterNav = document.getElementById('mobileFilterNav');
+                    mobileFilterNav.classList.add('w-0');
+                    mobileFilterNav.classList.remove('w-2/3');
+                    document.getElementById('mainContent').style.overflow = '';
+                }
+            }
+        }
+
+
+        function toggleFilterNav(event) {
+            const mobileFilterNav = document.getElementById('mobileFilterNav');
+            console.log(event.target.checked);
+            if (event.target.checked) {
+                mobileFilterNav.classList.add('w-2/3');
+                mobileFilterNav.classList.remove('w-0');
+                document.getElementById('mainContent').style.overflow = 'hidden';
+                return;
+            }
+            mobileFilterNav.classList.add('w-0');
+            mobileFilterNav.classList.remove('w-2/3');
+            document.getElementById('mainContent').style.overflow = '';
+        }
+    </script>
 {% endblock %}

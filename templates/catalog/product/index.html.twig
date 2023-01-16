@@ -29,13 +29,13 @@
 
 {% block body %}
     <div class="mb-20">
-        <div class="container mx-auto mt-4 px-5 xl:px-0">
+        <div class="container mx-auto mt-4 md:px-5 xl:px-0">
             <div class="grid lg:grid-cols-5 gap-10 sm:grid-cols-1">
                 <div class="product__images-container col-span-3">
-                    <div class="flex gap-2">
+                    <div class="flex md:gap-2" style="max-width: 100vw">
                         {% if product['media_gallery']|length == 1 %}
                             {% for image in product['media_gallery'] %}
-                                <div class="slide px-0 md:px-20">
+                                <div class="slide px-0 md:px-20 mx-auto">
                                     <picture>
                                         <source media="(max-width: 640px)" srcset="{{ image['url']|cdn('auto', 335, 335) }}">
                                         <source media="(max-width: 678px)" srcset="{{ image['url']|cdn('auto', 592, 592) }}">
@@ -61,14 +61,14 @@
                                     </ul>
                                 </div>
                                 <div class="glide__arrows" data-glide-el="controls">
-                                    <a data-glide-dir="<" class="glide__arrow glide__arrow--left">&#10094;</a>
+                                    <a data-glide-dir="<" class="l-0 glide__arrow glide__arrow--left">&#10094;</a>
                                     <a data-glide-dir=">" class="glide__arrow glide__arrow--right">&#10095;</a>
                                 </div>
                             </div>
                         {% endif %}
                     </div>
                 </div>
-                <div class="product__details-container col-span-3 md:col-span-2">
+                <div class="product__details-container col-span-3 md:col-span-2 px-5 md:px-0">
                     <div class="product__details-title grid">
                         <h1 class="text-2xl md:text-4xl font-bold">{{ product['name']|replace({'(': "<br />", ')': ''})|raw }}</h1>
                         {{ component('catalog_product_configuration', {
@@ -124,7 +124,6 @@
     {% if product['media_gallery']|length > 1 %}
         {% block addtionalStylesheets %}
             {{ encore_entry_link_tags('glide') }}
-            {{ encore_entry_script_tags('glide') }}
         {% endblock %}
         {% block additionalScripts %}
             {{ encore_entry_script_tags('glide') }}

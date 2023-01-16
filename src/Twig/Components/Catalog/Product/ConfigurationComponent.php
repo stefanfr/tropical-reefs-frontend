@@ -52,6 +52,7 @@ final class ConfigurationComponent
             $addToCartOptions['options'][] = $this->selectedSize;
         }
 
+        $this->updateProduct();
         $this->addToCartResponse = $this->magentoCheckoutCartApiService->addProductToCart($addToCartOptions);
     }
 
