@@ -8,12 +8,6 @@ RUN apt-get update && apt-get install -y nodejs
 COPY ./docker/build-config/entrypoint.sh /
 RUN chmod +x /entrypoint.sh
 
-# Copy files
-COPY . /var/www/html
-
-# Set working directory
-WORKDIR /var/www/html
-
 # Run composer install & setup Symfony
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
