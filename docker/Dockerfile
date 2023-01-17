@@ -5,7 +5,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_19.x | bash -
 RUN apt-get update && apt-get install -y nodejs
 
 # entry point
-COPY ./docker/config/entrypoint.sh /
+COPY ./docker/build-config/entrypoint.sh /
 RUN chmod +x /entrypoint.sh
 
 # Copy files
@@ -32,7 +32,7 @@ FROM nginx:1.23
 COPY --from=build /var/www/html /var/www/html
 
 # Copy nginx configuration
-COPY ./docker/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY ./docker/build-config/nginx.conf /etc/nginx/nginx.conf
 
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]
