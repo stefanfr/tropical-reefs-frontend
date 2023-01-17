@@ -10,4 +10,4 @@ RUN chmod +x /entrypoint.sh
 # change ownership
 RUN chown -R www-data:www-data /var/www/html
 
-ENTRYPOINT [ "/entrypoint.sh" ]
+RUN make deploy

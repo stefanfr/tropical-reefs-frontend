@@ -1,11 +1,6 @@
 #!/bin/sh
 set -e
 
-composer install --no-dev;
-
-npm install;
-npm run build;
-
 php bin/console doctrine:schema:update --force --complete;
 php bin/console doctrine:schema:update --force --em=manager --complete;
 
