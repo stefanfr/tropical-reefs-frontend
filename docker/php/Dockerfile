@@ -12,7 +12,7 @@ RUN chmod +x /entrypoint.sh
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
     && php -r "unlink('composer-setup.php');" \
-    && /bin/cp /var/www/html/docker/build-config/.env /var/www/html/.env \
+    && /bin/cp ./docker/build-config/.env .env \
     && make deploy \
     && rm -f /usr/local/bin/composer \
     /bin/rm /var/www/html/.env
