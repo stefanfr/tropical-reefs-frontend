@@ -1,20 +1,20 @@
 #!/bin/sh
 set -e
 
-composer install --no-dev
+composer install --no-dev;
 
-npm install
-npm run build
+npm install;
+npm run build;
 
-php bin/console doctrine:schema:update --force --complete
-php bin/console doctrine:schema:update --force --em=manager --complete
+php bin/console doctrine:schema:update --force --complete;
+php bin/console doctrine:schema:update --force --em=manager --complete;
 
-chown -R www-data:www-data *
-composer dump-autoload --optimize --classmap-authoritative
+chown -R www-data:www-data *;
+composer dump-autoload --optimize --classmap-authoritative;
 
 # first arg is `-f` or `--some-option`
 if [ "${1#-}" != "$1" ]; then
-	set -- php-fpm "$@"
+	set -- php-fpm "$@";
 fi
 
-exec "$@"
+sleep infinity;
