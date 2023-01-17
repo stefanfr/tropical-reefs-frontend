@@ -25,6 +25,8 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 
 RUN chown -R www-data:www-data /var/www/html
 
+EXPOSE 9000
+
 # Stage 2: Deploy
 FROM nginx:1.23
 
@@ -33,6 +35,9 @@ COPY --from=build /var/www/html /var/www/html
 
 # Copy nginx configuration
 COPY ./docker/build-config/nginx.conf /etc/nginx/nginx.conf
+
+# Mount php-socket
+VOLUME ["/var/run/php"]
 
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]
