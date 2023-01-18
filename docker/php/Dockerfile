@@ -8,10 +8,9 @@ RUN apt-get update && apt-get install -y nodejs
 COPY ./docker/build-config/entrypoint.sh /
 RUN chmod +x /entrypoint.sh
 
-WORKDIR $CI_PROJECT_DIR/build
-
 # Copy files
-COPY . .
+COPY . /var/www/html/
+WORKDIR /var/www/html/
 
 # Run composer install & setup Symfony
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
@@ -21,6 +20,4 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && make deploy \
     && /bin/rm ./.env
 
-# Copy files
-COPY . /var/www/html
 RUN chown -R www-data:www-data /var/www/html
