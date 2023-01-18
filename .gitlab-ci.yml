@@ -1,7 +1,12 @@
 before_script:
   - docker info
 
+stages:
+  - build_php
+  - build_nginx
+
 build_php:
+  stage: build_php
   only:
     - master
   image: docker
@@ -17,6 +22,7 @@ build_php:
       - /var/www/html/
 
 build_nginx:
+  stage: build_nginx
   when: on_success
   dependencies:
     - build_php
