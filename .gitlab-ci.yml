@@ -1,16 +1,31 @@
 before_script:
   - docker info
 
-build:
+build_php:
   stage: build
   only:
     - master
   image: docker
   services:
     - docker:dind
-  script:
+  before_script:
     - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
+  script:
     - docker build -f ./docker/php/Dockerfile -t $CI_REGISTRY_IMAGE/frontend-php ./
     - docker push $CI_REGISTRY_IMAGE/frontend-php
+  artifacts:
+    paths:
+      - /var/www/html/
+
+build_nginx:
+  stage: build
+  only:
+    - master
+  image: docker
+  services:
+    - docker:dind
+  before_script:
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
+  script:
     - docker build -f ./docker/nginx/Dockerfile -t $CI_REGISTRY_IMAGE/frontend-nginx ./
     - docker push $CI_REGISTRY_IMAGE/frontend-nginx

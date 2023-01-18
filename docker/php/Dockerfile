@@ -19,8 +19,7 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php -r "unlink('composer-setup.php');" \
     && /bin/cp ./docker/build-config/.env ./.env \
     && make deploy \
-    && rm -f /usr/local/bin/composer \
-    /bin/rm ./.env
+    && /bin/rm ./.env
 
 # Copy files
 COPY . /var/www/html
