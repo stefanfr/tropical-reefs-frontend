@@ -17,10 +17,9 @@ build_php:
       - /var/www/html/
 
 build_nginx:
+  when: on_success
   dependencies:
     - build_php
-  only:
-    - master
   image: docker
   services:
     - docker:dind
