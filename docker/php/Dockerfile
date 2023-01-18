@@ -22,4 +22,6 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && rm -f /usr/local/bin/composer \
     /bin/rm ./.env
 
+# Copy files
+COPY . /var/www/html
 RUN chown -R www-data:www-data /var/www/html
