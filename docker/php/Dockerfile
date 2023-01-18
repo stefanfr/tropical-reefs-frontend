@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y nodejs
 COPY ./docker/build-config/entrypoint.sh /
 RUN chmod +x /entrypoint.sh
 
-WORKDIR $CI_PROJECT_DIR
+WORKDIR $CI_PROJECT_DIR/build
 
 # Copy files
 COPY . .
