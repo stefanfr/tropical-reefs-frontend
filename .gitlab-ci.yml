@@ -19,6 +19,8 @@ build_php:
 
 build_nginx:
   stage: build
+  dependencies:
+    - build_php
   only:
     - master
   image: docker
