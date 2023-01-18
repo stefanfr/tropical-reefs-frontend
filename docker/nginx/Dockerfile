@@ -1,5 +1,7 @@
 FROM nginx:1.23
 
+WORKDIR $CI_PROJECT_DIR
+
 # Copy files from build stage
 COPY . /var/www/html
 
