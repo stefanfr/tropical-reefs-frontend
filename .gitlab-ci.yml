@@ -19,7 +19,7 @@ build_php:
     - docker push $CI_REGISTRY_IMAGE/frontend-php
   artifacts:
     paths:
-      - /var/www/html/
+      - ./build
 
 build_nginx:
   stage: build_nginx

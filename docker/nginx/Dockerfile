@@ -1,6 +1,7 @@
 FROM nginx:1.23
 
-WORKDIR /var/www/html/
+WORKDIR $CI_PROJECT_DIR/build
+COPY . /var/www/html/
 
 # Copy nginx configuration
 COPY ./docker/build-config/nginx.conf /etc/nginx/nginx.conf

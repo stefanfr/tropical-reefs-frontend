@@ -8,9 +8,10 @@ RUN apt-get update && apt-get install -y nodejs
 COPY ./docker/build-config/entrypoint.sh /
 RUN chmod +x /entrypoint.sh
 
+WORKDIR $CI_PROJECT_DIR/build
+
 # Copy files
-COPY . /var/www/html/
-WORKDIR /var/www/html/
+COPY . .
 
 # Run composer install & setup Symfony
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
@@ -18,8 +19,10 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php -r "unlink('composer-setup.php');" \
     && /bin/cp ./docker/build-config/.env ./.env \
     && make deploy \
-    && /bin/rm ./.env
+    && rm -f /usr/local/bin/composer \
+    /bin/rm ./.env
 
 RUN chown -R www-data:www-data /var/www/html
 
-WORKDIR .
+# Copy files
+COPY . /var/www/html
