@@ -49,11 +49,6 @@ class AppExtension extends AbstractExtension
             };
         }
 
-        $uri = str_replace('aquastore.test', 'dev.tropicalreefs.nl', $uri);
-        if ( ! preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i', $uri)) {
-            $uri = 'https://dev.tropicalreefs.nl/' . $uri;
-        }
-
         $filters = 'pr:sharp/';
 
         $filters .= match ($method) {
