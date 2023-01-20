@@ -18,6 +18,8 @@ class AddressController extends AbstractCheckoutController
         $shippingAddress = new Address();
         $billingAddress = new Address();
 
+        $billingAddress->setCustomerEmail($cart['email']);
+
 //        if ( ! $cart['total_quantity']) {
 //            return $this->redirectToRoute('app_checkout_cart');
 //        }

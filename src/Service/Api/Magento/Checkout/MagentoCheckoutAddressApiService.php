@@ -92,7 +92,7 @@ class MagentoCheckoutAddressApiService
     public function saveBillingAddressDetails(Address $addressDetails, bool $sameAsShipping = true): array|bool
     {
         $response = (new Request(
-            (new Mutation('setBillingAddressOnCart')
+            $query = (new Mutation('setBillingAddressOnCart')
             )->addParameter(
                 (new Input('input')
                 )->addFields(
@@ -106,7 +106,7 @@ class MagentoCheckoutAddressApiService
                                     [
                                         new InputField('firstname', $addressDetails->getFirstname()),
                                         new InputField('lastname', $addressDetails->getLastname()),
-                                        new InputField('company', $addressDetails->getCompany()),
+                                        new InputField('company', $addressDetails->getCompany() ?? ''),
                                         new InputField('telephone', $addressDetails->getPhone()),
                                         new InputField('city', $addressDetails->getCity()),
                                         new InputField('postcode', $addressDetails->getPostcode()),

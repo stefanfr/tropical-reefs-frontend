@@ -6,6 +6,7 @@ use App\Service\Api\Magento\Checkout\MagentoCheckoutCartApiService;
 use App\Service\Api\Magento\Checkout\MagentoCheckoutPaymentApiService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
@@ -40,7 +41,7 @@ final class PaymentComponent extends AbstractController
 
     public ?string $couponErrorMessage = null;
 
-    public false|array $errors = false;
+    public false|string|array $errors = false;
 
     public function __construct(
         protected MagentoCheckoutCartApiService    $magentoCheckoutCartApiService,
@@ -104,12 +105,16 @@ final class PaymentComponent extends AbstractController
     }
 
     #[LiveAction]
-    public function placeOrder(): null|RedirectResponse
+    public function placeOrder(Request $request): null|RedirectResponse
     {
-        $this->errors = $this->magentoCheckoutPaymentApiService->savePaymentMethod($this->selectedPaymentMethod);
+        $orderNumber = $this->magentoCheckoutPaymentApiService->placeOrder();
 
-        if ( ! $this->errors) {
-            return $this->redirectToRoute('app_checkout_payment');
+        if (is_string($orderNumber)) {
+            $this->errors = $this->magentoCheckoutPaymentApiService->startPayNlTransaction($orderNumber, $request->getUriForPath($this->generateUrl('app_checkout_payment_complete')));
+
+            if (is_string($this->errors)) {
+                return new RedirectResponse($this->errors);
+            }
         }
 
         return null;

@@ -4,6 +4,7 @@ namespace App\Service\Api\Magento\Customer\Account\Order;
 
 use App\Service\Api\Magento\BaseMagentoService;
 use App\Service\GraphQL\Field;
+use App\Service\GraphQL\Parameter;
 use App\Service\GraphQL\Query;
 use App\Service\GraphQL\Request;
 

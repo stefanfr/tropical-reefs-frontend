@@ -2,13 +2,27 @@
 
 namespace App\Controller\Checkout;
 
+use App\Service\Api\Magento\Checkout\MagentoCheckoutCartApiService;
+use App\Service\Api\Magento\Checkout\MagentoCheckoutPaymentApiService;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Request as HttpRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class PaymentController extends AbstractCheckoutController
 {
+    public function __construct(
+        MagentoCheckoutCartApiService              $magentoCheckoutCartApiService,
+        protected MagentoCheckoutPaymentApiService $magentoCheckoutPaymentApiService,
+    )
+    {
+        $this->magentoCheckoutCartApiService = $magentoCheckoutCartApiService;
+
+        parent::__construct($this->magentoCheckoutCartApiService);
+    }
+
     #[Route('/checkout/payment', name: 'app_checkout_payment')]
-    public function index(): Response
+    public function index(Request $request): Response
     {
         $cart = $this->magentoCheckoutCartApiService->collectFullCart();
         $useCoupon = false;
@@ -30,5 +44,20 @@ class PaymentController extends AbstractCheckoutController
             'paymentMethods' => $cart['available_payment_methods'],
             'selectedPaymentMethod' => $cart['selected_payment_method']['code'],
         ]);
+    }
+
+    #[Route('/checkout/payment/complete', name: 'app_checkout_payment_complete')]
+    public function complete(HttpRequest $request)
+    {
+        $payOrderId = $request->query->get('orderId');
+        $orderResponse = $this->magentoCheckoutPaymentApiService->finalizeOrder($payOrderId);
+
+        if ($orderResponse && $orderResponse['isSuccess']) {
+            $request->getSession()->set('lastOrderNumber', $orderResponse['orderNumber']);
+            return $this->redirectToRoute('app_checkout_success');
+        }
+
+        //TODO re-enable quote
+        return $this->redirectToRoute('app_checkout_cart');
     }
 }

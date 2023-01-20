@@ -45,7 +45,7 @@ class MagentoCheckoutCartApiService
             );
         }
 
-        $response = (new Request(
+        $request = new Request(
             $query->addFields(
                 [
                     new Field('id'),
@@ -252,8 +252,9 @@ class MagentoCheckoutCartApiService
                 ]
             ),
             $this->mageGraphQlClient
-        )
-        )->send();
+        );
+
+        $response = $request->send();
 
         try {
             $cartData = $response['data']['cart'] ?? $response['data']['customerCart'];
@@ -268,12 +269,12 @@ class MagentoCheckoutCartApiService
         return $cartData;
     }
 
-    public function addProductToCart(array $itemData)
+    public function addProductToCart(array $itemData, bool $fresh = false)
     {
-        $response = (new Request(
+        $request = new Request(
             (new Mutation('addProductsToCart',
                 [
-                    new Parameter('cartId', $this->magentoCheckoutApiService->getQuoteMaskId()),
+                    new Parameter('cartId', $this->magentoCheckoutApiService->getQuoteMaskId($fresh)),
                     (new Parameter('cartItems', null)
                     )->addFields(
                         [
@@ -351,7 +352,9 @@ class MagentoCheckoutCartApiService
                 ]
             ),
             $this->mageGraphQlClient
-        ))->send();
+        );
+
+        $response = $request->send();
 
         if (isset($response['data']['addProductsToCart']['cart']['total_quantity'])) {
             try {
@@ -360,6 +363,10 @@ class MagentoCheckoutCartApiService
             } catch (SessionNotFoundException $exception) {
 
             }
+        }
+
+        if ($response['errors'] ?? false) {
+            $this->addProductToCart($itemData, true);
         }
 
         return $response['data']['addProductsToCart'] ?? throw new BadRequestException('Something went wrong');
