@@ -5,8 +5,8 @@ namespace App\Service\GraphQL;
 class InputObject
 {
     public function __construct(
-        protected string $name,
-        protected array  $childInputFields = [],
+        protected null|string $name = null,
+        protected array       $childInputFields = [],
     )
     {
     }
@@ -29,8 +29,12 @@ class InputObject
 
     public function __toString(): string
     {
-        $inputField = ' ' . $this->name;
-        $inputField .= ': {';
+        $inputField = ' ';
+        if (null !== $this->name) {
+            $inputField = $this->name;
+            $inputField .= ': ';
+        }
+        $inputField .= '{';
 
         foreach ($this->childInputFields as $childInputField) {
             $inputField .= $childInputField->__toString() . ' ';

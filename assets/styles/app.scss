@@ -6,7 +6,24 @@
 @import url(https://fonts.googleapis.com/css?family=Orbitron:200,300,400,500,600,700);
 
 * {
-  font-family: Roboto, sans-serif
+  font-family: Roboto, sans-serif;
+  --rounded-box: .5rem;
+}
+
+.filters__filter-options {
+  .active {
+    .checkbox {
+      --tw-border-opacity: 1;
+      border-color: hsl(var(--a) / var(--tw-border-opacity));
+      --tw-bg-opacity: 1;
+      background-color: hsl(var(--a) / var(--tw-bg-opacity));
+      --tw-text-opacity: 1;
+      color: hsl(var(--ac) / var(--tw-text-opacity));
+      background-repeat: no-repeat;
+      animation: checkmark var(--animation-input, 0.2s) ease-in-out;
+      background-image: linear-gradient(-45deg, transparent 65%, hsl(var(--chkbg)) 65.99%), linear-gradient(45deg, transparent 75%, hsl(var(--chkbg)) 75.99%), linear-gradient(-45deg, hsl(var(--chkbg)) 40%, transparent 40.99%), linear-gradient(45deg, hsl(var(--chkbg)) 30%, hsl(var(--chkfg)) 30.99%, hsl(var(--chkfg)) 40%, transparent 40.99%), linear-gradient(-45deg, hsl(var(--chkfg)) 50%, hsl(var(--chkbg)) 50.99%);
+    }
+  }
 }
 
 h1, h2, h3 {

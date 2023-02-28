@@ -25,11 +25,16 @@
     </div>
 
     {% if lookupDetails is not empty %}
-        <div class="checkout__address-postcode-result bg-base-200 py-6 px-4 rounded-box shadow-md mt-4">
-            <strong>{{ 'We found this address'|trans }}:</strong>
-            <address class="mt-2">{{ lookupDetails['street'] }} {{ lookupDetails['house_nr_flat'] }}</address>
-            <address>{{ lookupDetails['zipcode'] }}, {{ lookupDetails['place'] }}</address>
-        </div>
+        {% if lookupDetails['street'] is defined %}
+            <div class="checkout__address-postcode-result bg-base-200 py-6 px-4 rounded-box shadow-md mt-4">
+                <strong>{{ 'We found this address'|trans }}:</strong>
+                <address class="mt-2">{{ lookupDetails['street'] }} {{ lookupDetails['house_nr_flat'] }}</address>
+                <address>{{ lookupDetails['zipcode'] }}, {{ lookupDetails['place'] }}</address>
+            </div>
+        {% else %}
+            {{ lookupDetails['error'] }}
+            {{ lookupDetails['error_description'] }}
+        {% endif %}
     {% endif %}
 
     <div class="flex justify-end">

@@ -28,7 +28,7 @@ class MagentoCheckoutCartApiService
     {
     }
 
-    public function collectFullCart()
+    public function collectFullCart(bool $fresh = false)
     {
         $session = null;
         try {
@@ -41,7 +41,7 @@ class MagentoCheckoutCartApiService
         } else {
             $query = (new Query('cart')
             )->addParameter(
-                new Parameter('cart_id', $this->magentoCheckoutApiService->getQuoteMaskId()),
+                new Parameter('cart_id', $this->magentoCheckoutApiService->getQuoteMaskId($fresh)),
             );
         }
 
@@ -259,7 +259,10 @@ class MagentoCheckoutCartApiService
         try {
             $cartData = $response['data']['cart'] ?? $response['data']['customerCart'];
         } catch (Exception $e) {
-            throw new BadRequestException('Failed to load cart');
+            if ($session?->has('customerToken')) {
+                $session->remove('customerToken');
+            }
+            return $this->collectFullCart(true);
         }
 
         if (isset($cartData['total_quantity'])) {

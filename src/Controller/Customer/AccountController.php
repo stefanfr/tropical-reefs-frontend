@@ -30,6 +30,7 @@ class AccountController extends AbstractCustomerController
 
         return $this->render('customer/index.html.twig', [
             'customerData' => $customerData,
+            'customerOrders' => array_reverse($customerData['orders']['items']),
             'defaultShippingAddress' => $this->getDefaultSelectedAddress($customerData),
             'defaultBillingAddress' => $this->getDefaultSelectedAddress($customerData, 'billing'),
         ]);

@@ -9,15 +9,21 @@
             <div class="account__details-headers mb-4">
                 <h2 class="text-3xl">{{ 'Your orders'|trans }}</h2>
             </div>
-            <div class="account__details-default-address">
+            <div class="account__details-default-address gap-3 grid grid-cols-4">
                 {% if customerOrders is empty %}
                     <span>{{ 'No orders yet.'|trans }}</span><br/>
                     <a class="text-accent" href="{{ path('app_home') }}">{{ 'Click here to place your first order'|trans }}</a>
                 {% else %}
                     {% for order in customerOrders %}
-                        <div class="account__details-default-address-shipping relative border border-solid border-base-300 rounded-box py-4 px-6">
-                            <strong class="block">{{ order['id'] }}</strong>
-                        </div>
+                        <a href="{{ path('app_customer_order_detail', {orderNumber: order['order_number']}) }}" class="account__details-default-address-shipping relative border border-solid border-base-300 rounded-box py-4 px-6 flex justify-between col-span-4 shadow-md">
+                            <strong class="block">{{ order['order_number'] }}</strong>
+                            <span>{{ order['status'] }}</span>
+                            <span>{{ order['grand_total']|format_currency('EUR') }}</span>
+                            <span>{{ order['created_at']|date }}</span>
+                            <span>
+                                {{ 'view'|trans }}
+                            </span>
+                        </a>
                     {% endfor %}
                 {% endif %}
             </div>

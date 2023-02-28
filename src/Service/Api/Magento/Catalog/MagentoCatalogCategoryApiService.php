@@ -22,9 +22,9 @@ use Symfony\Contracts\Cache\ItemInterface;
 class MagentoCatalogCategoryApiService
 {
     public function __construct(
-        protected MageGraphQlClient $mageGraphQlClient,
-        protected StoreConfig       $storeConfig,
-        protected RedisAdapter      $redisAdapter,
+        protected readonly MageGraphQlClient $mageGraphQlClient,
+        protected readonly StoreConfig       $storeConfig,
+        protected readonly RedisAdapter      $redisAdapter,
     )
     {
     }
@@ -37,7 +37,6 @@ class MagentoCatalogCategoryApiService
         $cacheKey = 'catalog_category_tree_' . md5(serialize($filters));
         if (null !== $uid) {
             $cacheKey .= '_' . $uid;
-            $this->redisAdapter->clear($cacheKey);
         }
 
         return $this->redisAdapter->get($cacheKey, function (ItemInterface $item) use ($uid, $filters, $debug) {

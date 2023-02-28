@@ -33,7 +33,6 @@ abstract class BaseMagentoService
                                 break;
                         }
                     } catch (SessionNotFoundException $exception) {
-
                     }
                 }
             }

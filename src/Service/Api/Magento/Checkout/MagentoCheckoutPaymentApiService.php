@@ -259,7 +259,7 @@ class MagentoCheckoutPaymentApiService
         return $response['data']['paynlFinishTransaction'] ?? false;
     }
 
-    public function collectOrder(mixed $orderNumber): false|array
+    public function collectOrder(string $orderNumber): false|array
     {
         $response = (new Request(
             (new Query('salesOrder'))

@@ -4,9 +4,15 @@ namespace App\Service\Api\Magento\Customer\Account;
 
 use App\Service\Api\Magento\BaseMagentoService;
 use App\Service\GraphQL\Field;
+use App\Service\GraphQL\InputField;
 use App\Service\GraphQL\Query;
 use App\Service\GraphQL\Request;
 use App\Service\GraphQL\Selection;
+use App\Service\GraphQL\Types\AddressType;
+use App\Service\GraphQL\Types\MoneyType;
+use App\Service\GraphQL\Types\OrderItemType;
+use App\Service\GraphQL\Types\OrderType;
+use App\Service\GraphQL\Types\TotalsType;
 
 class MagentoCustomerAccountQueryService extends BaseMagentoService
 {
@@ -32,7 +38,9 @@ class MagentoCustomerAccountQueryService extends BaseMagentoService
             return $customerData;
         }
 
-        $selectedOptions = [];
+        $selectedOptions = [
+            new InputField('pageSize', 100),
+        ];
         $response = (new Request(
             (new Query('customer')
             )->addFields(
@@ -53,18 +61,14 @@ class MagentoCustomerAccountQueryService extends BaseMagentoService
                     (new Selection('orders', $selectedOptions)
                     )->addChildFields(
                         [
-                            new Field('total_count'),
                             (new Field('items')
                             )->addChildFields(
                                 [
-                                    new Field('id'),
-                                    new Field('number'),
-                                    (new Field('billing_address')
-                                    )->addChildFields(
-                                        [
-                                            ...self::getCustomerDetailFields(),
-                                        ]
-                                    ),
+                                    ...OrderType::fields(),
+                                    (new Field('total')
+                                    )->addChildFields([
+                                        new Field('grand_total', MoneyType::fields())
+                                    ]),
                                 ]
                             ),
                             (new Field('page_info')

@@ -12,7 +12,7 @@ class Query
     {
     }
 
-    public function addParameter(Parameter|Filters $parameter): static
+    public function addParameter(AttributeInput|Parameter|Filters $parameter): static
     {
         $this->params[] = $parameter;
 

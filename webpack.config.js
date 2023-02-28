@@ -21,6 +21,14 @@ Encore
         algorithm: 'gzip',
         deleteOriginalAssets: false
     }))
+    .configureTerserPlugin((options) => {
+        options.cache = true;
+        options.terserOptions = {
+            output: {
+                comments: false
+            }
+        }
+    })
     .enablePostCssLoader()
     .setOutputPath('public/build/')
     .setPublicPath('/build')

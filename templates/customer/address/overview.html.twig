@@ -31,7 +31,7 @@
                 {% else %}
                     <div class="addresses grid gap-5 grid-cols-3">
                         {% for address in customerData['addresses'] %}
-                            <div class="account__details-default-address-shipping relative border border-solid border-base-300 rounded-box py-4 px-6">
+                            <div class="account__details-default-address-shipping relative border border-solid border-base-300 rounded-box py-4 px-6 shadow-md">
                                 <strong class="block">{{ address['firstname'] }} {{ address['lastname'] }}</strong>
                                 <span class="block">{{ address['company'] }}</span>
                                 <span class="block">{{ address['street']|join(' ') }}</span>

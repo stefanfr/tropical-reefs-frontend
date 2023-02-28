@@ -2,8 +2,10 @@
 
 namespace App\Controller\Catalog;
 
+use App\Service\Api\Magento\Catalog\MagentoCatalogAttributeApiService;
 use App\Service\Api\Magento\Catalog\MagentoCatalogCategoryApiService;
 use App\Service\Api\Magento\Core\MagentoCoreStoreConfigService;
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,9 +15,10 @@ use Symfony\Component\HttpFoundation\Response;
 class CategoryController extends AbstractController
 {
     public function __construct(
-        protected RequestStack                     $requestStack,
-        protected MagentoCoreStoreConfigService    $magentoCoreStoreConfigService,
-        protected MagentoCatalogCategoryApiService $magentoCatalogCategoryApiService,
+        protected readonly RequestStack                      $requestStack,
+        protected readonly MagentoCoreStoreConfigService     $magentoCoreStoreConfigService,
+        protected readonly MagentoCatalogCategoryApiService  $magentoCatalogCategoryApiService,
+        protected readonly MagentoCatalogAttributeApiService $magentoCatalogAttributeApiService,
     )
     {
     }
@@ -34,18 +37,22 @@ class CategoryController extends AbstractController
 //            ],
         ];
 
-//        $filters = [
-//            [
-//                'value' => 28,
-//                'operator' => 'eq', // Either eq or neq
-//                'attribute' => 'brand',
-//            ],
-//        ];
+        $filters = [];
+        foreach (($activeFilters = $request->getSession()->get('activeFilters')) ?? [] as $key => $filter) {
+            $filters[] = $this->prepareFilter(
+                [
+                    'value' => $filter,
+                    'operator' => 'in',
+                    'attribute' => $key,
+                ]
+            );
+        }
 
         $catalog = $this->magentoCatalogCategoryApiService->collectCategoryProducts($magentoMatch['entity_uid'], $options, $filters);
         $category = $this->magentoCatalogCategoryApiService->collectCategory($magentoMatch['entity_uid']);
 
         return $this->render('catalog/category/index.html.twig', [
+            'activeFilters' => $activeFilters,
             'pagination' => $this->getPagination($catalog, $magentoMatch),
             'category' => $category,
             'catalog' => $catalog,
@@ -136,6 +143,34 @@ class CategoryController extends AbstractController
         );
 
         return '/' . $relativeUrl . '?' . $queryString;
+    }
+
+    protected function prepareFilter(array $filter): array
+    {
+        static $attributeMetaData;
+
+        if ( ! isset($attributeMetaData[$filter['attribute']])) {
+            try {
+                $attributeMetaData[$filter['attribute']] = $this->magentoCatalogAttributeApiService->collectAttributeMetaData($filter['attribute']);
+            } catch (InvalidArgumentException $e) {
+                $attributeMetaData[$filter['attribute']] = [];
+            }
+        }
+
+        $attributeValue = array_values(
+            array_filter($attributeMetaData[$filter['attribute']]['attribute_options'] ?? [], static function ($value) use ($filter) {
+                return in_array($value['label'], $filter['value'], true);
+            })
+        );
+
+        $filter['value'] = array_map(
+            static function ($attributeValue) {
+                return $attributeValue['value'];
+            },
+            $attributeValue
+        );
+
+        return $filter;
     }
 
 }

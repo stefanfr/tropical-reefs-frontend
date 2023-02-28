@@ -19,9 +19,9 @@ use Symfony\Contracts\Cache\ItemInterface;
 class MagentoCatalogProductApiService
 {
     public function __construct(
-        protected RedisAdapter                  $redisAdapter,
-        protected MageGraphQlClient             $mageGraphQlClient,
-        protected MagentoCoreStoreConfigService $magentoCoreStoreConfigService,
+        protected readonly RedisAdapter                  $redisAdapter,
+        protected readonly MageGraphQlClient             $mageGraphQlClient,
+        protected readonly MagentoCoreStoreConfigService $magentoCoreStoreConfigService,
     )
     {
     }

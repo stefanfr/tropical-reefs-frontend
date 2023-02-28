@@ -55,7 +55,8 @@
                                                 {% if subCategory['product_count'] %}
                                                     <li>
                                                         <a href="/{{ subCategory['url_path'] }}">
-                                                            {{ subCategory['name']|trans }} ({{ subCategory['product_count'] }})
+                                                            {{ subCategory['name']|trans }}
+                                                            ({{ subCategory['product_count'] }})
                                                         </a>
                                                     </li>
                                                 {% endif %}
@@ -79,10 +80,10 @@
                                             <div class="filters__filter-options px-2">
                                                 {% for option in filter['options'] %}
                                                     <div class="filters__filter-option form-control">
-                                                        <label class="cursor-pointer label flex gap-3">
+                                                        <a href="#" rel="nofollow" class="cursor-pointer label flex gap-3">
                                                             <span class="label-text text-base">{{ option['label'] }} ({{ option['count'] }})</span>
                                                             <input aria-label="{{ option['label'] }}" name="{{ filter['attribute_code'] }}[]" value="{{ option['value'] }}" type="checkbox" class="checkbox checkbox-accent"/>
-                                                        </label>
+                                                        </a>
                                                     </div>
                                                 {% endfor %}
                                             </div>
@@ -131,11 +132,11 @@
                                     <h3 class="font-bold">{{ filter['label'] }}</h3>
                                     <div class="filters__filter-options mt-2">
                                         {% for option in filter['options'] %}
-                                            <div class="filters__filter-option form-control">
-                                                <label class="cursor-pointer label flex gap-3">
+                                            <div class="filters__filter-option {% if option['label'] in activeFilters[filter['attribute_code']] ?? [] %} active {% endif %}">
+                                                <a href="{{ catalogProductFilterUrl(filter['attribute_code'], option['label']) }}" rel="nofollow" class="cursor-pointer label flex gap-3">
                                                     <span class="label-text text-base">{{ option['label'] }} ({{ option['count'] }})</span>
-                                                    <input aria-label="{{ option['label'] }}" name="{{ filter['attribute_code'] }}[]" value="{{ option['value'] }}" type="checkbox" class="checkbox checkbox-accent"/>
-                                                </label>
+                                                    <span aria-label="{{ option['label'] }}" class="checkbox checkbox-accent"></span>
+                                                </a>
                                             </div>
                                         {% endfor %}
                                     </div>
