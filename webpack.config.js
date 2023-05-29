@@ -22,14 +22,13 @@ Encore
         deleteOriginalAssets: false
     }))
     .configureTerserPlugin((options) => {
-        options.cache = true;
         options.terserOptions = {
             output: {
                 comments: false
             }
         }
     })
-    .enableVueLoader()
+    .enableVueLoader(() => {}, { runtimeCompilerBuild: false })
     .enableTypeScriptLoader()
     .enablePostCssLoader()
     .setOutputPath('public/build/')

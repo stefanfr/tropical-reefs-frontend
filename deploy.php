@@ -52,7 +52,7 @@ task('deploy:permissions', static function () {
  */
 task('deploy:statics', static function () {
     run('cd {{release_path}} && npm ci');
-    run('cd {{release_path}} && ./node_modules/.bin/encore production');
+    run('cd {{release_path}} && npm run build');
 })->desc('Deploying statics');
 
 /**
