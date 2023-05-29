@@ -28,7 +28,7 @@ Encore
             }
         }
     })
-    .enableVueLoader(() => {}, { runtimeCompilerBuild: false })
+    .enableVueLoader()
     .enableTypeScriptLoader()
     .enablePostCssLoader()
     .setOutputPath('public/build/')
