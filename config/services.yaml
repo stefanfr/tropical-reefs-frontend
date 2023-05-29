@@ -82,3 +82,6 @@ services:
     arguments:
       - '@logger'
       - '@service_container'
+
+  customer.session.manager:
+    class: App\Manager\Customer\CustomerSessionManager

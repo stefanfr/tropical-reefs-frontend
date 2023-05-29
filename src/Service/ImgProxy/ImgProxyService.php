@@ -51,4 +51,45 @@ class ImgProxyService
 
         return $this->getBaseUrl() . sprintf('/%s', $path);
     }
+
+    public function getCdnUrl(?string $uri, string $method, int|string $width, ?int $height = null): string
+    {
+        if (null === $uri) {
+            $uri = match ($width) {
+                'square' => sprintf('https://via.placeholder.com/%s', $height),
+                default => sprintf('https://via.placeholder.com/%sx%s', $width, $height),
+            };
+        }
+
+        $uri = str_replace('aquastore.test', 'dev.tropicalreefs.nl', $uri);
+        if ( ! filter_var($uri, FILTER_VALIDATE_URL)) {
+            $uri = 'https://dev.tropicalreefs.nl/'.$uri;
+        }
+
+        $filters = 'pr:sharp/';
+
+        $filters .= match ($method) {
+            'crop' => 'crop:',
+            'fit' => 'rs:fit:',
+            'fill' => 'rs:fill:',
+            'fill-down' => 'rs:fill-down:',
+            'force' => 'rs:force:',
+            'auto' => 'rs:auto:',
+            default => 'plain',
+        };
+
+        $filters .= match ($width) {
+            'square' => sprintf('%s:%s', $height, $height),
+            default => sprintf('%s:%s', $width, $height),
+        };
+
+        $filters .= '/ex:1';
+        $filters .= '/g:ce';
+        $filters .= '/ar:1';
+
+        return $this->getUrl(
+            preg_replace('/cache\/.*\//U', '', $uri),
+            $filters
+        );
+    }
 }

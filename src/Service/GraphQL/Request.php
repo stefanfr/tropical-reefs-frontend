@@ -39,6 +39,8 @@ class Request
 
             return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         } catch (Exception $exception) {
+            dump($headers);
+            echo $this->mageGraphQlClient->getApiUrl() . PHP_EOL;
             echo (string)$this->query;
             dd($exception->getMessage());
         }

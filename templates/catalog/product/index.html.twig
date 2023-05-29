@@ -33,61 +33,43 @@
             <div class="grid lg:grid-cols-5 gap-10 sm:grid-cols-1">
                 <div class="product__images-container col-span-3">
                     <div class="flex md:gap-2" style="max-width: 100vw">
-                        {% if product['media_gallery']|length == 1 %}
-                            {% for image in product['media_gallery'] %}
-                                <div class="slide px-0 md:px-20 mx-auto">
+                        <ul class="gallery_images">
+                            {% for image in mediaGallery %}
+                                <li class="glide__slide px-0 md:px-20">
                                     <picture>
-                                        <source media="(max-width: 640px)" srcset="{{ image['url']|cdn('auto', 335, 335) }}">
-                                        <source media="(max-width: 678px)" srcset="{{ image['url']|cdn('auto', 592, 592) }}">
-                                        <source media="(max-width: 1024px)" srcset="{{ image['url']|cdn('auto', 414, 414) }}">
-                                        <img style="aspect-ratio: 1" class="w-full" src="{{ image['url']|cdn('auto', 592, 592) }}" alt="">
-                                    </picture>
-                                </div>
-                            {% endfor %}
-                        {% else %}
-                            <div class="glide">
-                                <div class="glide__track" data-glide-el="track">
-                                    <ul class="glide__slides">
-                                        {% for image in product['media_gallery'] %}
-                                            <li class="glide__slide px-0 md:px-20">
-                                                <picture>
-                                                    <source media="(max-width: 640px)" srcset="{{ image['url']|cdn('auto', 335, 335) }}">
-                                                    <source media="(max-width: 678px)" srcset="{{ image['url']|cdn('auto', 592, 592) }}">
-                                                    <source media="(max-width: 1024px)" srcset="{{ image['url']|cdn('auto', 414, 414) }}">
-                                                    <img style="aspect-ratio: 1" class="w-full" src="{{ image['url']|cdn('auto', 592, 592) }}" alt="">
-                                                </picture>
-                                            </li>
+                                        {% for source in image['sources'] %}
+                                            <source media="(max-width: {{ source['size'] }})" srcset="{{ source['url'] }}">
                                         {% endfor %}
-                                    </ul>
-                                </div>
-                                <div class="glide__arrows" data-glide-el="controls">
-                                    <a data-glide-dir="<" class="l-0 glide__arrow glide__arrow--left">&#10094;</a>
-                                    <a data-glide-dir=">" class="glide__arrow glide__arrow--right">&#10095;</a>
-                                </div>
-                            </div>
-                        {% endif %}
+                                        <img style="aspect-ratio: 1" class="w-full" src="{{ image['url'] }}" alt="">
+                                    </picture>
+                                </li>
+                            {% endfor %}
+                        </ul>
                     </div>
                 </div>
                 <div class="product__details-container col-span-3 md:col-span-2 px-5 md:px-0">
                     <div class="product__details-title grid">
-                        <h1 class="text-2xl md:text-4xl font-bold">{{ product['name']|replace({'(': "<br />", ')': ''})|raw }}</h1>
-                        {{ component('catalog_product_configuration', {
-                            product: product,
-                        }) }}
+                        <h1 class="text-2xl md:text-4xl font-bold">{{ product['name']|raw }}</h1>
+                        <catalog-product-configuration :product="{{ product|json_encode }}">
+                            <template v-slot:related-products>
+                                {% include 'catalog/_partials/product_list.html.twig' with {'limit': 3, 'items': product['related_products']} %}
+                            </template>
+                            <template v-slot:popup-image>
+                                <img height="120" width="120" src="{{ product['small_image']['url']|cdn('auto', 'square', 120) }}" alt="{{ product['name']|raw }}" />
+                            </template>
+                        </catalog-product-configuration>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="divider lg:divider-vertical" style="margin-top: 2rem" id="product-description">
-            <h3 class="text-2xl md:text-3xl font-bold">{{ 'Product description'|trans }}</h3>
-        </div>
-        <div class="container mx-auto mt-10 px-5 xl:px-0">
-            <div class="product__description grid md:grid-cols-3 grid-cols-1 md:gap-20 gap-5">
-                <div class="product__description-text md:col-span-2">
-                    {{ product['description']['html']|raw }}
-                </div>
-                <div class="product__description-text">
-                    <h3 class="text-lg md:text-xl font-bold">{{ 'Characteristics'|trans }}</h3>
+                    <div class="divider lg:divider-vertical" style="margin-top: 4rem" id="product-description">
+                        <h3 class="text-2xl md:text-3xl font-bold">{{ 'Product description'|trans }}</h3>
+                    </div>
+                    <div class="product__description">
+                        <div class="product__description-text md:col-span-2">
+                            {{ product['description']['html']|raw }}
+                        </div>
+                    </div>
+                    <div class="divider lg:divider-vertical" style="margin-top: 4rem" id="product-characteristics">
+                        <h3 class="text-2xl md:text-3xl font-bold">{{ 'Characteristics'|trans }}</h3>
+                    </div>
                     <table class="table table-compact w-full mt-3">
                         <tr>
                             <td class="font-bold">{{ 'SKU' }}</td>
@@ -102,31 +84,24 @@
                             {% endif %}
                         {% endfor %}
                     </table>
+
+                    {% if product['related_products']|length > 0 %}
+                        <div class="divider lg:divider-vertical" style="margin-top: 2rem">
+                            <h3 class="text-3xl font-bold">{{ 'Related products'|trans }}</h3>
+                        </div>
+                        <div class="container mx-auto">
+                            <div class="product_row grid grid-cols-2 gap-4 mt-10 col-span-6">
+                                {% include 'catalog/_partials/product_list.html.twig' with {'limit': 5, 'items': product['related_products']} %}
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
-        {% if product['related_products']|length > 0 %}
-            <div class="divider lg:divider-vertical" style="margin-top: 4rem">
-                <h3 class="text-3xl font-bold">{{ 'Related products'|trans }}</h3>
-            </div>
-            <div class="container mx-auto">
-                <div class="product_row grid grid-cols-5 gap-4 mt-10 col-span-6">
-                    {% include 'catalog/_partials/product_list.html.twig' with {'limit': 5, 'items': product['related_products']} %}
-                </div>
-            </div>
-        {% endif %}
         {% if false %}
             <div id="reviews" class="divider lg:divider-vertical" style="margin-top: 4rem">
                 <h3 class="text-3xl font-bold">{{ 'Product reviews'|trans }}</h3>
             </div>
         {% endif %}
     </div>
-    {% if product['media_gallery']|length > 1 %}
-        {% block addtionalStylesheets %}
-            {{ encore_entry_link_tags('glide') }}
-        {% endblock %}
-        {% block additionalScripts %}
-            {{ encore_entry_script_tags('glide') }}
-        {% endblock %}
-    {% endif %}
 {% endblock %}

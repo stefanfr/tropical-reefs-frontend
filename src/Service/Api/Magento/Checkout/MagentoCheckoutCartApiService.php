@@ -45,7 +45,7 @@ class MagentoCheckoutCartApiService
             );
         }
 
-        $request = new Request(
+        $response = (new Request(
             $query->addFields(
                 [
                     new Field('id'),
@@ -90,7 +90,7 @@ class MagentoCheckoutCartApiService
                             (new Field('prices')
                             )->addChildFields(
                                 [
-                                    (new Field('price')
+                                    (new Field('price_including_tax')
                                     )->addChildFields(
                                         [
                                             new Field('value'),
@@ -252,9 +252,7 @@ class MagentoCheckoutCartApiService
                 ]
             ),
             $this->mageGraphQlClient
-        );
-
-        $response = $request->send();
+        ))->send();
 
         try {
             $cartData = $response['data']['cart'] ?? $response['data']['customerCart'];

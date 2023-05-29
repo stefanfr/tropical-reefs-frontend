@@ -23,9 +23,7 @@
                     {% endfor %}
                 {% endif %}
             </div>
-            {{ component('customer_address', {
-                address: address,
-            }) }}
+            <customer-address :shipping-countries="{{ shippingCountries|json_encode }}"></customer-address>
         </div>
     </div>
 {% endblock %}

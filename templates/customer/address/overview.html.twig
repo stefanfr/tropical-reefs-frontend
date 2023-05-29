@@ -26,7 +26,7 @@
             </div>
             <div class="account__details-default-address col-span-3">
                 {% if customerData['addresses'] is empty %}
-                    <span>{{ 'No addresses yet.'|trans({type: 'shipping'|trans}) }}</span><br/>
+                    <span>{{ 'No addresses yet.'|trans }}</span><br/>
                     <a class="text-accent" href="{{ path('app_customer_address_create') }}">{{ 'Click here to create your first address'|trans }}</a>
                 {% else %}
                     <div class="addresses grid gap-5 grid-cols-3">
@@ -36,7 +36,7 @@
                                 <span class="block">{{ address['company'] }}</span>
                                 <span class="block">{{ address['street']|join(' ') }}</span>
                                 <span class="block">{{ address['postcode'] }}, {{ address['city'] }}</span>
-                                <span class="block">{{ address['country_code'] }}</span>
+                                <span class="block">{{ address['country_code']|country_name }}</span>
                                 <div class="btn-group absolute right-2 bottom-2">
                                     <a
                                             href="{{ path('app_customer_address_update', {'addressId': address['id']}) }}"

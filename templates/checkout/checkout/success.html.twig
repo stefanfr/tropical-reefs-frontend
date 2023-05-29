@@ -6,29 +6,24 @@
 
 {% block body %}
     <div class="container mx-auto mt-2 grid grid-cols-8 items-center">
-        <ul class="col-start-3 col-span-4 steps steps-vertical lg:steps-horizontal">
-            <li class="step">{{ 'Address'|trans }}</li>
-            <li class="step">{{ 'Shipping'|trans }}</li>
-            <li class="step">{{ 'Payment'|trans }}</li>
-            <li class="step step-accent">{{ 'Complete'|trans }}</li>
-        </ul>
+        <checkout-header :current-step="4"></checkout-header>
         <div class="mt-4 py-8 px-[4rem] col-start-3 col-span-4 container border border-base-300 rounded-box shadow-md border-solid justify-between">
             <h2 class="text-2xl mt-4">{{ '4. Success'|trans }}</h2>
             <p class="mt-2">{{ 'Thank you for your order, we will ship it to you soon!'|trans }}</p>
             <div class="flex mt-5 justify-between px-[.5rem]">
                 <div class="shipping_address">
-                    <h3 class="text-md block font-bold">{{ 'Shipping Address' }}</h3>
+                    <h3 class="text-md block font-bold">{{ 'Shipping Address'|trans }}</h3>
                     <strong class="block mt-2">{{ order['shipping_address']['firstname'] }} {{ order['shipping_address']['lastname'] }}</strong>
                     <span class="block">{{ order['shipping_address']['street']|join(' ') }}</span>
                     <span class="block">{{ order['shipping_address']['postcode'] }} {{ order['shipping_address']['city'] }}</span>
-                    <span class="block">{{ order['shipping_address']['country_code'] }}</span>
+                    <span class="block">{{ order['shipping_address']['country_code']|country_name }}</span>
                 </div>
                 <div class="billing_address">
-                    <h3 class="text-md block font-bold">{{ 'Billing Address' }}</h3>
+                    <h3 class="text-md block font-bold">{{ 'Billing Address'|trans }}</h3>
                     <strong class="block mt-2">{{ order['shipping_address']['firstname'] }} {{ order['shipping_address']['lastname'] }}</strong>
                     <span class="block">{{ order['shipping_address']['street']|join(' ') }}</span>
                     <span class="block">{{ order['shipping_address']['postcode'] }} {{ order['shipping_address']['city'] }}</span>
-                    <span class="block">{{ order['shipping_address']['country_code'] }}</span>
+                    <span class="block">{{ order['shipping_address']['country_code']|country_name }}</span>
                 </div>
             </div>
             <div class="divider lg:divider-vertical"></div>

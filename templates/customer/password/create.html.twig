@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Customer Password Forget'|trans }}{% endblock %}
+
+{% block body %}
+    <div class="messages_container px-8">
+        {% if errors is defined and errors is not empty %}
+            {% for error in errors %}
+                <div class="alert alert-error shadow-md alert-sm">
+                    <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span>{{ error['message'] }}</span>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div class="container mx-auto mt-2 grid grid-cols-8 items-center">
+        <div class="mt-4 py-8 px-12 col-start-3 col-span-4 container border border-base-300 rounded-box shadow-md border-solid grid">
+            <h2 class="text-2xl mt-4">{{ 'Forgot your password?'|trans }}</h2>
+            <p class="mt-4">
+                {{ 'Enter your email address below to receive a password reset link'|trans }}.
+            </p>
+            {{ form_start(form, {attr: {class: 'grid gap-4 mt-4'}}) }}
+            {{ form_errors(form) }}
+            {{ form_widget(form.email) }}
+            {{ form_widget(form.newPassword.first) }}
+            {{ form_widget(form.newPassword.second) }}
+            <input type="submit" class="btn btn-accent" value="{{ 'Reset password'|trans }}">
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

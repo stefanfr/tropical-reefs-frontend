@@ -13,7 +13,7 @@ class AddressDeleteController extends AbstractCustomerController
 {
     public function __construct(
         MagentoCustomerAccountQueryService              $magentoCustomerAccountService,
-        protected MagentoCustomerAddressMutationService $magentoCustomerAddressMutationService,
+        protected readonly MagentoCustomerAddressMutationService $magentoCustomerAddressMutationService,
     )
     {
         parent::__construct($magentoCustomerAccountService);

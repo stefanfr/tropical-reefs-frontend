@@ -27,6 +27,10 @@ class PaymentController extends AbstractCheckoutController
         $cart = $this->magentoCheckoutCartApiService->collectFullCart();
         $useCoupon = false;
 
+        if (!$cart['total_quantity']) {
+            return $this->redirectToRoute('app_checkout_cart');
+        }
+
         if (null !== $cart['applied_coupons']) {
             $useCoupon = true;
             $couponIsValid = true;

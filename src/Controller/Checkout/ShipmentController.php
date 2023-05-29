@@ -12,9 +12,13 @@ class ShipmentController extends AbstractCheckoutController
     {
         $cart = $this->magentoCheckoutCartApiService->collectFullCart();
 
+        if (!$cart['total_quantity']) {
+            return $this->redirectToRoute('app_checkout_cart');
+        }
+
         return $this->render('checkout/checkout/shipment.html.twig', [
             'shippingMethods' => $cart['shipping_addresses'][0]['available_shipping_methods'] ?? [],
-            'selectedShippingMethod' => $cart['shipping_addresses'][0]['selected_shipping_method'] ?? null,
+            'selectedShippingMethod' => $cart['shipping_addresses'][0]['selected_shipping_method'] ?? [],
         ]);
     }
 }

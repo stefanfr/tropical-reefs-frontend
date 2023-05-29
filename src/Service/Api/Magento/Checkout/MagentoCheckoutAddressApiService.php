@@ -3,7 +3,6 @@
 namespace App\Service\Api\Magento\Checkout;
 
 use App\Cache\Adapter\RedisAdapter;
-use App\DataClass\Checkout\Address\Address;
 use App\Service\Api\Magento\Http\MageGraphQlClient;
 use App\Service\GraphQL\Field;
 use App\Service\GraphQL\Input;
@@ -16,12 +15,11 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class MagentoCheckoutAddressApiService
 {
     public function __construct(
-        protected RedisAdapter              $redisAdapter,
-        protected RequestStack              $requestStack,
-        protected MageGraphQlClient         $mageGraphQlClient,
+        protected RedisAdapter $redisAdapter,
+        protected RequestStack $requestStack,
+        protected MageGraphQlClient $mageGraphQlClient,
         protected MagentoCheckoutApiService $magentoCheckoutApiService,
-    )
-    {
+    ) {
     }
 
     public function setCustomerEmail(string $customerEmail): array|bool
@@ -48,7 +46,7 @@ class MagentoCheckoutAddressApiService
         return $response['errors'] ?? false;
     }
 
-    public function saveShippingAddressDetails(Address $addressDetails): array|bool
+    public function saveShippingAddressDetails(array $addressDetails): array|bool
     {
         $response = (new Request(
             (new Mutation('setShippingAddressesOnCart')
@@ -62,14 +60,14 @@ class MagentoCheckoutAddressApiService
                             (new InputObject('address')
                             )->addInputFields(
                                 [
-                                    new InputField('firstname', $addressDetails->getFirstname()),
-                                    new InputField('lastname', $addressDetails->getLastname()),
-                                    new InputField('company', $addressDetails->getCompany()),
-                                    new InputField('telephone', $addressDetails->getPhone()),
-                                    new InputField('city', $addressDetails->getCity()),
-                                    new InputField('postcode', $addressDetails->getPostcode()),
-                                    new InputField('street', [$addressDetails->getStreet(), $addressDetails->getHouseNr() . ' ' . $addressDetails->getAdd()]),
-                                    new InputField('country_code', $addressDetails->getCountryCode() ?? 'NL'),
+                                    new InputField('firstname', $addressDetails['firstname']),
+                                    new InputField('lastname', $addressDetails['lastname']),
+                                    new InputField('company', $addressDetails['company']),
+                                    new InputField('telephone', $addressDetails['telephone']),
+                                    new InputField('city', $addressDetails['city']),
+                                    new InputField('postcode', $addressDetails['postcode']),
+                                    new InputField('street', $addressDetails['street']),
+                                    new InputField('country_code', $addressDetails['country_code']),
                                 ]
                             ),
                         ),
@@ -89,7 +87,7 @@ class MagentoCheckoutAddressApiService
         return $response['errors'] ?? false;
     }
 
-    public function saveBillingAddressDetails(Address $addressDetails, bool $sameAsShipping = true): array|bool
+    public function saveBillingAddressDetails(array $addressDetails, bool $sameAsShipping = true): array|bool
     {
         $response = (new Request(
             $query = (new Mutation('setBillingAddressOnCart')
@@ -104,14 +102,14 @@ class MagentoCheckoutAddressApiService
                                 (new InputObject('address')
                                 )->addInputFields(
                                     [
-                                        new InputField('firstname', $addressDetails->getFirstname()),
-                                        new InputField('lastname', $addressDetails->getLastname()),
-                                        new InputField('company', $addressDetails->getCompany() ?? ''),
-                                        new InputField('telephone', $addressDetails->getPhone()),
-                                        new InputField('city', $addressDetails->getCity()),
-                                        new InputField('postcode', $addressDetails->getPostcode()),
-                                        new InputField('street', [$addressDetails->getStreet(), $addressDetails->getHouseNr() . ' ' . $addressDetails->getAdd()]),
-                                        new InputField('country_code', $addressDetails->getCountryCode() ?? 'NL'),
+                                        new InputField('firstname', $addressDetails['firstname']),
+                                        new InputField('lastname', $addressDetails['lastname']),
+                                        new InputField('company', $addressDetails['company']),
+                                        new InputField('telephone', $addressDetails['telephone']),
+                                        new InputField('city', $addressDetails['city']),
+                                        new InputField('postcode', $addressDetails['postcode']),
+                                        new InputField('street', $addressDetails['street']),
+                                        new InputField('country_code', $addressDetails['country_code']),
                                     ]
                                 ),
                                 (new InputField('use_for_shipping', $sameAsShipping)),

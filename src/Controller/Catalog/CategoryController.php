@@ -74,7 +74,7 @@ class CategoryController extends AbstractController
         $breadcrumbs[] = [
             'active' => true,
             'label' => $category['name'],
-            'url' => $category['url_path'],
+            'url' => ltrim($this->requestStack->getMainRequest()?->getPathInfo(), '/') ?? $category['url_path'],
         ];
 
         try {

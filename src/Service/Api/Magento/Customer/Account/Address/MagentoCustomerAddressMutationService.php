@@ -2,7 +2,6 @@
 
 namespace App\Service\Api\Magento\Customer\Account\Address;
 
-use App\DataClass\Customer\Address\CustomerAddress;
 use App\Service\Api\Magento\BaseMagentoService;
 use App\Service\GraphQL\Field;
 use App\Service\GraphQL\Input;
@@ -13,30 +12,30 @@ use App\Service\GraphQL\Request;
 
 class MagentoCustomerAddressMutationService extends BaseMagentoService
 {
-    public function saveAddress(CustomerAddress $address): false|array
+    public function saveAddress(array $address, ?int $addressId = null): false|array
     {
         $mutation = 'createCustomerAddress';
         $parameters = [
             (new Input('input')
             )->addFields(
                 [
-                    new InputField('firstname', $address->getFirstname()),
-                    new InputField('lastname', $address->getLastname()),
-                    new InputField('company', $address->getCompany() ?? ''),
-                    new InputField('street', [$address->getStreet(), $address->getHouseNr(), $address->getAdd()]),
-                    new InputField('postcode', $address->getPostcode()),
-                    new InputField('city', $address->getCity()),
-                    new InputFieldEnum('country_code', $address->getCountryCode() ?? 'NL'),
-                    new InputField('telephone', $address->getTelephone()),
-                    new InputField('default_shipping', $address->isDefaultShipping()),
-                    new InputField('default_billing', $address->isDefaultBilling()),
+                    new InputField('firstname', $address['firstname']),
+                    new InputField('lastname', $address['lastname']),
+                    new InputField('company', $address['company'] ?? ''),
+                    new InputField('street', $address['street']),
+                    new InputField('postcode', $address['postcode']),
+                    new InputField('city', $address['city']),
+                    new InputFieldEnum('country_code', $address['countryCode']),
+                    new InputField('telephone', $address['telephone']),
+                    new InputField('default_shipping', $address['isDefaultShipping']),
+                    new InputField('default_billing', $address['isDefaultBilling']),
                 ]
             ),
         ];
 
-        if ($address->getId() !== null) {
+        if (null !== $addressId) {
             $mutation = 'updateCustomerAddress';
-            $parameters[] = new InputField('id', $address->getId());
+            $parameters[] = new InputField('id', $addressId);
         }
 
         $response = (new Request(

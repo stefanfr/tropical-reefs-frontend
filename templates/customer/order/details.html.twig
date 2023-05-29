@@ -5,75 +5,65 @@
 {% block body %}
     <div class="container mx-auto mt-10 grid grid-cols-12 gap-8">
         {% include 'customer/_partials/account_menu.html.twig' %}
-        <div class="grow grid mt-4 auto-rows-min col-span-7">
-            <div class="account__details-headers mb-4 grid justify-between items-center">
-                <h2 class="text-3xl">{{ 'Your order: %orderNumber%'|trans({ '%orderNumber%': order['increment_id'] }) }}</h2>
-                <small><a href="{{ path('app_customer_order_overview') }}">&lt; {{ 'Back to overview'|trans }}</a></small>
+        <div class="grow grid mt-4 auto-rows-min col-span-10">
+            <div class="account__details-headers mb-4 flex justify-between items-center">
+                <h2 class="text-3xl">{{ 'Order details'|trans }}</h2>
+                <small><a href="{{ path('app_customer_order_overview') }}">{{ 'Back to overview'|trans }}
+                        &gt;</a></small>
             </div>
-            <div class="relative border border-solid border-base-300 rounded-box py-4 px-6 shadow-md">
-                <div class="account__details-default-address gap-4 grid grid-cols-4 mt-4">
-                    <div class="shipping_address col-span-2">
-                        <h3 class="text-md block font-bold">{{ 'Shipping Address' }}</h3>
-                        <strong class="block mt-2">{{ order['shipping_address']['firstname'] }} {{ order['shipping_address']['lastname'] }}</strong>
-                        <span class="block">{{ order['shipping_address']['street']|join(' ') }}</span>
-                        <span class="block">{{ order['shipping_address']['postcode'] }} {{ order['shipping_address']['city'] }}</span>
-                        <span class="block">{{ order['shipping_address']['country_code'] }}</span>
-                    </div>
-                    <div class="billing_address col-span-2">
-                        <h3 class="text-md block font-bold">{{ 'Billing Address' }}</h3>
-                        <strong class="block mt-2">{{ order['shipping_address']['firstname'] }} {{ order['shipping_address']['lastname'] }}</strong>
-                        <span class="block">{{ order['shipping_address']['street']|join(' ') }}</span>
-                        <span class="block">{{ order['shipping_address']['postcode'] }} {{ order['shipping_address']['city'] }}</span>
-                        <span class="block">{{ order['shipping_address']['country_code'] }}</span>
-                    </div>
-                </div>
-                <div class="divider lg:divider-vertical"></div>
-                <div class="order_items">
-                    {% for item in order['items'] %}
-                        <div class="grid grid-cols-6 gap-4 align-middle items-center">
-                            <img src="{{ (['media/catalog/product', item['small_image']]|join)|cdn('auto', 'square', 72) }}" alt="{{ item['product_name'] }}">
-                            <div class="col-span-2 description grid auto-rows-min">
-                                <strong>{{ item['product_name'] }}</strong>
-                                <span>{{ item['product_sku'] }}</span>
-                            </div>
-                            <span>{{ item['product_sale_price_incl_tax']['value']|format_currency(item['product_sale_row_total_incl_tax']['currency']) }}</span>
-                            <span>{{ item['quantity_ordered'] }}</span>
-                            <strong>{{ item['product_sale_row_total_incl_tax']['value']|format_currency(item['product_sale_row_total_incl_tax']['currency']) }}</strong>
+            <div class="mb-3 flex">
+                <span class="text-base">{{ 'Order placed'|trans }}: <time class="font-bold">{{ order['created_at']|date('d M, Y') }}</time></span>
+                <div class="divider lg:divider-horizontal"></div>
+                <span class="text-base">{{ 'Order number'|trans }}: <strong>{{ order['increment_id'] }}</strong></span>
+            </div>
+            <div class="order_items grid grid-cols-5 gap-5 mb-4">
+                {% for item in order['items'] %}
+                    <div class="card bg-base-200 border border-solid border-base-300 rounded-box shadow-md">
+                        <figure>
+                            <img src="{{ (['media/catalog/product', item['small_image']]|join)|cdn('auto', 'square', 140) }}" alt="{{ item['product_name'] }}">
+                        </figure>
+                        <div class="card-body bg-base-100 px-4 py-4">
+                            <h4 class="card-title text-base">{{ item['product_name'] }}</h4>
+                            <p class="flex">
+                                <span class="grow text-sm">{{ item['status']|trans }}</span>
+                                <strong class="text-sm">{{ item['product_sale_price_incl_tax']['value']|format_currency(item['product_sale_row_total_incl_tax']['currency']) }}</strong>
+                            </p>
                         </div>
-                        <div class="divider lg:divider-vertical"></div>
-                    {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="divider lg:divider-vertical"><h2 class="text-2xl">{{ 'Address and payment information'|trans }}</h2></div>
+            <div class="grid grid-cols-4 gap-5 mt-4">
+                <div class="shipping_address border border-solid border-base-300 rounded-box py-4 px-6 shadow-md grid gap-0">
+                    <h3 class="text-base block font-bold">{{ 'Shipping Address'|trans }}</h3>
+                    <strong class="text-sm mt-2">{{ order['shipping_address']['firstname'] }} {{ order['shipping_address']['lastname'] }}</strong>
+                    <span class="text-sm">{{ order['shipping_address']['street']|join(' ') }}</span>
+                    <span class="text-sm">{{ order['shipping_address']['postcode'] }} {{ order['shipping_address']['city'] }}</span>
+                    <span class="text-sm">{{ order['shipping_address']['country_code']|country_name }}</span>
                 </div>
-                <div class="order-totals flex justify-end">
-                    <table>
-                        {% for key, total in order['totals'] %}
-                            {% if total %}
-                                <tr class="{% if key == 'grand_total' %}border-t-2 border-solid{% endif %}">
-                                    <td style="min-width: 8rem">
-                                        {% if key =='grand_total' %}
-                                            <strong>{{ key|trans }}</strong>
-                                        {% else %}
-                                            <span>{{ key|trans }}</span>
-                                        {% endif %}
-                                    </td>
-                                    <td class="text-right">
-                                        {% if key == 'grand_total' %}
-                                            {% if total['value'] == 0 %}
-                                                <strong class="text-success">{{ 'Free'|trans }}</strong>
-                                            {% else %}
-                                                <strong>{{ total['value']|format_currency(total['currency']) }}</strong>
-                                            {% endif %}
-                                        {% else %}
-                                            {% if total['value'] == 0 %}
-                                                <span class="text-success">{{ 'Free'|trans }}</span>
-                                            {% else %}
-                                                <span>{{ total['value']|format_currency(total['currency']) }}</span>
-                                            {% endif %}
-                                        {% endif %}
-                                    </td>
-                                </tr>
+                <div class="billing_address border border-solid border-base-300 rounded-box py-4 px-6 shadow-md grid gap-0">
+                    <h3 class="text-base block font-bold">{{ 'Billing Address'|trans }}</h3>
+                    <strong class="text-sm mt-2">{{ order['billing_address']['firstname'] }} {{ order['billing_address']['lastname'] }}</strong>
+                    <span class="text-sm">{{ order['billing_address']['street']|join(' ') }}</span>
+                    <span class="text-sm">{{ order['billing_address']['postcode'] }} {{ order['billing_address']['city'] }}</span>
+                    <span class="text-sm">{{ order['billing_address']['country_code']|country_name }}</span>
+                </div>
+                <div class="order-totals col-start-4 gap-0">
+                    <ul>
+                        {% for total in order['totals'] %}
+                            {% if total['grandTotal'] %}
+                                <div class="divider lg:divider-vertical" style="margin:0"></div>
                             {% endif %}
+                            <li class="flex justify-between text-sm {% if total['grandTotal'] %}font-bold{% endif %}">
+                                <span>{{ total['label']|trans }}</span>
+                                {% if total['value'] %}
+                                    <span>{{ total['value']|format_currency(total['currency']) }}</span>
+                                {% else %}
+                                    <span class="text-success">{{ 'Free'|trans }}</span>
+                                {% endif %}
+                            </li>
                         {% endfor %}
-                    </table>
+                    </ul>
                 </div>
             </div>
         </div>

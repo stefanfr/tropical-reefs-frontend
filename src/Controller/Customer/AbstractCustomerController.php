@@ -8,10 +8,12 @@ use Symfony\Component\HttpFoundation\Request;
 
 abstract class AbstractCustomerController extends AbstractController
 {
+    protected string $customerPage = 'default';
+    protected array|null $customerData = null;
+
     public function __construct(
-        protected MagentoCustomerAccountQueryService $magentoCustomerAccountService
-    )
-    {
+        protected MagentoCustomerAccountQueryService $magentoCustomerAccountQueryService
+    ) {
     }
 
     protected function isAuthenticated(Request $request): bool
@@ -20,8 +22,8 @@ abstract class AbstractCustomerController extends AbstractController
             return false;
         }
 
-        $customerData = $this->magentoCustomerAccountService->getCustomerData();
+        $this->customerData = $this->magentoCustomerAccountQueryService->getCustomerData($this->customerPage === 'default');
 
-        return null !== $customerData;
+        return null !== $this->customerData;
     }
 }

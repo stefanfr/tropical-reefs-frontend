@@ -102,18 +102,6 @@ h1, h2, h3 {
   }
 }
 
-.cart__totals-totals {
-  strong {
-    text-align: right;
-  }
-
-  strong:nth-last-child(1), span:nth-last-child(2) {
-    margin-top: .75rem;
-    font-size: 1.12rem;
-    font-weight: bold;
-  }
-}
-
 #stickyAddToCart {
   -moz-transition: height .5s;
   -ms-transition: height .5s;

@@ -20,7 +20,7 @@
     <div class="container mx-auto mt-2 grid grid-cols-8 items-center">
         <div class="mt-4 py-8 col-start-3 col-span-4 container border border-base-300 rounded-box shadow-md border-solid grid justify-center">
             <h2 class="text-2xl mt-4">{{ 'Login'|trans }}</h2>
-            <p class="mt-2">{{ 'Already an account? Login below to make use of all benifits' }}</p>
+            <p class="mt-2">{{ 'Already an account? Login below to make use of all benefits'|trans }}</p>
             {{ form_start(form, {attr: {class: 'grid gap-4 mt-4'}}) }}
             {{ form_errors(form) }}
             {{ form_widget(form.email) }}
@@ -31,9 +31,12 @@
                 <p>
                     {{ 'No account yet?'|trans }}
                     <br/>
-                    {{ 'Register an account and make use of all benifits'|trans }}
+                    {{ 'Register an account and make use of all benefits'|trans }}
                 </p>
                 <a class="text-accent" href="{{ path('app_customer_register') }}">{{ 'Click here to register'|trans }}</a>
+            </div>
+            <div class="reset_password text-right mt-4">
+                <a class="text-accent" href="{{ path('app_customer_password_forget') }}">{{ 'Forgot Password?'|trans }}</a>
             </div>
         </div>
     </div>

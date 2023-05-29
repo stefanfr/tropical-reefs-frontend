@@ -9,7 +9,6 @@ use App\Service\GraphQL\Request;
 
 class MagentoCustomerAddressQueryService extends BaseMagentoService
 {
-
     public function collectCustomerAddresses(): array
     {
         $response = (new Request(

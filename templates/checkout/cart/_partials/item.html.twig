@@ -10,7 +10,7 @@
         </div>
     </div>
     <div class="m-auto">
-        <span>{{ item['prices']['price']['value']|format_currency('EUR', [], 'nl_NL') }}</span>
+        <span>{{ item['prices']['price_including_tax']['value']|format_currency('EUR', [], 'nl_NL') }}</span>
     </div>
     <div class="flex gap-2 m-auto">
         <form action="{{ path('app_checkout_cart_update', {uid: item['uid']}) }}" method="post">

@@ -18,17 +18,16 @@ class GeneralSettingsController extends AbstractCustomerController
             return $this->redirectToRoute('app_customer_login');
         }
 
-        $customerData = $this->magentoCustomerAccountService->getCustomerData();
+        $customerDetails = [
+            'firstname' => $this->customerData['firstname'],
+            'lastname' => $this->customerData['lastname'],
+            'email' => $this->customerData['email'],
+        ];
 
-        $customerAccount = (new CustomerAccount()
-        )->setEmail($customerData['email'])
-            ->setFirstname($customerData['firstname'])
-            ->setLastname($customerData['lastname']);
-
-        return $this->render('customer/general/index.html.twig',
+        return $this->render(
+            'customer/general/index.html.twig',
             [
-                'customerAccount' => $customerAccount,
-                'customerPassword' => (new CustomerAccount())->setPassword('test'),
+                'customerDetails' => $customerDetails,
             ]
         );
     }

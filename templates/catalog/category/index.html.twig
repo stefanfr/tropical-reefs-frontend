@@ -95,7 +95,7 @@
                     </div>
                 </nav>
             {% endif %}
-            <h1 class="text-4xl">{{ category['name']|trans }} <small>({{ catalog['total_count'] }})</small></h1>
+            <h1 class="text-4xl">{{ category['name'] }} <small>({{ catalog['total_count'] }})</small></h1>
         </div>
         <div class="category mt-0 md:mt-4 grid grid-cols-9 gap-5">
             {% if device.isSmartphone != true %}
@@ -109,7 +109,7 @@
                                         {% if subCategory['product_count'] %}
                                             <li>
                                                 <a href="/{{ subCategory['url_path'] }}">
-                                                    {{ subCategory['name']|trans }} ({{ subCategory['product_count'] }})
+                                                    {{ subCategory['name'] }} ({{ subCategory['product_count'] }})
                                                 </a>
                                             </li>
                                         {% endif %}
@@ -158,17 +158,19 @@
                         </select>
                     </div>
                     <div class="pagination grow flex justify-center">
-                        <div class="btn-group">
-                            <a href="{{ pagination['prevPage'] }}" class="btn btn-sm" {% if catalog['page_info']['current_page'] == 1 %} disabled {% endif %}>
-                                «
-                            </a>
-                            {% for page in pagination['displayPages'] %}
-                                <a href="{{ page['url'] }}" class="btn btn-sm" {% if catalog['page_info']['current_page'] == page['value'] %} disabled {% endif %}>{{ page['value'] }}</a>
-                            {% endfor %}
-                            <a href="{{ pagination['nextPage'] }}" class="btn btn-sm" {% if catalog['page_info']['current_page'] == catalog['page_info']['total_pages'] %} disabled {% endif %}>
-                                »
-                            </a>
-                        </div>
+                        {% if pagination['displayPages']|length > 1 %}
+                            <div class="btn-group">
+                                <a href="{{ pagination['prevPage'] }}" class="btn btn-sm" {% if catalog['page_info']['current_page'] == 1 %} disabled {% endif %}>
+                                    «
+                                </a>
+                                {% for page in pagination['displayPages'] %}
+                                    <a href="{{ page['url'] }}" class="btn btn-sm" {% if catalog['page_info']['current_page'] == page['value'] %} disabled {% endif %}>{{ page['value'] }}</a>
+                                {% endfor %}
+                                <a href="{{ pagination['nextPage'] }}" class="btn btn-sm" {% if catalog['page_info']['current_page'] == catalog['page_info']['total_pages'] %} disabled {% endif %}>
+                                    »
+                                </a>
+                            </div>
+                        {% endif %}
                     </div>
                     <div>
                         <select aria-label="Sort" name="sort" class="select select-sm select-bordered w-full max-w-xs" id="catalog_sort">
@@ -192,40 +194,28 @@
                         </select>
                     </div>
                 </div>
-                <div class="product_row grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 col-span-6 auto-rows-min mt-4 md:mt-8">
+                <div
+                    class="product_row grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 col-span-6 auto-rows-min mt-4 md:mt-8">
                     {% include 'catalog/_partials/product_list.html.twig' with {'items': catalog['items']} %}
+                </div>
+                <div class="items-end justify-end col-span-6 grow col-start-3 hidden lg:flex mt-10">
+                    <div class="pagination grow flex justify-center">
+                        {% if pagination['displayPages']|length > 1 %}
+                            <div class="btn-group">
+                                <a href="{{ pagination['prevPage'] }}" class="btn btn-sm" {% if catalog['page_info']['current_page'] == 1 %} disabled {% endif %}>
+                                    «
+                                </a>
+                                {% for page in pagination['displayPages'] %}
+                                    <a href="{{ page['url'] }}" class="btn btn-sm" {% if catalog['page_info']['current_page'] == page['value'] %} disabled {% endif %}>{{ page['value'] }}</a>
+                                {% endfor %}
+                                <a href="{{ pagination['nextPage'] }}" class="btn btn-sm" {% if catalog['page_info']['current_page'] == catalog['page_info']['total_pages'] %} disabled {% endif %}>
+                                    »
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <script>
-        document.onclick = function (event) {
-            const toggle = document.getElementById('toggleFilterNav');
-            const nav = event.target.parentElement.closest('nav');
-            if (toggle.checked) {
-                if (null === nav || event.target.parentElement.closest('nav').id !== 'filterNavHolder') {
-                    toggle.checked = false;
-                    const mobileFilterNav = document.getElementById('mobileFilterNav');
-                    mobileFilterNav.classList.add('w-0');
-                    mobileFilterNav.classList.remove('w-2/3');
-                    document.getElementById('mainContent').style.overflow = '';
-                }
-            }
-        }
-
-
-        function toggleFilterNav(event) {
-            const mobileFilterNav = document.getElementById('mobileFilterNav');
-            console.log(event.target.checked);
-            if (event.target.checked) {
-                mobileFilterNav.classList.add('w-2/3');
-                mobileFilterNav.classList.remove('w-0');
-                document.getElementById('mainContent').style.overflow = 'hidden';
-                return;
-            }
-            mobileFilterNav.classList.add('w-0');
-            mobileFilterNav.classList.remove('w-2/3');
-            document.getElementById('mainContent').style.overflow = '';
-        }
-    </script>
 {% endblock %}

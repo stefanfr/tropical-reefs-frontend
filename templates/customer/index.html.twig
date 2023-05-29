@@ -20,7 +20,7 @@
                         <span class="block">{{ defaultShippingAddress['company'] }}</span>
                         <span class="block">{{ defaultShippingAddress['street']|join(' ') }}</span>
                         <span class="block">{{ defaultShippingAddress['postcode'] }}, {{ defaultShippingAddress['city'] }}</span>
-                        <span class="block">{{ defaultShippingAddress['country_code'] }}</span>
+                        <span class="block">{{ defaultShippingAddress['country_code']|country_name }}</span>
                         <a
                                 href="{{ path('app_customer_address_update', {'addressId': defaultShippingAddress['id']}) }}"
                                 class="btn btn-accent btn-sm absolute right-4 bottom-4"
@@ -39,7 +39,7 @@
                         <span class="block">{{ defaultBillingAddress['company'] }}</span>
                         <span class="block">{{ defaultBillingAddress['street']|join(' ') }}</span>
                         <span class="block">{{ defaultBillingAddress['postcode'] }}, {{ defaultBillingAddress['city'] }}</span>
-                        <span class="block">{{ defaultBillingAddress['country_code'] }}</span>
+                        <span class="block">{{ defaultBillingAddress['country_code']|country_name }}</span>
                         <a
                                 href="{{ path('app_customer_address_update', {'addressId': defaultBillingAddress['id']}) }}"
                                 class="btn btn-accent btn-sm absolute right-4 bottom-4"
@@ -50,21 +50,32 @@
             <div class="account__details-headers col-span-2">
                 <h3 class="text-xl">{{ 'Last orders'|trans }}</h3>
             </div>
-            <div class="account__details-default-address gap-3 col-span-2 grid grid-cols-4">
+            <div class="account__details-default-address gap-3 grid col-span-2">
                 {% if customerOrders is empty %}
                     <span>{{ 'No orders yet.'|trans }}</span><br/>
                     <a class="text-accent" href="{{ path('app_home') }}">{{ 'Click here to place your first order'|trans }}</a>
                 {% else %}
                     {% for order in customerOrders %}
-                        <a href="{{ path('app_customer_order_detail', {orderNumber: order['increment_id']}) }}" class="account__details-default-address-shipping relative border border-solid border-base-300 rounded-box py-4 px-6 flex justify-between col-span-4 shadow-md">
-                            <strong class="block">{{ order['increment_id'] }}</strong>
-                            <span>{{ order['status'] }}</span>
-                            <span>{{ order['total']['grand_total']['value']|format_currency('EUR') }}</span>
-                            <span>{{ order['created_at']|date }}</span>
-                            <span>
-                                {{ 'view'|trans }}
-                            </span>
-                        </a>
+                        <div class="order_details flex gap-4 w-full justify-between">
+                            <span>{{ 'Order number'|trans }}:&nbsp;<strong>{{ order['increment_id'] }}</strong></span>
+                            <span>{{ 'Order date'|trans }}:&nbsp;<strong>{{ order['created_at']|date }}</strong></span>
+                        </div>
+                        <div class="w-full grid grid-cols-5 gap-5 mb-4">
+                            {% for item in order['items'] %}
+                                <a href="{{ path('app_customer_order_detail', {orderNumber: order['increment_id']}) }}" class="card bg-base-200 border border-solid border-base-300 rounded-box shadow-md">
+                                    <figure>
+                                        <img src="{{ (['media/catalog/product', item['small_image']]|join)|cdn('auto', 'square', 140) }}" alt="{{ item['product_name'] }}">
+                                    </figure>
+                                    <div class="card-body bg-base-100 px-4 py-4">
+                                        <h4 class="card-title text-base">{{ item['product_name'] }}</h4>
+                                        <p class="flex">
+                                            <span class="grow text-sm">{{ item['status']|trans }}</span>
+                                            <strong class="text-sm">{{ item['product_sale_price_incl_tax']['value']|format_currency(item['product_sale_row_total_incl_tax']['currency']) }}</strong>
+                                        </p>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
                     {% endfor %}
                 {% endif %}
             </div>

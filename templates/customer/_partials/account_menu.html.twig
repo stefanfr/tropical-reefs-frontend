@@ -2,8 +2,8 @@
     <ul class="menu bg-base-100 border border-base-300 rounded-box shadow-md border-solid">
         <li>
             <a
-                class="{% if app.request.get('_route') == 'app_customer' %}active bg-accent{% endif %} focus:bg-accent text-accent-content"
-                href="{{ path('app_customer') }}"
+                    class="{% if app.request.get('_route') == 'app_customer' %}active bg-accent{% endif %} focus:bg-accent text-accent-content"
+                    href="{{ path('app_customer') }}"
             >{{ 'Account overview'|trans }}</a>
         </li>
         <li>
@@ -14,8 +14,8 @@
         </li>
         <li>
             <a
-                class="{% if 'app_customer_address' in app.request.get('_route') %}active bg-accent{% endif %} focus:bg-accent text-accent-content"
-                href="{{ path('app_customer_address') }}"
+                    class="{% if 'app_customer_address' in app.request.get('_route') %}active bg-accent{% endif %} focus:bg-accent text-accent-content"
+                    href="{{ path('app_customer_address') }}"
             >{{ 'Addresses'|trans }}</a>
         </li>
         <li>
@@ -31,7 +31,9 @@
         </li>
         <li>
             <a
-            class="focus:bg-accent text-accent-content"
+                    class="{% if 'app_customer_wishlist' in app.request.get('_route') %}active bg-accent{% endif %} focus:bg-accent text-accent-content"
+                    href="{{ path('app_customer_wishlist') }}"
+                    class="focus:bg-accent text-accent-content"
             >{{ 'Wishlist'|trans }}</a>
         </li>
         <li>

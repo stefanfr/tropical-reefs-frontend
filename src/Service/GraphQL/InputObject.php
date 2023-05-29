@@ -11,7 +11,7 @@ class InputObject
     {
     }
 
-    public function addInputField(InputField|InputObject $inputField): static
+    public function addInputField(InputField|InputObject|InputFieldEnum $inputField): static
     {
         $this->childInputFields[] = $inputField;
 

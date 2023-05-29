@@ -9,4 +9,7 @@ permissions:
 	chown -R www-data:www-data *
 	composer dump-autoload --optimize --classmap-authoritative
 
-deploy: composer npm permissions
+translations:
+	bin/console app:localize:vue
+
+deploy: composer npm permissions translations

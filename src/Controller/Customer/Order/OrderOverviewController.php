@@ -11,11 +11,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class OrderOverviewController extends AbstractCustomerController
 {
+    protected string $customerPage = 'order_overview';
     public function __construct(
-        MagentoCustomerAccountQueryService         $magentoCustomerAccountService,
-        protected MagentoCustomerOrderQueryService $magentoCustomerOrderQueryService,
-    )
-    {
+        MagentoCustomerAccountQueryService $magentoCustomerAccountService,
+        protected readonly MagentoCustomerOrderQueryService $magentoCustomerOrderQueryService,
+    ) {
         parent::__construct($magentoCustomerAccountService);
     }
 
@@ -26,10 +26,8 @@ class OrderOverviewController extends AbstractCustomerController
             return $this->redirectToRoute('app_customer_login');
         }
 
-        $orders = $this->magentoCustomerOrderQueryService->collectCustomerOrders();
-
         return $this->render('customer/order/overview.html.twig', [
-            'customerOrders' => $orders,
+            'customerOrders' => $this->customerData['orders']['items'],
         ]);
     }
 }

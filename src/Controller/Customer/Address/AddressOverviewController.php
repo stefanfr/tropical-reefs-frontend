@@ -17,10 +17,8 @@ class AddressOverviewController extends AbstractCustomerController
             return $this->redirectToRoute('app_customer_login');
         }
 
-        $customerData = $this->magentoCustomerAccountService->getCustomerData();
-
         return $this->render('customer/address/overview.html.twig', [
-            'customerData' => $customerData,
+            'customerData' => $this->customerData,
         ]);
     }
 }

@@ -3,34 +3,17 @@
 namespace App\Service\Api\Magento\Customer\Account;
 
 use App\Service\Api\Magento\BaseMagentoService;
-use App\Service\GraphQL\Field;
 use App\Service\GraphQL\InputField;
+use App\Service\GraphQL\InputFieldEnum;
+use App\Service\GraphQL\InputObject;
 use App\Service\GraphQL\Query;
 use App\Service\GraphQL\Request;
-use App\Service\GraphQL\Selection;
-use App\Service\GraphQL\Types\AddressType;
-use App\Service\GraphQL\Types\MoneyType;
-use App\Service\GraphQL\Types\OrderItemType;
-use App\Service\GraphQL\Types\OrderType;
-use App\Service\GraphQL\Types\TotalsType;
+use App\Service\GraphQL\Types\CustomerOrderType;
+use App\Service\GraphQL\Types\CustomerType;
 
 class MagentoCustomerAccountQueryService extends BaseMagentoService
 {
-    public static function getCustomerDetailFields(): array
-    {
-        return [
-            new Field('firstname'),
-            new Field('lastname'),
-            new Field('company'),
-            new Field('street'),
-            new Field('postcode'),
-            new Field('city'),
-            new Field('country_code'),
-            new Field('telephone'),
-        ];
-    }
-
-    public function getCustomerData(): array|null
+    public function getCustomerData(bool $overviewPage = true): ?array
     {
         static $customerData = null;
 
@@ -39,48 +22,25 @@ class MagentoCustomerAccountQueryService extends BaseMagentoService
         }
 
         $selectedOptions = [
-            new InputField('pageSize', 100),
+            (new InputObject('sort')
+            )->addInputFields(
+                [
+                    new InputFieldEnum('sort_field', 'CREATED_AT'),
+                    new InputFieldEnum('sort_direction', 'DESC'),
+                ]
+            ),
         ];
+
+        if ($overviewPage) {
+            $selectedOptions[] = new InputField('pageSize', 1);
+        }
+
         $response = (new Request(
             (new Query('customer')
             )->addFields(
                 [
-                    new Field('email'),
-                    new Field('firstname'),
-                    new Field('lastname'),
-                    new Field('is_subscribed'),
-                    new Field('default_shipping'),
-                    new Field('default_billing'),
-                    (new Field('addresses')
-                    )->addChildFields(
-                        [
-                            new Field('id'),
-                            ...self::getCustomerDetailFields(),
-                        ]
-                    ),
-                    (new Selection('orders', $selectedOptions)
-                    )->addChildFields(
-                        [
-                            (new Field('items')
-                            )->addChildFields(
-                                [
-                                    ...OrderType::fields(),
-                                    (new Field('total')
-                                    )->addChildFields([
-                                        new Field('grand_total', MoneyType::fields())
-                                    ]),
-                                ]
-                            ),
-                            (new Field('page_info')
-                            )->addChildFields(
-                                [
-                                    new Field('current_page'),
-                                    new Field('page_size'),
-                                    new Field('total_pages'),
-                                ]
-                            ),
-                        ]
-                    ),
+                    ...CustomerType::fields(),
+                    ...CustomerOrderType::fields($selectedOptions),
                 ]
             ),
             $this->mageGraphQlClient

@@ -6,16 +6,7 @@
 
 {% block body %}
     <div class="container mx-auto mt-2 grid grid-cols-8 items-center">
-        <ul class="col-start-3 col-span-4 steps steps-vertical lg:steps-horizontal">
-            <li class="step step-accent">{{ 'Address'|trans }}</li>
-            <li class="step">{{ 'Shipping'|trans }}</li>
-            <li class="step">{{ 'Payment'|trans }}</li>
-            <li class="step">{{ 'Complete'|trans }}</li>
-        </ul>
-        {{ component('checkout_address', {
-            type: 'billing',
-            isLoggedIn: isLoggedIn,
-            address: billingAddress
-        }) }}
+        <checkout-header :current-step="1"></checkout-header>
+        <checkout-address-step :is-logged-in="{{ isLoggedIn ? 1 : 0 }}" :customer-addresses="{{ customerAddresses|json_encode }}"></checkout-address-step>
     </div>
 {% endblock %}

@@ -5,13 +5,19 @@
 {% set title = 'Checkout'|trans %}
 
 {% block body %}
-    {{ component('checkout_payment', {
-        totals: totals,
-        useCoupon: useCoupon,
-        cartItems: cartItems,
-        couponCode: couponCode,
-        couponIsValid: couponIsValid,
-        paymentMethods: paymentMethods,
-        selectedPaymentMethod: selectedPaymentMethod
-    }) }}
+    <div class="container mx-auto mt-2 grid grid-cols-8 items-center">
+        <checkout-header :current-step="3"></checkout-header>
+        <div class="mt-4 py-8 col-start-3 col-span-4 container border border-base-300 rounded-box shadow-md border-solid grid justify-center">
+            <div class="checkout-step-container grid auto-rows-max">
+                <h2 class="text-2xl mt-4">{{ '3. Payment method'|trans }}</h2>
+            </div>
+            <checkout-payment-methods :payment-methods="{{ paymentMethods|json_encode }}"></checkout-payment-methods>
+            <div class="divider lg:divider-vertical"></div>
+            <checkout-payment-coupon input-coupon-code="{{ couponCode ?? '' }}"></checkout-payment-coupon>
+            <div class="divider lg:divider-vertical"></div>
+            <checkout-payment-actions></checkout-payment-actions>
+            <div class="divider lg:divider-vertical"></div>
+            <checkout-payment-summary :cart-items="{{ cartItems|json_encode }}" :totals="{{ totals|json_encode }}"></checkout-payment-summary>
+        </div>
+    </div>
 {% endblock %}

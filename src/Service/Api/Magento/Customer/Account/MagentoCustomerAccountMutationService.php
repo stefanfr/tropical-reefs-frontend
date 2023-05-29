@@ -19,10 +19,10 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class MagentoCustomerAccountMutationService extends BaseMagentoService
 {
     public function __construct(
-        MageGraphQlClient                   $mageGraphQlClient,
-        RedisAdapter                        $redisAdapter,
-        RequestStack                        $requestStack,
-        protected MagentoCheckoutApiService $magentoCheckoutApiService
+        MageGraphQlClient                            $mageGraphQlClient,
+        RedisAdapter                                 $redisAdapter,
+        RequestStack                                 $requestStack,
+        protected readonly MagentoCheckoutApiService $magentoCheckoutApiService,
     )
     {
         $this->mageGraphQlClient = $mageGraphQlClient;
@@ -50,6 +50,7 @@ class MagentoCustomerAccountMutationService extends BaseMagentoService
             try {
                 $session = $this->requestStack->getSession();
                 $session->set('customerToken', $response['data']['generateCustomerToken']['token']);
+                $this->mergeGuestQuote($session->get('checkout_quote_mask'));
             } catch (SessionNotFoundException $exception) {
             }
 
@@ -117,21 +118,31 @@ class MagentoCustomerAccountMutationService extends BaseMagentoService
         return $response['errors'] ?? false;
     }
 
-    public function resetPassword(string $email): false|array
+    public function resetPassword(array $customerData): false|array
     {
         $response = (new Request(
             (new Mutation('resetPassword')
-            )->addParameter(
-                new Parameter('email', $email)
+            )->addParameters(
+                [
+                    new Parameter('email', $customerData['email']),
+                    new Parameter('newPassword', $customerData['newPassword']),
+                    new Parameter('resetPasswordToken', $customerData['resetPasswordToken']),
+                ]
             ),
             $this->mageGraphQlClient
         ))->send();
 
+        dd($response);
+
         return $response['errors'] ?? false;
     }
 
-    public function mergeGuestQuote(string $guestQuoteMask): bool
+    public function mergeGuestQuote(?string $guestQuoteMask): bool
     {
+        if (null === $guestQuoteMask) {
+            return true;
+        }
+
         $response = (new Request(
             (new Mutation('assignCustomerToGuestCart')
             )->addParameter(

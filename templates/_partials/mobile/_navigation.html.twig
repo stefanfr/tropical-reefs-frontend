@@ -27,34 +27,3 @@
         </ul>
     </div>
 </nav>
-
-<script>
-    let navIsVisible = false;
-
-    document.onclick = function (event) {
-        const toggle = document.getElementById('toggleMobileNav');
-        const nav = event.target.parentElement.closest('nav');
-        if (toggle.checked) {
-            if (null === nav || event.target.parentElement.closest('nav').id !== 'mobileNavHolder') {
-                toggle.checked = false;
-                const mobileNave = document.getElementById('mobileNav');
-                mobileNave.classList.add('w-0');
-                mobileNave.classList.remove('w-3/4');
-                document.getElementById('mainContent').style.overflow = '';
-            }
-        }
-    }
-
-    function toggleNav(event) {
-        const mobileNave = document.getElementById('mobileNav');
-        if (event.target.checked) {
-            mobileNave.classList.add('w-3/4');
-            mobileNave.classList.remove('w-0');
-            document.getElementById('mainContent').style.overflow = 'hidden';
-            return;
-        }
-        mobileNave.classList.add('w-0');
-        mobileNave.classList.remove('w-3/4');
-        document.getElementById('mainContent').style.overflow = '';
-    }
-</script>

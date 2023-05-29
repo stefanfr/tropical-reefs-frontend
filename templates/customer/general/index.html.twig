@@ -9,14 +9,7 @@
             <div class="account__details-headers mb-4">
                 <h2 class="text-3xl">{{ 'Edit personal settings'|trans }}</h2>
             </div>
-            <div class="grid grid-cols-2 gap-6">
-                {{ component('customer_general_settings', {
-                    customerAccount: customerAccount
-                }) }}
-                {{ component('customer_general_password', {
-                    customerAccount: customerPassword
-                }) }}
-            </div>
+            <customer-general-settings :customer-details="{{ customerDetails|json_encode }}"></customer-general-settings>
         </div>
     </div>
 {% endblock %}

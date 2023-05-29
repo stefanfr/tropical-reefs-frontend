@@ -14,28 +14,6 @@ use App\Service\GraphQL\Types\TotalsType;
 
 class MagentoCustomerOrderQueryService extends BaseMagentoService
 {
-    public function collectCustomerOrders(): false|array
-    {
-        $response = (new Request(
-            (new Query('customerOrders')
-            )->addField(
-                (new Field('items')
-                )->addChildFields(
-                    [
-                        new Field('id'),
-                        new Field('order_number'),
-                        new Field('created_at'),
-                        new Field('grand_total'),
-                        new Field('status'),
-                    ]
-                )
-            ),
-            $this->mageGraphQlClient
-        ))->send();
-
-        return $response['data']['customerOrders']['items'] ?? false;
-    }
-
     public function collectCustomerOrder(string $orderNumber): false|array
     {
         $response = (new Request(

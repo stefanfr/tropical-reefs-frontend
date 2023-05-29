@@ -4,6 +4,7 @@ namespace App\Controller\Customer;
 
 use App\Service\Api\Magento\Customer\Account\Address\MagentoCustomerAddressMutationService;
 use App\Service\Api\Magento\Customer\Account\MagentoCustomerAccountQueryService;
+use App\Service\Api\Magento\Customer\Account\Wishlist\MagentoCustomerWishlistQueryService;
 use App\Trait\Customer\CustomerAuthenticationTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,6 +15,7 @@ class AccountController extends AbstractCustomerController
     public function __construct(
         MagentoCustomerAccountQueryService              $magentoCustomerAccountService,
         protected MagentoCustomerAddressMutationService $magentoCustomerAddressMutationService,
+        protected readonly MagentoCustomerWishlistQueryService $magentoCustomerWishlistQuery
     )
     {
         parent::__construct($magentoCustomerAccountService);
@@ -26,11 +28,11 @@ class AccountController extends AbstractCustomerController
             return $this->redirectToRoute('app_customer_login');
         }
 
-        $customerData = $this->magentoCustomerAccountService->getCustomerData();
+        $customerData = $this->magentoCustomerAccountQueryService->getCustomerData();
 
         return $this->render('customer/index.html.twig', [
             'customerData' => $customerData,
-            'customerOrders' => array_reverse($customerData['orders']['items']),
+            'customerOrders' => $customerData['orders']['items'],
             'defaultShippingAddress' => $this->getDefaultSelectedAddress($customerData),
             'defaultBillingAddress' => $this->getDefaultSelectedAddress($customerData, 'billing'),
         ]);

@@ -3,26 +3,37 @@
 namespace App\Controller\Checkout;
 
 use App\DataClass\Checkout\Address\Address;
+use App\Manager\Customer\CustomerSessionManager;
+use App\Service\Api\Magento\Checkout\MagentoCheckoutCartApiService;
+use App\Service\Api\Magento\Customer\Account\Address\MagentoCustomerAddressQueryService;
+use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class AddressController extends AbstractCheckoutController
 {
+    public function __construct(
+        MagentoCheckoutCartApiService $magentoCheckoutCartApiService,
+        protected readonly RequestStack $requestStack,
+        protected readonly CustomerSessionManager $customerSessionManager,
+        protected readonly MagentoCustomerAddressQueryService $magentoCustomerAddressQueryService,
+    ) {
+        parent::__construct($magentoCheckoutCartApiService);
+    }
+
     #[Route('/checkout/address', name: 'app_checkout_address')]
     public function index(RequestStack $requestStack): Response
     {
-        $session = $requestStack->getSession();
-
         $cart = $this->magentoCheckoutCartApiService->collectFullCart();
         $shippingAddress = new Address();
         $billingAddress = new Address();
 
         $billingAddress->setCustomerEmail($cart['email']);
 
-//        if ( ! $cart['total_quantity']) {
-//            return $this->redirectToRoute('app_checkout_cart');
-//        }
+        if ( ! $cart['total_quantity']) {
+            return $this->redirectToRoute('app_checkout_cart');
+        }
 
         if (isset($cart['shipping_addresses'][0])) {
             $shippingAddress = $this->convertAddress($shippingAddress, $cart['shipping_addresses'][0]);
@@ -34,9 +45,10 @@ class AddressController extends AbstractCheckoutController
 
         return $this->render('checkout/checkout/address.html.twig', [
             'cart' => $cart,
+            'customerAddresses' => $this->collectAddresses(),
             'shippingAddress' => $shippingAddress,
             'billingAddress' => $billingAddress,
-            'isLoggedIn' => $session->has('customerToken'),
+            'isLoggedIn' => $this->customerSessionManager->isLoggedIn(),
         ]);
     }
 
@@ -56,5 +68,26 @@ class AddressController extends AbstractCheckoutController
             ->setPostcode($quoteAddress['postcode'])
             ->setPhone($quoteAddress['telephone'])
             ->setCountryCode($quoteAddress['country']['code'] ?? 'NL');
+    }
+
+    public function collectAddresses(): array
+    {
+        static $addresses;
+
+        if (null !== $addresses) {
+            return $addresses;
+        }
+
+        $addresses = [];
+
+        try {
+            $session = $this->requestStack->getSession();
+            if ($session->has('customerToken')) {
+                $addresses = $this->magentoCustomerAddressQueryService->collectCustomerAddresses();
+            }
+        } catch (SessionNotFoundException $exception) {
+        }
+
+        return $addresses;
     }
 }

@@ -80,6 +80,10 @@ task('deploy:restart:fpm', function () {
     run('systemctl restart php-fpm');
 });
 
+task('deploy:translations', function () {
+    run('cd {{release_path}} && php bin/console app:localize:vue');
+});
+
 task('deploy:redis:flush', function () {
     run('redis-cli flushall');
 });
