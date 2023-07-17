@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Facades\MeasurementProtocol;
 use App\Service\Api\Magento\Catalog\MagentoCatalogCategoryApiService;
 use App\Service\Api\Magento\Catalog\MagentoCatalogProductApiService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
