@@ -12,4 +12,4 @@ permissions:
 translations:
 	bin/console app:localize:vue
 
-deploy: composer npm permissions translations
+deploy: composer translations npm permissions
