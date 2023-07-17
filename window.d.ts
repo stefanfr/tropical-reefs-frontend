@@ -2,6 +2,7 @@
 interface Window {
   Locale: string,
   Config: object,
+  dataLayer: Array<object>,
 }
 
 import {Store} from "vuex";

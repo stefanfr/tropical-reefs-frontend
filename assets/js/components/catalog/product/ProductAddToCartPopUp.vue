@@ -1,6 +1,6 @@
 <template>
     <div>
-        <input type="checkbox" id="addToCartModal" class="modal-toggle" :checked="addedToCart" @change="toggleAddedToCart"/>
+        <input aria-label="hidden input" type="checkbox" id="addToCartModal" class="modal-toggle" :checked="addedToCart" @change="toggleAddedToCart"/>
         <div class="modal">
             <div class="modal-box" style="width: 50vw; max-width: 50vw">
                 <h3 class="font-bold text-lg text-center">{{ $t('Successfully added to cart') }}</h3>

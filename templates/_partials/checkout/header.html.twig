@@ -1,7 +1,7 @@
 <header>
     {% include '_partials/_usps.html.twig' %}
     <div class="container mx-auto grid grid-cols-3 items-center gap-20 mt-4">
-        <a href="{{ path('app_home') }}">
+        <a aria-label="home" href="{{ path('app_home') }}">
             <picture class="logo_full">
                 <source srcset="{{ asset('build/assets/images/logo.png'|cdn('auto', 400, 144)) }}"/>
                 <img width="200" height="72" src="{{ asset('build/assets/images/logo.png'|cdn('auto', 200, 72)) }}" alt="logo"/>
