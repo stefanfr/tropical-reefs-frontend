@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y nodejs
 COPY ./docker/build-config/entrypoint.sh /
 RUN chmod +x /entrypoint.sh
 
-WORKDIR $CI_PROJECT_DIR/build
+WORKDIR $CI_PROJECT_DIR/var/www/html
 
 # Copy files
 COPY . .
@@ -23,6 +23,3 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     /bin/rm ./.env
 
 RUN chown -R www-data:www-data /var/www/html
-
-# Copy files
-COPY . /var/www/html
