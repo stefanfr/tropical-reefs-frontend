@@ -1,7 +1,7 @@
 FROM nginx:1.23
+FROM gitlab.hostplus.nl:5050/tropical-reefs/frontend/frontend-php:latest as php
 
-WORKDIR $CI_PROJECT_DIR/build
-COPY . /var/www/html/
+COPY --from=php /var/www/html/ /var/www/html/
 
 # Copy nginx configuration
 COPY ./docker/build-config/nginx.conf /etc/nginx/nginx.conf
