@@ -2,7 +2,7 @@ composer :
 	composer install --no-dev --no-scripts
 
 npm:
-	npm install
+	npm ci
 	npm run build
 
 permissions:
