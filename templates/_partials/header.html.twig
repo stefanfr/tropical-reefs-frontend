@@ -10,8 +10,8 @@
             {% endif %}
             <a href="{{ path('app_home') }}" class="pt-3 pb-3">
                 <picture class="logo_full">
-                    <source srcset="{{ asset('build/assets/images/logo.png'|cdn('auto', 400, 144)) }}"/>
-                    <img width="150" height="72" src="{{ asset('build/assets/images/logo.png'|cdn('auto', 200, 72)) }}" alt="logo"/>
+                    <source srcset="{{ asset('/build/assets/images/logo.png'|cdn('auto', 400, 144)) }}"/>
+                    <img width="150" height="72" src="{{ asset('/build/assets/images/logo.png'|cdn('auto', 200, 72)) }}" alt="logo"/>
                 </picture>
             </a>
             <div class="hidden lg:flex items-center justify-center bg-neutral">
