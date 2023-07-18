@@ -62,8 +62,8 @@ class ImgProxyService
         }
 
         $uri = str_replace('aquastore.test', 'dev.tropicalreefs.nl', $uri);
-        if ( ! filter_var($uri, FILTER_VALIDATE_URL)) {
-            $uri = 'https://dev.tropicalreefs.nl/'.$uri;
+        if (!filter_var($uri, FILTER_VALIDATE_URL)) {
+            $uri = 'https://dev.tropicalreefs.nl' . $uri;
         }
 
         $filters = 'pr:sharp/';
